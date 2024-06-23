@@ -1,5 +1,5 @@
 particlesJS.load("particles-js", "particles.json");
-minipages = ["net", "about", "projects", "contact", "hacks"];
+minipages = ["about", "projects", "contact"];
 
 [...document.getElementsByClassName("header-item")].forEach((el) => {
   el.onclick = function () {
@@ -9,7 +9,7 @@ minipages = ["net", "about", "projects", "contact", "hacks"];
     el.classList.add("selected");
     window.location.hash = minipages[el.id.split("header")[1] - 1];
     document.getElementById("main-carrier").style.left =
-      "-" + (el.id.split("header")[1] * 100 - 100) + "vw";
+      "-" + (el.id.split("header")[1] * 100) + "vw";
   };
 });
 
@@ -26,14 +26,14 @@ window.onload = () => {
       .classList.add("selected");
     document.getElementById("main-carrier").style.left =
       "-" +
-      ((minipages.indexOf(window.location.hash.split("#")[1]) + 1) * 100 -
-        100) +
+      ((minipages.indexOf(window.location.hash.split("#")[1]) + 1) * 100) +
       "vw";
   } catch {
-    window.location.hash = "net";
+    window.location.hash = "about";
     [...document.getElementsByClassName("header-item")].forEach((el2) => {
       el2.classList.remove("selected");
     });
     document.getElementById("header1").classList.add("selected");
+    document.getElementById("main-carrier").style.left = "-100vw"
   }
 };
