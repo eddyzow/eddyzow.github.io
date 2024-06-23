@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+  <!-- Copyright 2020+ eddyzow. All rights reserved. -->
+  <head>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
+      crossorigin="anonymous"
+    ></script>
+    <title>JSBeats</title>
+    <meta
+      name="description"
+      content="New rhythm/music game where you click the keys to the beats of songs! Come play now!"
+    />
+    <link rel="icon" type="image/ico" href="favicon.ico" />
+    <script async src="https://arc.io/widget.min.js#jJ14Tn6w"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.core.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-WS6SB3G6XN"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-WS6SB3G6XN");
+    </script>
+  </head>
+  <body>
+    <div id="noticeModal" class="noticeModal"></div>
+    <div id="noticePopup" class="noticePopup">
+      <div id="noticeNotify">NOTICE</div>
+      <p id="noticeText">NOTICE</p>
+      <div id="notgotitButton">GOT IT</div>
+    </div>
+    <div id="musicPlaying">♫ MUSIC - AUTHOR</div>
+    <div id="startScreen">
+      <div id="startPopup">
+        <h1>Welcome back to JSBeats!</h1>
+        <h2>Patch Notes (v3.0)</h2>
+        <h3>- TONS OF NEW SONGS!!</h3>
+        <h3>- "Epic" [2]</h3>
+        <h3>- "Lemon Summer" [32]</h3>
+        <h3>- "A Fool Moon Night" [50]</h3>
+        <h3>- "Toxic Violet Cubes" [37]</h3>
+        <h3>- Made timing for Perfect, Great, and Okay stricter</h3>
+        <h3>- 0.3 >> 0.2, 0.5 >> 0.4, 0.7 >> 0.6</h3>
+        <div id="closeStart">LET'S GO!</div>
+      </div>
+    </div>
+    <div id="modal">PLEASE WAIT...</div>
+    <div id="wallpaper"></div>
+    <div id="header">
+      <p>JSBeats v3.0</p>
+    </div>
+    <div id="back">BACK</div>
+
+    <div id="screen1">
+      <div class="select1" id="main">
+        <h1>MAIN LEVELS</h1>
+        <p>Play main JSBeats levels, created by the developer</p>
+      </div>
+      <div class="select1" id="online">
+        <h1>ONLINE PLAY</h1>
+        <p>- Play real-time games versus opponents</p>
+        <p>- Create your own levels (coming soon)</p>
+      </div>
+      <div class="select1" id="settings">
+        <h1>SETTINGS</h1>
+        <p>Change your JSBeats keybinds</p>
+      </div>
+    </div>
+    <div id="screenLive">
+      <div id="screenLobby">
+        <div id="userContainer">
+          <div class="liveUser" id="liveUser1">
+            <h1 id="player1Name">Searching for Player</h1>
+            <p id="player1Ready">Searching for Player</p>
+          </div>
+          <div class="liveUser" id="liveUser2">
+            <h1 id="player2Name">Searching for Player</h1>
+            <p id="player2Ready">Searching for Player</p>
+          </div>
+          <div class="liveUser" id="liveUser3">
+            <h1 id="player3Name">Searching for Player</h1>
+            <p id="player3Ready">Searching for Player</p>
+          </div>
+          <div class="liveUser" id="liveUser4">
+            <h1 id="player4Name">Searching for Player</h1>
+            <p id="player4Ready">Searching for Player</p>
+          </div>
+        </div>
+        <div id="chat-box">
+          <div class="chat-text" id="game-chat-info">
+            Welcome to game chat! Please remember to be civil. If you see
+            hateful or other chat that otherwise breaks our rules, please report
+            the user. Currently, due to our moderation abilities, we will rely
+            more on the community to keep this place safe. Remember that you may
+            turn chat off in Settings!
+          </div>
+          <form class="chat-text-box" id="chat-input-form" autocomplete="off">
+            <input
+              id="chat-text-input"
+              type="text"
+              maxlength="100"
+              placeholder="Enter a message... (ENTER to submit)"
+            />
+          </form>
+        </div>
+        <div id="readyButton">Ready</div>
+        <div id="exitButton">Exit</div>
+      </div>
+      <div id="startMatchmaking">
+        <h1 id="matchmakingText">FIND A MATCH</h1>
+        <p id="matchmakingCapt">
+          Match with random players and play a song, highest score wins.
+        </p>
+      </div>
+    </div>
+    <div id="screenOnline">
+      <div id="warningScreen">
+        <h1>CHEATING IS NOT COOL!</h1>
+        <p>
+          We noticed this is your first time playing JSBeats on a new browser!
+          Welcome!
+        </p>
+        <p>
+          Games like JSBeats are very prone to hacking, especially if access to
+          the console is available.
+        </p>
+        <p>
+          Although an anti-cheat is already implemented and measures have been
+          taken to make sure cheating doesn't happen, please do not cheat.
+        </p>
+        <p>
+          If you see a cheater or think there may be one in your game, please
+          report them and mods will watch their replay.
+        </p>
+        <p>
+          JSBeats does not tolerate cheating. If you are caught cheating, you
+          will be banned immediately with no warning.
+        </p>
+        <p>
+          You could be suspended by JSBeats if you have a couple of very good
+          runs. If that happens, shoot an email to thegameshowlobby@gmail.com
+          along with a link to a video of you playing (keyboard cam) and we'll
+          take care of the rest.
+        </p>
+        <div>
+          <input type="checkbox" id="agreeNoCheat" class="inline" />
+          <p class="inline">
+            I understand and will not cheat in JSBeats online play.
+          </p>
+        </div>
+      </div>
+      <div id="noAccountScreen">
+        <h1>ACCOUNT REQUIRED</h1>
+        <p>In order to play online, an account is required.</p>
+        <p>
+          You can sign in or create an account by clicking
+          <a onclick="login()">here</a>.
+        </p>
+        <p>Have fun!</p>
+      </div>
+      <div class="select3 disabled" id="live">
+        <h1>LIVE</h1>
+        <p>Real-time game versus other opponents!</p>
+      </div>
+      <div class="select3 disabled" id="custom">
+        <h1>CUSTOM (COMING SOON)</h1>
+        <p>Play custom beatmaps and songs by the community!</p>
+      </div>
+    </div>
+    <div id="screenSettings">
+      <h1>Change Keybinds</h1>
+      <p>These changes will be reflected in game</p>
+      <input
+        type="text"
+        class="inline"
+        id="keybind1"
+        placeholder="1"
+        maxlength="1"
+        minlength="1"
+      />
+      <input
+        type="text"
+        class="inline"
+        id="keybind2"
+        placeholder="2"
+        maxlength="1"
+        minlength="1"
+      />
+      <input
+        type="text"
+        class="inline"
+        id="keybind3"
+        placeholder="3"
+        maxlength="1"
+        minlength="1"
+      />
+      <input
+        type="text"
+        class="inline"
+        id="keybind4"
+        placeholder="4"
+        maxlength="1"
+        minlength="1"
+      />
+    </div>
+    <div id="sound-slider">
+      <p id="masterVolume">MASTER VOLUME (50%)</p>
+      <input
+        title="Master Volume"
+        type="range"
+        min="0"
+        max="100"
+        id="masterVolumeSlider"
+        oninput="updateSlider(this)"
+      />
+    </div>
+    <div id="screen2">
+      <div class="select2" id="main-level1">
+        <h1 class="inline">TUTORIAL</h1>
+        <div class="inline">
+          <div class="star">Difficulty 5</div>
+          <div class="inline">1:03</div>
+        </div>
+        <p>Vibe Ace by Kevin MacLeod</p>
+        <p>Charted by eddyzow</p>
+      </div>
+      <div class="select2" id="main-level15">
+        <h1 class="inline">TOXIC VIOLET CUBES</h1>
+        <h1 class="inline new">NEW!</h1>
+        <div class="inline">
+          <div class="star">Difficulty 37</div>
+          <div class="inline">4:50</div>
+        </div>
+        <p>Toxic Violet Cubes by Camellia</p>
+        <p>Charted by eddyzow</p>
+      </div>
+      <div class="select2" id="main-level14">
+        <h1 class="inline">A FOOL MOON NIGHT</h1>
+        <h1 class="inline new">NEW!</h1>
+        <div class="inline">
+          <div class="star">Difficulty 50</div>
+          <div class="inline">3:54</div>
+        </div>
+        <p>A Fool Moon Night by Koxx</p>
+        <p>Charted by eddyzow</p>
+      </div>
+      <div class="select2" id="main-level13">
+        <h1 class="inline">LEMON SUMMER</h1>
+        <h1 class="inline new">NEW!</h1>
+        <div class="inline">
+          <div class="star">Difficulty 32</div>
+          <div class="inline">2:00</div>
+        </div>
+        <p>LEMON SUMMER by Paitan</p>
+        <p>Charted by eddyzow</p>
+      </div>
+      <div class="select2" id="main-level12">
+        <h1 class="inline">EPIC</h1>
+        <h1 class="inline new">NEW!</h1>
+        <div class="inline">
+          <div class="star">Difficulty 2</div>
+          <div class="inline">1:52</div>
+        </div>
+        <p>EPIC by Tokyo Machine</p>
+        <p>Charted by eddyzow</p>
+      </div>
+      <div class="select2" id="main-level11">
+        <h1 class="inline">ALTALE</h1>
+        <div class="inline">
+          <div class="star">Difficulty 29</div>
+          <div class="inline">2:35</div>
+        </div>
+        <p>Altale by Sakuzyo</p>
+        <p>Charted by eddyzow</p>
+      </div>
+      <div class="select2" id="main-level3">
+        <h1 class="inline">DIOMA</h1>
+        <h1 class="inline wip">WORK IN PROGRESS (43%)</h1>
+        <div class="inline">
+          <div class="star">Difficulty 20</div>
+          <div class="inline">3:55</div>
+        </div>
+        <p>Dioma by JNATHYN</p>
+        <p>Charted by eddyzow</p>
+      </div>
+      <div class="select2" id="main-level4">
+        <h1 class="inline">NEW HERO IN TOWN</h1>
+        <div class="inline">
+          <div class="star">Difficulty 3</div>
+          <div class="inline">0:53</div>
+        </div>
+        <p>New Hero In Town by Kevin MacLeod</p>
+        <p>Charted by eddyzow</p>
+      </div>
+
+      <div class="select2" id="main-level6">
+        <h1 class="inline">EXPLORERS</h1>
+        <div class="inline">
+          <div class="star">Difficulty 16</div>
+          <div class="inline">2:26</div>
+        </div>
+        <p>Explorers by Hinkik</p>
+        <p>Charted by eddyzow & Asphyxia</p>
+      </div>
+      <div class="select2" id="main-level7">
+        <h1 class="inline">DARK SHEEP</h1>
+        <div class="inline">
+          <div class="star">Difficulty 26</div>
+          <div class="inline">3:58</div>
+        </div>
+        <p>Dark Sheep by Chroma</p>
+        <p>Charted by eddyzow</p>
+      </div>
+    </div>
+    <div id="screenGame">
+      <div id="quitgame">Hold Backspace for 3 seconds to quit game.</div>
+      <div id="scoreholder">
+        <div id="combowrapper">
+          <p>COMBO</p>
+          <div id="currentCombo">35</div>
+          <p id="multiplier">x1.35</p>
+        </div>
+        <div id="currentScore">3045</div>
+
+        <div id="rankwrappernew">
+          <div id="currentRankNew">F</div>
+          <div id="rankBarOuter"></div>
+          <div id="rankBarInner"></div>
+        </div>
+        <div id="accuracywrapper">
+          <p>ACC</p>
+          <div id="currentAcc">100.00%</div>
+        </div>
+      </div>
+      <div id="gameBar"></div>
+      <div id="screenGameHolder">
+        <div id="score1" class="inlineb score-column">A</div>
+        <div id="score2" class="inlineb score-column">S</div>
+        <div id="score3" class="inlineb score-column">K</div>
+        <div id="score4" class="inlineb score-column">L</div>
+      </div>
+    </div>
+    <div id="resultsLeft">
+      <div>
+        <h1>Rank</h1>
+        <div id="rank">?</div>
+      </div>
+      <div>
+        <h1>Score</h1>
+        <div id="score">103650</div>
+      </div>
+      <div>
+        <h1>Accuracy</h1>
+        <div id="accuracy">34</div>
+      </div>
+      <div>
+        <h1>Max Combo</h1>
+        <div id="maxcombo">34</div>
+      </div>
+      <div>
+        <h1>Performance</h1>
+        <div id="performance">Incomplete</div>
+      </div>
+    </div>
+    <div id="resultsRight">
+      <div class="inlineb categ">
+        <div>Perfect</div>
+        <p id="amt-perfect">53</p>
+      </div>
+      <div class="inlineb categ">
+        <div>Great</div>
+        <p id="amt-great">5</p>
+      </div>
+      <div class="inlineb categ">
+        <div>OK</div>
+        <p id="amt-ok">3</p>
+      </div>
+      <div class="inlineb categ">
+        <div>Miss</div>
+        <p id="amt-miss">13</p>
+      </div>
+    </div>
+    <script src="client.js"></script>
+  </body>
+</html>

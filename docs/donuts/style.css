@@ -1,0 +1,502 @@
+@font-face {
+  font-family: "Inter";
+  font-weight: 300;
+  src: url("../champion/Inter-Light.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 500;
+  src: url("../champion/Inter-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 400;
+  src: url("../champion/Inter-Normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 600;
+  src: url("../champion/Inter-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 700;
+  src: url("../champion/Inter-Bold.woff2") format("woff2");
+}
+
+#donut-count {
+  font-variant-numeric: tabular-nums;
+  position: fixed;
+  width: 100%;
+  background: black;
+  border-bottom: 4px solid white;
+  padding: 2vh 0;
+  font-size: 2vw;
+  font-weight: 700;
+  z-index: 5;
+}
+
+.shop-item {
+  direction: ltr;
+  background: rgba(0, 0, 0, 0.5);
+  margin-top: 0;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  transition: all 0.125s ease;
+}
+
+.shop-item:hover {
+  background: rgba(0, 0, 0, 0);
+  cursor: pointer;
+}
+
+.shop-item h1 {
+  margin: 0;
+}
+
+.shop-item h2 {
+  margin: 0;
+}
+
+.shop-item p {
+  margin: 0;
+}
+
+#shopbar {
+  position: relative;
+  overflow-y: auto;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.75) 0%,
+    rgba(0, 0, 0, 0.5) 25%
+  );
+  width: 15vw;
+  padding-left: 5vw;
+  height: 100vh;
+  top: -6vh;
+  right: -95vw;
+  transition: all 0.25s ease;
+  z-index: 8;
+}
+
+#shopbar:hover {
+  right: -80vw;
+}
+
+#powerbar {
+  direction: rtl;
+  position: fixed;
+  overflow-y: auto;
+  background: linear-gradient(
+    to left,
+    rgba(0, 255, 200, 0.75) 0%,
+    rgba(0, 0, 0, 0.5) 25%
+  );
+  width: 15vw;
+  padding-right: 5vw;
+  height: 100vh;
+  bottom: 0;
+  left: -15vw;
+  transition: all 0.25s ease;
+  z-index: 8;
+}
+
+#powerbar:hover {
+  left: 0vw;
+}
+
+body {
+  background: white;
+  font-family: "Inter", Helvetica, sans-serif;
+  width: 100vw;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  user-select: none;
+  color: white;
+}
+
+#header {
+  background: black;
+  position: relative;
+  margin: -8px;
+  margin-bottom: 0;
+  width: 100%;
+  border-bottom: 4px solid white;
+}
+
+.notice:hover {
+  padding: 6vh;
+  cursor: pointer;
+  filter: brightness(120%);
+  right: 100%;
+}
+
+.notice {
+  margin-left: -8px;
+  width: 100%;
+  padding: 5vh;
+  padding-right: 0;
+  color: white;
+  transition: all 0.25s ease;
+}
+
+.notice div {
+  font-weight: 700;
+  font-size: 3vh;
+}
+
+.notice p {
+  font-weight: 400;
+  font-size: 2vh;
+}
+
+.notice a {
+  color: white;
+}
+
+.notice:nth-child(4) {
+  background: linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url("../champion/crystal.png");
+}
+
+.notice:nth-child(4n + 1) {
+  background: linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url("../champion/crystal2.png");
+}
+
+.notice:nth-child(4n + 2) {
+  background: linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url("../champion/crystal3.png");
+}
+
+.notice:nth-child(4n + 3) {
+  background: linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url("../champion/crystal4.png");
+}
+
+#header div {
+  overflow: hidden;
+  display: inline-block;
+  color: rgb(180, 180, 180);
+  font-weight: 700;
+  font-size: 1.5vw;
+  padding: 3% 3%;
+  border: 0.5vh solid white;
+  border-top: none;
+  border-bottom: none;
+  margin: -0.5vh;
+  transition: all 0.25s ease;
+}
+
+#bakeryname {
+  position: relative;
+  color: white;
+  font-size: 4vh;
+  z-index: 5;
+  font-family: Inter;
+  background: none;
+  text-align: center;
+  padding-top: 1vh;
+  width: 60vw;
+  padding-left: 20vw;
+  padding-right: 20vw;
+  background: black;
+  border: none;
+  outline: none;
+}
+
+#header div:hover {
+  cursor: pointer;
+  font-size: 1.6vw;
+  color: white;
+}
+
+.inline {
+  display: inline;
+}
+
+.body {
+  margin-top: 4vh;
+  margin-left: 4vw;
+}
+
+h1 {
+  font-size: 3vh;
+}
+
+div {
+  font-size: 2vh;
+}
+
+#signupButton {
+  border: 0.5vh outset black;
+  background: silver;
+  font-size: 2vw;
+  width: 50vw;
+  padding: 1vh;
+  margin: 1vh 0;
+  text-align: center;
+  transition: all 0.125s ease;
+  border-radius: 1vh;
+}
+
+#signupButton:hover {
+  cursor: pointer;
+  filter: brightness(80%);
+}
+
+#proceed {
+  background: linear-gradient(
+    to left,
+    rgba(194, 194, 194, 0.5),
+    rgba(61, 61, 61, 0.5)
+  );
+  width: 50vw;
+  padding: 1vh;
+  margin: 1vh 0;
+  text-align: center;
+  transition: all 0.125s ease;
+  border-radius: 1vh;
+}
+
+#proceed:hover {
+  cursor: pointer;
+  filter: brightness(80%);
+}
+
+a {
+  display: inline-block;
+  font-size: 3vh;
+}
+
+#particles-js {
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  position: fixed;
+  background-size: cover;
+  background-repeat: repeat;
+  transition: all 0.5s;
+  z-index: -1;
+}
+
+#body-contain {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+#real-donut {
+  touch-action: manipulation;
+  content: url(https://pixy.org/src/464/4649689.png);
+  width: 40vh;
+  height: 40vh;
+  margin: 22.5vh auto;
+  display: inline-block;
+  transition: all 0.25s cubic-bezier(0.4, 0.8, 0.2, 1);
+}
+
+.donut-contain {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  height: 85vh;
+}
+
+#loggedOutPopup {
+  font-size: 1.1em;
+  margin: 0;
+}
+
+#loggedOutPopup {
+  z-index: 1001;
+  background: #ddd;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-align: center;
+  color: #222;
+  position: fixed;
+  top: 50%;
+  width: 500px;
+  left: 50%;
+  margin: auto;
+  opacity: 0%;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.5, 0.5);
+  transition: all 0.5s cubic-bezier(0.15, 0.25, 0.4, 1);
+}
+
+#wallpaper {
+  z-index: -1;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  margin: auto;
+  background-position: center;
+  background-size: cover;
+  right: 0;
+  top: 0;
+  filter: brightness(50%);
+}
+
+#buttons {
+  position: fixed;
+  z-index: 10;
+  right: 0;
+  top: 0;
+}
+
+#reset-save {
+  font-size: 1vh;
+  border-radius: 8px;
+  z-index: 6;
+  right: 0;
+  top: 0;
+  margin-top: 1vh;
+  margin-right: 1vh;
+  background: rgb(95, 0, 0);
+  padding: 0.5vh 0.5vw;
+  transition: all 0.125s ease;
+}
+
+#pn {
+  font-size: 1vh;
+  border-radius: 8px;
+  z-index: 6;
+  right: 0;
+  top: 0;
+  margin-top: 1vh;
+  margin-right: 0.5vh;
+  background: rgb(121, 121, 121);
+  padding: 0.5vh 0.5vw;
+  transition: all 0.125s ease;
+}
+
+#detail {
+  font-size: 1vh;
+  border-radius: 8px;
+  z-index: 6;
+  right: 0;
+  top: 0;
+  margin-top: 1vh;
+  margin-right: 0.5vh;
+  background: rgb(0, 120, 141);
+  padding: 0.5vh 0.5vw;
+  transition: all 0.125s ease;
+}
+
+.inlineb {
+  display: inline-block;
+}
+
+#detail:hover {
+  filter: brightness(150%);
+  cursor: pointer;
+}
+
+#pn:hover {
+  filter: brightness(150%);
+  cursor: pointer;
+}
+
+#reset-save:hover {
+  filter: brightness(150%);
+  cursor: pointer;
+}
+
+#loggedOutButton {
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 2vh;
+  font-weight: bold;
+  position: absolute;
+  color: #ccc;
+  background: #888;
+  width: 540px;
+  border-radius: 0px 0px 6px 6px;
+  right: 0px;
+  transition: all 0.125s ease-in-out;
+}
+
+#loggedOutButton:hover {
+  cursor: pointer;
+  filter: brightness(110%);
+}
+
+.noticeModal {
+  opacity: 0%;
+  visibility: hidden;
+  position: absolute;
+  z-index: 1000;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  margin: auto;
+  padding: 50vh 0;
+  background: rgba(0, 0, 0, 0.4);
+  transform: translateY(-50%);
+  transition: all 0.25s ease-in-out;
+}
+
+#real-donut:hover {
+  cursor: pointer;
+  width: 45vh;
+  height: 45vh;
+  margin: 20vh auto;
+}
+
+#real-donut:active {
+  cursor: pointer;
+  width: 38vh;
+  height: 38vh;
+  margin: 23.5vh auto;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

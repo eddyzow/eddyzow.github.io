@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <!-- Copyright 2020+ eddyzow. All rights reserved. -->
+  <head>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
+      crossorigin="anonymous"
+    ></script>
+    <title>eddyzow live quiz</title>
+    <script async src="https://arc.io/widget.min.js#jJ14Tn6w"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <script src="confetti.js"></script>
+    <script src="particles.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-4881W8M3DJ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-4881W8M3DJ");
+    </script>
+  </head>
+  <body>
+    <div id="gameLobby">
+      <div style="margin-top: 5vh; font-weight: bold; font-size: 3vw">
+        NEXT GAME
+      </div>
+      <div
+        id="nextGame"
+        style="margin-top: 1vh; font-weight: bold; font-size: 3vw"
+      >
+        Loading...
+      </div>
+      <h1 id="gameLive">Loading...</h1>
+      <button id="joinGame" disabled>JOIN GAME</button>
+    </div>
+    <div id="liveGame" style="visibility: hidden">
+      <div id="eliminated">Eliminated</div>
+      <div id="question-screen">
+        <h1 id="timer">10</h1>
+        <h1 id="question">Question</h1>
+        <button id="answer1">Loading...</button>
+        <button id="answer2">Loading...</button>
+        <button id="answer3">Loading...</button>
+      </div>
+      <div id="alert-screen">
+        <h1 id="alert"></h1>
+        <p id="alert2"></p>
+        <p id="alert3"></p>
+        <button id="close-alert">OK</button>
+      </div>
+      <div id="tournprog-players">
+        <div id="tournprog-player-icon"></div>
+        <div id="tournprog-player-count">0</div>
+      </div>
+      <div id="exitGame"><</div>
+      <div id="twitchPlayer"></div>
+    </div>
+    <div id="particles-js"></div>
+    <script src="https://player.twitch.tv/js/embed/v1.js"></script>
+    <script src="client.js"></script>
+  </body>
+</html>

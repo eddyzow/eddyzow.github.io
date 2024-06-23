@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+  <title>Champion Blitz</title>
+  <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
+     crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.core.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100;0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;0,9..40,1000;1,9..40,100;1,9..40,200;1,9..40,300;1,9..40,400;1,9..40,500;1,9..40,600;1,9..40,700;1,9..40,800;1,9..40,900;1,9..40,1000&display=swap" rel="stylesheet">    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+  </head>
+  <body>
+    <div id="version" title="v1.11 (May 25, 2020) Patch Notes: &#x0a- New game modes! - Survival, still a fairly new game mode, and Heist, the newest one! Try them out!">Champion Blitz v1.11 (2021-05) 🛈</div>
+    <div id="cashInterface">
+      <div id="kickedNotification">
+        <div class="modalWhite">
+          <h1>Kicked From Game</h1>
+          <h2 id="kickedReason">Something went wrong...</h2>
+        </div>
+      </div>
+      <div id="cashInterfaceUpgradeScreen">
+        <div class="cashInterfaceUpgradeTextHolder">
+          <div class="cashInterfaceUpgradeText">Upgrades</div>
+        </div>
+        <div class="cashInterfaceQuestionRow ciq2">
+          <div class="cashInterfaceQuestion ciq1" id="upgrade1">
+            <div>
+              <h1 id="mpqtitle">Money Per Question</h1>
+              <div id="mpqlevel">Level ? -> Level ?</div>
+              <div id="mpqcompare">$? -> $?</div>
+              <p id="mpqcost">Click to upgrade to Level ? ($?)</p>
+            </div>
+          </div>
+          <div class="cashInterfaceQuestion ciq1" id="upgrade2">            
+            <div>
+              <h1>Streak Bonus</h1>
+              <div id="sblevel">Level ? -> Level ?</div>
+              <div id="sbcompare">$? -> $?</div>
+              <p id="sbcost">Click to upgrade to Level ? ($?)</p>
+            </div>
+          </div>
+          <div class="cashInterfaceQuestion " id="upgrade3">            
+            <div>
+              <h1>Multiplier</h1>
+              <div id="mlevel">Level ? -> Level ?</div>
+              <div id="mcompare">$? -> $?</div>
+              <p id="mcost">Click to upgrade to Level ? ($?)</p>
+            </div>
+          </div>
+          <div class="cashInterfaceQuestion " id="upgrade4">            
+            <div>
+              <h1>Insurance</h1>
+              <div id="ilevel">Level ? -> Level ?</div>
+              <div id="icompare">$? -> $?</div>
+              <p id="icost">Click to upgrade to Level ? ($?)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="cashInterfaceHealthScreen">
+        <div id="cashInterfaceHealthTextHolder">
+          <div id="cashInterfaceHealthText">Boss Upgrades</div>
+        </div>
+
+        <!-- A combined score of 1 million per player is required to do 1 million damage to the boss, but the longer the game is played the more damage the boss does: Number of Seconds Passed / 50 and then squared. -->
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Extra Health 1</div>
+          <p class="boss-upgrade-desc">Any health you contribute to the game is now multiplied by 1.25</p>
+          <p id="purchase-bossupgrade1" class="boss-upgrade-cost">1000 * Player Count</p>
+        </div>
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Extra Health 2</div>
+          <p class="boss-upgrade-desc">Any health you contribute to the game is now multiplied by 1.5</p>
+          <p id="purchase-bossupgrade2" class="boss-upgrade-cost">10000 * Player Count</p>
+        </div>
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Extra Health 3</div>
+          <p class="boss-upgrade-desc">Any health you contribute to the game is now multiplied by 2</p>
+          <p id="purchase-bossupgrade3" class="boss-upgrade-cost">100000 * Player Count</p>
+        </div>
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Extra Health 4</div>
+          <p class="boss-upgrade-desc">Any health you contribute to the game is now multiplied by 2.5</p>
+          <p id="purchase-bossupgrade4" class="boss-upgrade-cost">1000000 * Player Count</p>
+        </div>
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Extra Health 5</div>
+          <p class="boss-upgrade-desc">Any health you contribute to the game is now multiplied by 3</p>
+          <p id="purchase-bossupgrade5" class="boss-upgrade-cost">10000000 * Player Count</p>
+        </div>
+      </div>
+      <div id="cashInterfaceHeistScreen">
+        <div id="cashInterfaceHeistTextHolder">
+          <div id="cashInterfaceHeistText">Heist</div>
+        </div>
+
+        <div id="rob-screen">
+          <div id="rob-screenreal">
+            <div class="boss-upgrade-title">Robbery</div>
+            <p class="boss-upgrade-desc">Select a player to rob.</p>
+            <div id="player-grid">
+            </div>
+            <div class="button-grid">
+              <div class="rob-player2" id="cancel-rob">Cancel</div>
+              <div id="confirmRob" class="rob-player2">Rob</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="scout-screen">
+          <div id="scout-screenreal">
+            <div class="boss-upgrade-title">Scout</div>
+            <p class="boss-upgrade-desc">Select a player to scout.</p>
+            <div id="scout-player-grid">
+            </div>
+            <div class="button-grid">
+              <div class="scout-player2" id="cancel-scout">Cancel</div>
+              <div id="confirmScout" class="scout-player2">Scout</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Robbery</div>
+          <p class="boss-upgrade-desc">Costs money, but could return you a fortune</p>
+          <p class="boss-upgrade-desc">If robbery fails, the target will be notified.</p>
+          <p id="rob" class="boss-upgrade-cost">Rob somebody! (Price depends on the player you are going to rob)</p>
+        </div>
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Scout</div>
+          <p class="boss-upgrade-desc">Send a scout to return AT LEAST how much money a player has</p>
+          <p class="boss-upgrade-desc">30% chance that your scout is intercepted by the enemy and they are notified</p>
+          <p id="scout" class="boss-upgrade-cost">Scout Cost: $5.00</p>
+        </div>
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Upgrade Shield (+5%)</div>
+          <p class="boss-upgrade-desc">Increases shield by 5%, lowering the chance of you getting robbed (Shield decays 1% per 10 seconds)</p>
+          <p>Maximum shield is 80%</p>
+          <p id="current-shield">Your current shield is 20% (80% chance you will lose in a robbery)</p>
+          <p id="purchase-heistupgrade1" class="boss-upgrade-cost">Cost: $2.00</p>
+        </div>
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Upgrade Insurance</div>
+          <p class="boss-upgrade-desc">Reduces the amount that you lose if you're robbed</p>
+          <p id="current-insurance">Your current level is 1 (50% lost if robbed)</p>
+          <p id="purchase-heistupgrade2" class="boss-upgrade-cost">Cost: $10.00</p>
+        </div>
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Upgrade Defense</div>
+          <p class="boss-upgrade-desc">Increases the amount that others have to pay to rob you</p>
+          <p id="current-defense">Your current level is 1 (Enemies can pay $1 to rob you)</p>
+          <p id="purchase-heistupgrade3" class="boss-upgrade-cost">Cost: $10.00</p>
+        </div>
+        <div class="boss-upgrade">
+          <div class="boss-upgrade-title">Metal Detector</div>
+          <p class="boss-upgrade-desc">Tells you one of the 3 richest players</p>
+          <p>However, if you're one of them, you could pick yourself, rendering it a useless powerup!</p>
+          <p id="purchase-heistupgrade4" class="boss-upgrade-cost">Cost: $10.00</p>
+        </div>
+      </div>
+      <div id="cashInterfaceCorrectScreen">
+        <div id="correctwrong">+$2</div>
+        <div id="nextQuestionCash">Next Question</div>
+      </div>
+      <div id="cashInterfaceQuestionScreen">
+        <div id="cashInterfaceQuestionTextHolder">
+          <div id="cashInterfaceQuestionText">Question</div>
+        </div>
+        <div class="cashInterfaceQuestionRow">
+          <div class="cashInterfaceQuestion ciq1 " id="casha1">
+            <p id="interfaceq1">Answer 1</p>
+          </div>
+          <div class="cashInterfaceQuestion ciq1 " id="casha2">            
+            <p id="interfaceq2">Answer 2</p>
+          </div>
+          <div class="cashInterfaceQuestion " id="casha3">            
+            <p id="interfaceq3">Answer 3</p>
+          </div>
+          <div class="cashInterfaceQuestion " id="casha4">            
+            <p id="interfaceq4">Answer 4</p>
+          </div>
+        </div>
+      </div>
+      <div id="bottombar">
+        <div id="answerStreak" class="inlineb">Streak: 1</div>
+        <div id="nextCorrect" class="inlineb">Next Correct: $1</div>
+        <div id="cashQuestions" class="inlineb switchbutton">Questions</div>
+        <div id="cashHealth" class="inlineb switchbutton">Health</div>
+        <div id="heistPowers" class="inlineb switchbutton">Heist</div>
+        <div id="cashUpgrades" class="inlineb switchbutton">Upgrades</div>
+      </div>
+    </div>
+    <div id="questionContainer">
+      <div id="liveQuestionText">Question</div>
+      <div id="answerOptionWrapper">
+        <div id="answerOption1" class="answerOption">Me1</div>
+        <div id="answerOption2" class="answerOption">Me2</div>
+        <div id="answerOption3" class="answerOption">Me3</div>
+        <div id="answerOption4" class="answerOption">Me4</div>
+      </div>
+      <div id="wordsTextWrapper">
+
+      </div>
+    </div>
+    <div id="loadingBar"></div>
+    <div id="header">
+      <div id="gameinfo">
+        <div id="setName"></div>
+        <div id="questionsPlayed"></div>
+        <div id="gameMode"></div>
+      </div>
+      <div id="userinfo">
+        <div id="playerUsername"></div>
+        <div id="playerPoints"></div>
+        <div id="playerRanking"></div>
+      </div>
+    </div>
+    <div id="intro">
+      <div>BLITZ</div>
+      <h1 id="worldwideGames">- GAMES PLAYED WORLDWIDE</h1>
+      <div class="bottomtext">Want to create, host, and play your own trivia games like this one? Click <a href="../champion/custom/create" target="_blank">here.</a></div>
+    </div>
+    <div id="wallpaper"></div>
+    <div id="warningContainer">You've been kicked out of the game.</div>
+    <div id="codeEnterContainer">
+      <p>Enter the game code shown by the host.</p>
+      <input
+        autocomplete="off"
+        id="gameCodeInput"
+        type="text"
+        placeholder="ENTER GAME CODE"
+        maxlength="9"
+      />
+      <button id="codeEnterButton">⇨</button>
+      <p id="styled-underline">Click here to rejoin an existing game.</p>
+    </div>
+    <div id="nameEnterContainer">
+      <p>Enter a username:</p>
+      <input
+        autocomplete="off"
+        id="usernameInput"
+        type="text"
+        placeholder="ENTER USERNAME"
+        maxlength="20"
+      />
+      <button id="nameEnterButton">⇨</button>
+      <p id="usernameInfo">
+        Warning! Your host is able to kick players out of the game. Take caution
+        when selecting a username.
+      </p>
+    </div>
+    <div id="waitingContainer">
+      <h1 id="yourein">Get ready!</h1>
+      <h2 id="waitforothers">Wait for other players to join!</h2>
+      <div id="chatContainer">
+        <div class="chat-message">
+          <p class="inline chat-author">SYSTEM</p>
+          <p class="inline chat-text">Welcome to the chat! Here you can talk with fellow players and maybe start some rivalries before the game begins. Good luck!</p>
+        </div>
+        <input id="chat-text-input" type="text" maxlength="100" placeholder="Type a message... (ENTER to submit)">
+      </div>
+    </div>
+    <div id="loading">
+      <p id="loadingQuestion"></p>
+      <div>
+        <div class="rotated-half-circle"></div>
+      </div>
+      <p id="goodluck">Good luck!</p>
+    </div>
+    <div id="questionEndScreen">
+      <p id="questionEndResult">Correct</p>
+      <div>
+        <div id="checkmark"></div>
+      </div>
+      <p id="placement">You're in 5th place. You can do it!</p>
+    </div>
+    <script src="client.js"></script>
+  </body>
+</html>

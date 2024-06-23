@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <!-- Copyright 2020+ eddyzow. All rights reserved. -->
+  <head>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.core.min.js"></script>
+    <script src="particles.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-4881W8M3DJ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-4881W8M3DJ");
+    </script>
+  </head>
+  <body>
+    <div id="intro-screen">
+      <div>Key Speed Test!</div>
+      <p>How fast can you hit keys accurately in a specified order?</p>
+      <p>
+        Place your index and middle fingers on the keys A, S, K, L and hit the
+        keys IN ORDER as they come from the top of the screen. If you hit the
+        wrong key or miss a key, the test is over.
+      </p>
+      <p>The speed starts slow but gets fast quickly! Good luck!</p>
+      <h1>Hit the spacebar to begin.</h1>
+      <h1 id="lasttry">Your last try: --</h1>
+      <h1 id="besttry">Your best try: --</h1>
+    </div>
+    <div id="game-screen">
+      <div id="notespeed">3.000</div>
+      <div id="lanes">
+        <div id="lane1">A</div>
+        <div id="lane2">S</div>
+        <div id="lane3">K</div>
+        <div id="lane4">L</div>
+      </div>
+      <div id="notes"></div>
+    </div>
+    <script src="client.js"></script>
+    <div id="particles-js"></div>
+  </body>
+</html>

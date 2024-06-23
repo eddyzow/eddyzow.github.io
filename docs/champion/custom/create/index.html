@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <title>Blitz Creator</title>
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
+     crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.core.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <script src="confetti.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100;0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;0,9..40,1000;1,9..40,100;1,9..40,200;1,9..40,300;1,9..40,400;1,9..40,500;1,9..40,600;1,9..40,700;1,9..40,800;1,9..40,900;1,9..40,1000&display=swap" rel="stylesheet">    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+</head>
+<body>
+    <div id="version" title="v1.10 (May 9, 2020) Patch Notes: &#x0a- New game modes! Boss Fight and Battle Royale - the first *original* game modes... try them out!">TRIVIA CHAMPION v1.10 (2021-05) 🛈</div>
+    <div id="loadingBar"></div>
+    <div id="wallpaper"></div>
+    <div id="savingModal" class="noticeModal">SAVING...</div>
+    <div id="deletegamepage">
+        <div id="closeDelete">✖</div>
+        <p>To delete this game, enter your password.</p>
+        <input type="password" autocomplete="new-password" id="deletePW" placeholder="PASSWORD" maxlength="20">
+        <button id="deleteButton">DELETE!</button>
+        <p id="wrongpwdel">Incorrect password.</p>
+    </div>
+    <div id="gameSettings">
+        <div id="closeSettings">✖</div>
+        <h1>SETTINGS</h1>
+        <div>
+            <p class="inline" >Privacy:</p>
+            <select class="inline" id="privacy">
+                <option value=0>Everyone can see and play my game</option>
+                <option value=1>Only I can see and play my game</option>
+            </select>
+        </div>
+        <div>
+            <p class="inline">Time Limit:</p>
+            <select class="inline" id="timeLimit">
+                <option value=10>10 seconds</option>
+                <option value=15>15 seconds</option>
+                <option value=20>20 seconds</option>
+                <option value=30>30 seconds</option>
+                <option value=45>45 seconds</option>
+                <option value=60>60 seconds</option>
+                <option value=90>90 seconds</option>
+                <option value=120>120 seconds</option>
+            </select>
+            <h1 class="inline">Live games automatically end after 120 minutes.</p>
+        </div>
+        <p>In order to save these changes, you will need to save your game.</p>
+        <p id="download-game">Download the current editor</p>
+        <p id="import-game">Import a downloaded editor</p>
+        <p id="delete-game">Delete this game</p>
+    </div>
+    <div id="header">
+        <div id="getblitz" class="inline">Blitz</div>
+        <div id="pageinfo">CUSTOM GAMES</div>
+        <div id="getblitzbutton" class="inline" style="visibility: hidden;">Get Blitz+</div>
+        <div id="headerButtons">
+            <button id="saveButton">SAVE NOW</button>
+            <button id="playButton">PLAY LIVE</button>
+            <div>
+                <div id="gameID" class="inline">-</div>
+                <div id="unsaved" class="inline">UNSAVED</div>
+            </div>
+            <div id="playerProfile">
+                    <div id="playerProfileTop">
+                        <div id="playerUsername">LOG IN</div>
+                        <div id="backButton">BACK</div>
+                        <div id="gameSettingsButton">SETTINGS</div>
+                    </div>
+                    <div id="logOutButton">LOG OUT</div>
+                </div>
+        </div>
+    </div>
+    <div id="blitzPlusPrescreen">
+        <div id="closePlusScreen">✖</div>
+        <h1 style="font-size: 7vh">Get Blitz+!</h1>
+        <p>Perks of Blitz+</p>
+        <p>- Create unlimited games instead of 15 per user!</p>
+        <p>- Support the development of this website!</p>
+        <p>- 50-question limit on games is raised to 100 with Blitz+!</p>
+        <p>- More coming soon!</p>
+        <button>Coming Soon</button>
+    </div>
+    <div id="screenCover">
+        <div id="searchGamesWrapper">
+            <input type="text" autocomplete="off" maxlength="9" id="gameSearchBar" placeholder="SEARCH GAME BY ID">
+            <div class="searchedGame">
+                <h2 id="searchedGameTitle">Search For Game</h2>
+                <h1 id="searchedGameAuthor">Type a specified game ID into the search bar, and press Enter.</h1>
+                <p id="searchedGameQuestions">You will not be able to host games with less than 6 questions.</p>
+                <div id="playGameSearchButton">HOST THIS GAME</div>
+            </div>
+        </div>
+        <div id="yourGamesWrapper">
+            <div class="yourGameButton">
+                <div>
+                    <div></div>
+                    <h1>Create New Game</h1>
+                    <p></p>
+                </div>
+                <div class="your-play-button">Play</div>
+            </div>
+        </div>
+        <div id="setname" style="visibility: hidden; opacity: 0"></div>
+        <div id="gameCreateWrapper">
+            <input autocomplete="off" maxlength="50" id="gameTitle" placeholder="TITLE YOUR GAME">
+            <div class="question">
+                <p class="questionNumber" title="To delete a question, leave title and all answers blank and save.">Question 1</p>
+                <input autocomplete="off" maxlength="100" class="questionText initQT1" placeholder="QUESTION TEXT">
+                <div>
+                    <input type="radio" name="answer1" class="answerCheckbox">
+                    <input autocomplete="off" maxlength="50" class="choiceText" placeholder="ANSWER CHOICE 1">
+                </div>
+                <div>
+                    <input type="radio" name="answer1" class="answerCheckbox">
+                    <input autocomplete="off" maxlength="50" class="choiceText" placeholder="ANSWER CHOICE 2">
+                </div>
+                <div>
+                    <input type="radio" name="answer1" class="answerCheckbox">
+                    <input autocomplete="off" maxlength="50" class="choiceText" placeholder="ANSWER CHOICE 3">
+                </div>
+                <div>
+                    <input type="radio" name="answer1" class="answerCheckbox">
+                    <input autocomplete="off" maxlength="50" class="choiceText" placeholder="ANSWER CHOICE 4">
+                </div>
+            </div>
+            <div id="addQuestionWrapper">
+                <div id="addQuestion" title="To delete a question, leave title and all answers blank and save.">+</div>
+            </div>
+        </div>
+        <div id="loggedOutModal" class="noticeModal"></div>
+        <div id="loggedOutPopup">
+            <h1>UNABLE TO PROCEED</h1>
+            <p>You must be logged in to perform this action.</p>
+            <div id="loggedOutButton">LOG IN</div>
+        </div>
+        <div id="searchGame" class="createInstanceButton">
+            <h1>SEARCH FOR GAME</h1>
+            <p class="instanceInfo">Search for a game set using its ID, then play it!</p>
+        </div>
+        <div id="yourGames" class="createInstanceButton">
+            <h1>YOUR GAMES</h1>
+            <p class="instanceInfo">Edit and play your existing games! </p>
+        </div>
+        <div id="createGame" class="createInstanceButton">
+            <h1>CREATE NEW GAME</h1>
+            <p class="instanceInfo">Create a new game with multiple choice questions.</p>
+        </div>
+    </div>
+    <script src="client.js"></script>
+</body>
+</html>

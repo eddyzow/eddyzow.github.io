@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+    <title>Host Game - Blitz</title>
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
+     crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.core.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <script src="confetti.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100;0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;0,9..40,1000;1,9..40,100;1,9..40,200;1,9..40,300;1,9..40,400;1,9..40,500;1,9..40,600;1,9..40,700;1,9..40,800;1,9..40,900;1,9..40,1000&display=swap" rel="stylesheet">    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+</head>
+<body>
+    <div id="version" title="v1.2 (November 27, 2023) Patch Notes: &#x0a- It's been over 3 years since I started this project, so I decided to change stuff! &#x0a- New font! &#x0a- Balanced Heist gamemode: Shield is actually useful now. It was too OP to steal from someone rich.">Champion Blitz v1.20 (2023-11) 🛈</div>
+    <div id="loadingBar"></div>
+    <div id="wallpaper"></div>
+    <div id="liveGameLobby">
+        <div id="blitzEndgameScreen">
+            <p>Podium</p>
+            <div id="podium-carry">
+                <div class="podium" id="silver-podium">
+                    <p>2nd Place</p>
+                    <h1 id="2nd-place">2</h1>
+                    <h2 id="2nd-pts"></h2>
+                </div>
+                <div class="podium" id="gold-podium">
+                    <p>Winner!</p>
+                    <h1 id="1st-place">1</h1>
+                    <h2 id="1st-pts"></h2>
+                </div>
+                <div class="podium" id="bronze-podium">
+                    <p>3rd Place</p>
+                    <h1 id="3rd-place">3</h1>
+                    <h2 id="3rd-pts"></h2>
+                </div>
+            </div>
+        </div>
+        <div id="blitzIntroScreen">
+            <div id="blitzIntroScreen1">BLITZ</div>
+            <div id="blitzIntroScreen2">ROUND</div>
+        </div>
+        <div id="blitzgameScreen">
+            <div id="blitz-timer-container">00:01.34</div>
+            <div id="blitz-players-container">
+                <div class="blitz-player" id="blitz-player1">
+                    <div class="blitz-name" id="blitz-name1">1</div>
+                    <div class="blitz-answered" id="blitz-answered1">12/20</div>
+                </div>
+                <div class="blitz-player" id="blitz-player2">
+                    <div class="blitz-name" id="blitz-name2">2</div>
+                    <div class="blitz-answered" id="blitz-answered2">15/20</div>
+                </div>
+                <div class="blitz-player" id="blitz-player3">
+                    <div class="blitz-name" id="blitz-name3">3</div>
+                    <div class="blitz-answered" id="blitz-answered3">11/20</div>
+                </div>
+            </div>
+        </div>
+        <div id="blitzRulesScreen">
+            <div>Blitz Rules</div>
+            <p>Blitz is a 3-person contest to determine the winner of the live game. Following the first round, three players will still be in the game. These three players will attempt to answer all questions in the set as quickly as possible. An incorrect answer yields a 5-second penalty. The first player to finish wins!</p>
+            <div id="blitzBlitzPlayers">Players:</div>
+            <div id="blitzRulesTimer">Starting in 15</div>
+        </div>
+        <div id="leaderboardScreen">
+            <p>Leaderboard (Top 5)</p>
+            <div id="rankingsList"></div>
+        </div>
+        <div id="bossDeathScreen">
+            <div>
+                <div>Survival Time</div>
+                <h1 id="survivalTime">04:07</h1>
+            </div>
+            <div id="bossfact1">Umm... answer more questions</div>
+            <div id="bossfact2">Umm... answer more questions</div>
+            <div id="bossfact3">Umm... answer more questions</div>
+            <div id="bossfact4">Umm... answer more questions</div>
+
+        </div>
+        <div id="chatFeed">
+        </div>
+        <div id="heistLiveScreen">
+            <div id="endHeistGameEarly">End Game</div>
+            <div id="heistTimer">00:00</div>
+            <div class="cashLiveInfo">
+                <h1>Total Cash</h1>
+                <p id="totalcashheist">--</p>
+            </div>
+            <div class="cashLiveInfo">
+                <h1>Richest Player's Money</h1>
+                <p id="richestmoneyheist">--</p>
+            </div>
+        </div>
+        <div id="bossLiveScreen">
+            <div id="endBossGameEarly">End Game</div>
+            <div id="bossStopwatch">00:00</div>
+            <div id="bossBar">1,000,000.00</div>
+            <div id="lossPerSecond">Health Drain/Second: 0.00</div>
+        </div>
+        <div id="cashLiveScreen">
+            <div id="endCashGameEarly">End Game</div>
+            <div id="cashTimer">00:00</div>
+            <div class="cashLiveInfo">
+                <h1>Total Cash</h1>
+                <p id="totalcashcash">--</p>
+            </div>
+            <div class="cashLiveInfo">
+                <h1>Richest Player's Money</h1>
+                <p id="richestmoneycash">--</p>
+            </div>
+            <div class="cashLiveInfo">
+                <h1>1st Place</h1>
+                <p id="firstplacecash">--</p>
+            </div>
+            <div class="cashLiveInfo">
+                <h1>2nd Place</h1>
+                <p id="secondplacecash">--</p>
+            </div>
+            <div class="cashLiveInfo">
+                <h1>3rd Place</h1>
+                <p id="thirdplacecash">--</p>
+            </div>
+        </div>
+        <div id="cashScreen">
+            <div id="pregame"></div>
+        </div>
+        <div id="questionScreen">
+            <div id="liveQuestionWrapper">
+                <div id="liveQuestionNumber"></div>
+                <div id="liveQuestionEliminated"></div>
+            </div>
+            <div id="questionScreenUpper">
+                <div id="questionTimer"></div>
+                <div id="liveQuestionText">Question</div>
+                <div id="playersAnsweredWrapper">
+                    <div id="playersAnswered"></div>
+                    <p id="answers-text">Answers</p>
+                </div>
+                <div id="correctWordsDisplay" style="text-align: center; color: white; font-size: 2.5vw;"></div>
+            </div>
+            <div id="answerOptionWrapper">
+                <div id="answerOption1" class="answerOption"></div>
+                <div id="answerOption2" class="answerOption"></div>
+                <div id="answerOption3" class="answerOption"></div>
+                <div id="answerOption4" class="answerOption"></div>
+            </div>
+        </div>
+        <div id="loading">
+            <h1 id="loadingQuestion"></h1>
+            <div>
+                <div class="rotated-half-circle"></div>
+            </div>
+            <div id="elimPl" class="elimPl">
+                <strong id="eliminatedPlayers"></strong> 
+                <p>will be eliminated after this question. Good luck!</p>
+            </div>
+        </div>
+        <div id="joinCodeShow">
+            <div>
+                <div>Players, go to</div>
+                <div class="boldunderlined">eddyzow.net/join</div>
+            </div>
+            <h2>and enter game code</h2>
+            <h1 id="gameCodeDisplay"></h1>
+            <p id="blitzlist" title="Blitz is a game of elimination. If you're eliminated, you will be able to answer questions with the other players but won't be able to win.">Be quick! If you join after the game starts, you'll be immediately eliminated! 🛈</p>
+            <p>You can answer using the number keys 1-4.</p>
+            <input type="checkbox" id="blitzOn">
+            <label id="blitzTitle" title="Checking this box enables a more competitive, but less engaging game mode played after the last question. Unchecking the box sets the game mode to Classic." for="blitzOn">Turn Blitz game mode (including elimination) on 🛈</label><br>
+        </div>
+        <div id="gameInfoBar">
+            <div id="infoBarTitle"></div>
+            <div id="infoBarQuestions"></div>
+            <div id="infoBarWaiting">Waiting for players...</div>
+            <div style="float:right">
+                <button id="infoEndButton" title="The Next button can be used to start/end questions or show leaderboards">End Game</button>
+                <button id="infoAdvanceButton" title="The Next button can be used to start/end questions or show leaderboards">Next</button>
+            </div>
+            <div id="gameMuteButton">Sound: ON</div>
+        </div>
+        <div id="lowerScreenPanel">
+            <div>
+                <div id="liveGamePlayerCount">Players: 0</div>
+                <button id="liveGameStartButton" title="You must have at least 3 players in your game to begin">Start</button>
+            </div>
+        </div>
+        <div id="usernamesScreenPanel">
+            <!-- insert div element with class playerUsername to show new player joins -->
+        </div>
+    </div>
+    <div id="gameHostSettings">
+        <div id="setname2">Unknown Set</div>
+        <div class="attribute" id="gametime">
+            <p class="inline category">Game Length (in minutes)</p>
+            <input type="text" class="inline" id="gameLength" maxlength=10 placeholder="Game Length">
+        </div>
+        <div class="attribute" id="survival-starting-hp">
+            <p class="inline category">Starting HP</p>
+            <input type="text" class="inline" id="startingHP" maxlength=10 placeholder="Starting HP">
+        </div>
+        <div class="attribute" id="survival-difficulty">
+            <p class="inline category">Difficulty</p>
+            <select class="inline" id="difficulty">
+                <option value=0>Very Easy (5)</option>
+                <option value=1>Easy (7)</option>
+                <option value=2>Normal (10)</option>
+                <option value=3>Hard (12)</option>
+                <option value=4>Insane (15)</option>
+                <option value=5>HELP ME (28)</option>
+            </select>
+        </div>
+        <div id="host-survival">Host</div>
+    </div>
+    <div id="gameHostPrescreen">
+        <div id="setname">Unknown Set</div>
+        <p class="inline">Select Lobby Music</p>
+        <select class="inline" id="lobbyMusic">
+            <option value=0>Default</option>
+            <option value=1>Dramatic</option>
+            <option value=2>Happy</option>
+            <option value=3>Sad</option>
+            <option value=4>Pressure</option>
+            <option value=5>Hype</option>
+            <option value=6>Casual</option>
+            <option value=7>Casual 2</option>
+            <option value=8>Casual 3</option>
+            <option value=9>Off</option>
+        </select>
+        <p>Choose a game mode! Remember to save your game before you begin!</p>
+        <p>Games require 6 or more questions to host live - please make sure you have passed this amount or the game will not host.</p>
+        <div>
+            <div id="heist-quiz" class="new-quiz">
+                <h1>Heist</h1>
+                <p>It's a full-on heist! Players are encouraged to steal from each other and build defense to protect themselves from getting robbed!</p>
+                <div class="tag">COMPETITIVE</div>
+                <a class="manual" href="heist-rules.txt" target="_blank">Player's manual (How to play)</a>
+                <p>* If you click the manual, the game mode will be selected</p>
+            </div>
+            <div id="boss-quiz" class="new-quiz">
+                <h1>Survival</h1>
+                <p>Defeat the boss while keeping your HP up! How long can the players survive? Find out in this game mode where every player works together.</p>
+                <div class="tag">COOPERATIVE</div>
+                <a class="manual" href="survival-rules.txt" target="_blank">Player's manual (How to play)</a>
+                <p>* If you click the manual, the game mode will be selected</p>
+            </div>
+            <div id="cash-quiz" class="featured-quiz">
+                <h1>Cash Grab</h1>
+                <p>Players compete to make the most money and buy upgrades that earn them more and more in this individual competitive game mode!</p>
+                <div class="tag">COMPETITIVE</div>
+            </div>
+            <div id="classic-quiz">
+                <h1>Classic</h1>
+                <p>Classic quiz! Answer questions with 4 choices! Get points for correct and fast answers, get more points for streaks, most points at the end of the game wins!</p>
+                <div class="tag">HOST-PACED</div>
+            </div>
+            <div id="blitz-quiz">
+                <h1>Blitz</h1>
+                <p>A more competitive and less engaging variant of the classic quiz, this gamemode includes an elimination gamemode and extra round at the end! Requires 3 players</p>
+                <div class="tag">HOST-PACED</div>
+            </div>
+            <div id="words-quiz">
+                <h1>Words (Going away soon!)</h1>
+                <p>Similar to the game show "Wheel of Fortune!" Great for flashcard type quizzes where one term matches to one definition! Use the keyboard to play; correct letters help you solve the puzzle, wrong letters dock you points! Late joiners are not accepted on this game mode due to glitches.</p>
+                <p>Due to glitches, I'm going to retire this game mode soon, try it out if you haven't already! Just pray the server doesn't crash lol</p>
+                <div class="tag">HOST-PACED</div>
+            </div>
+        </div>
+    </div>
+    
+        <div id="loggedOutModal" class="noticeModal"></div>
+        <div id="loggedOutPopup">
+            <h1>UNABLE TO PROCEED</h1>
+            <p>You must be logged in to perform this action.</p>
+            <div id="loggedOutButton">LOG IN</div>
+        </div>
+
+    <script src="client.js"></script>
+</body>
+</html>

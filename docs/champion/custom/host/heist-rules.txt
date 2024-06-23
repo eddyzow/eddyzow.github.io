@@ -1,0 +1,42 @@
+Blitz Gamemode: Heist Rules
+
+A new gamemode on Blitz where the goal is to rob others of their money… No money upgrades, just stealing!
+
+Answer questions to earn money! You'll get $1 per question that you answer correctly. No streak bonus, it will always be $1
+
+You may spend at least $3 to attempt to rob another player, however you don’t know how much they have, how much insurance they have, nor if they have a shield up.
+
+You may spend $5 to scout another player, however there's a 30% chance your scout will be intercepted, and a 30% chance that a message will be posted on the game feed.
+
+You may choose who you’re robbing.
+
+If the shield blocks your heist, you lose your $3 and the enemy is notified of the following:
+-- Your username (this might get them to start robbing you out of spite)
+-- How much money you have (same thing...)
+If you successfully rob someone, they will be told that they were robbed, and a message will be posted in the host screen's game feed about the heist.
+You’ll get some of their money depending on how much they have and their insurance level, so it’s important to keep note of who is rich so you can keep trying to rob them.
+
+Your shield decays 1% every 3 seconds, so it’s important to keep it as high as possible
+
+Shield (Non-permanent upgrade that’s price scales based on how much shield you currently have active) 
+Reduces the chance that you will get robbed. The default level is 20%, which means that 80% of robberies will be successful.
+The maximum level is 80%, which means that 20% of robberies will be successful.
+
+Insurance (Permanent, leveled) Reduces the amount that you lose if you are robbed.
+
+Defense (Permanent, leveled) Increases the amount that others have to pay to rob you.
+
+** Tips and Tricks **
+- If somebody tries to rob you and your shield blocks them, you'll get notified on how much money they have! If they're rich, rob them!
+- If somebody robs you successfully, a message in the host's game feed will appear that shows that you were robbed for a certain 
+amount of money, but the only person who knows who robbed you would be the robber thsemself. 
+You want to keep the robbed amount low - if someone else sees that you have a lot of money, they will try to rob you as well!
+- Try to cause as little attention as possible to come your way while racking up as much money as you can. 
+If you have something to spend your money on, spend it before it's too late.
+- There's a small chance (8% for Shield and 20% for everything else) that when you upgrade something or scout someone, a message in the game feed will show up with some information regarding the upgrade.
+- There's also a 15% chance that if you successfully rob someone, your name will appear in the game feed
+- If people are robbing you, you can purposely get some questions wrong to go into the negatives, and those who rob you will take the negativity with them.
+
+
+*Coming Soon:
+Prevent yourself from being robbed for a limited time (One-time use)

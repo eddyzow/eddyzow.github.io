@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <!-- Copyright 2020+ eddyzow. All rights reserved. -->
+  <head>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
+      crossorigin="anonymous"
+    ></script>
+    <title>Keyboard Hero</title>
+    <meta
+      name="description"
+      content="New rhythm/music game where you click the keys to the beats of songs! Come play now!"
+    />
+    <link rel="icon" type="image/ico" href="favicon.ico" />
+    <script async src="https://arc.io/widget.min.js#jJ14Tn6w"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.core.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-WS6SB3G6XN"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-WS6SB3G6XN");
+    </script>
+  </head>
+  <body>
+    <div id="noticeModal" class="noticeModal"></div>
+    <div id="noticePopup" class="noticePopup">
+      <div id="noticeNotify">NOTICE</div>
+      <p id="noticeText">NOTICE</p>
+      <div id="notgotitButton">GOT IT</div>
+    </div>
+    <div id="musicPlaying">♫ MUSIC - AUTHOR</div>
+    <div id="startScreen">
+      <div id="startPopup">
+        <h1>Welcome to Keyboard Hero!</h1>
+        <h2>Patch Notes (v1.0)</h2>
+        <h3>
+          Keyboard Hero is now out! The first songs have been added to my new
+          guitar-style rhythm game.
+        </h3>
+        <h3>
+          Most of the frameworks have been copied from my other rhythm game
+          JSBeats, so a lot will be changed as updates happen!
+        </h3>
+        <a href="https://eddyzow.herokuapp.com/jsb/">Play JSBeats here.</a>
+        <h3>Hopefully custom-made maps will be available to create soon!</h3>
+        <div id="closeStart">LET'S ROCK!</div>
+      </div>
+    </div>
+    <div id="modal">PLEASE WAIT...</div>
+    <div id="wallpaper"></div>
+
+    <div id="back">BACK</div>
+
+    <div id="screen1">
+      <div class="select1" id="main">
+        <h1>SOLO</h1>
+        <p>Practice main Keyboard Hero levels by yourself</p>
+      </div>
+
+      <div class="select1" id="online">
+        <h1>MULTIPLAYER (COMING SOON)</h1>
+        <p>Create and play community-made levels against opponents</p>
+      </div>
+
+      <div class="select1" id="settings">
+        <h1>SETTINGS</h1>
+        <p>Change your Keyboard Hero keybinds</p>
+      </div>
+
+      <div class="select1" id="about">
+        <h1>ABOUT</h1>
+        <p>All about Keyboard Hero</p>
+      </div>
+    </div>
+
+    <div id="screenAbout">
+      <h1>Keyboard Hero</h1>
+      <p>A rhythm game by eddyzow</p>
+      <p>
+        Use your keyboard to be your very own rock star in this new 5-lane
+        guitar-style rhythm game!
+      </p>
+      <p>
+        This isn't my first rhythm game! In early 2021, I created a game called
+        JSBeats which was pretty much a lackluster ripoff of games like
+        osu!mania. People really enjoyed the game, but not many actually played
+        it.
+      </p>
+      <p>
+        I wasn't happy with JSBeats. It was too hard to make beatmaps; they got
+        boring and then no one played anymore. One day, I came across a guitar
+        arcade machine and thought it would be interesting to make something
+        like this on the keyboard with my existing knowledge.
+      </p>
+      <p>
+        I stole a lot of code and resources from JSBeats in order to create
+        Keyboard Hero (you can see the striking resemblance if you go play
+        JSBeats, found at
+        <a target="_blank" href="https://eddyzow.herokuapp.com/projects"
+          >my website.</a
+        >
+      </p>
+      <p>Special thanks to:</p>
+      <p>- Hurt Record for music/sound effects</p>
+      <p>
+        - tetr.io, osu!mania, and RoBeats! for inspiration for almost all of my
+        games
+      </p>
+      <p>
+        - Third-party libraries like socket.io, Howler.js, MongoDB, and Heroku
+        for providing hosting
+      </p>
+      <p>Unsplash and Pixabay for copyright-free images</p>
+      <p>- Asphyxia for being a crazy rhythm game fanatic</p>
+    </div>
+    <div id="screenSettings">
+      <p>Settings</p>
+      <div id="sound-slider">
+        <p id="masterVolume">MASTER VOLUME (50%)</p>
+        <input
+          title="Master Volume"
+          type="range"
+          min="0"
+          max="100"
+          id="masterVolumeSlider"
+          oninput="updateSlider(this)"
+        />
+      </div>
+      <div id="change-keybinds">
+        <p>CLICK A KEYBIND TO CHANGE</p>
+        <div id="change-bind1" class="change-keybind">
+          Keybind 1 (Currently: KeyA)
+        </div>
+        <div id="change-bind2" class="change-keybind">
+          Keybind 2 (Currently: KeyS)
+        </div>
+        <div id="change-bind3" class="change-keybind">
+          Keybind 3 (Currently: KeyD)
+        </div>
+        <div id="change-bind4" class="change-keybind">
+          Keybind 4 (Currently: KeyF)
+        </div>
+        <div id="change-bind5" class="change-keybind">
+          Keybind 5 (Currently: KeyG)
+        </div>
+        <div id="change-bind6" class="change-keybind">
+          Strum Keybind (Currently: Enter)
+        </div>
+      </div>
+    </div>
+    <div id="screen2">
+      <div class="select2" id="main-level3">
+        <h1 class="inline">EPIC</h1>
+        <h1 class="inline new">NEW!</h1>
+        <div class="inline">
+          <div class="star">🎯🎯</div>
+          <div class="inline">1:52</div>
+        </div>
+        <p>EPIC by Tokyo Machine</p>
+        <p>Charted by eddyzow</p>
+      </div>
+      <input type="text" id="password-input" placeholder="Beta song password" />
+    </div>
+    <div id="screenGame">
+      <div id="quitgame">Hold Backspace for 3 seconds to quit game.</div>
+      <div id="screenGameHolder">
+        <div id="gameInformation">
+          <div id="currentScore">335010</div>
+          <div id="comboHandler">
+            <div id="currentStreak">355</div>
+            <div id="currentMultiplier">x4</div>
+          </div>
+        </div>
+        <div id="score1" class="inlineb score-column"></div>
+        <div id="score2" class="inlineb score-column"></div>
+        <div id="score3" class="inlineb score-column"></div>
+        <div id="score4" class="inlineb score-column"></div>
+        <div id="score5" class="inlineb score-column"></div>
+        <div id="noteReceivers">
+          <img
+            src="./assets/graphics/i1.svg"
+            draggable="false"
+            alt="Note Receiver 1 (Inactive)"
+            class="noteReceiver"
+            id="noteReceiver1"
+          />
+          <img
+            src="./assets/graphics/i2.svg"
+            draggable="false"
+            alt="Note Receiver 2 (Inactive)"
+            class="noteReceiver"
+            id="noteReceiver2"
+          />
+          <img
+            src="./assets/graphics/i3.svg"
+            draggable="false"
+            alt="Note Receiver 3 (Inactive)"
+            class="noteReceiver"
+            id="noteReceiver3"
+          />
+          <img
+            src="./assets/graphics/i4.svg"
+            draggable="false"
+            alt="Note Receiver 4 (Inactive)"
+            class="noteReceiver"
+            id="noteReceiver4"
+          />
+          <img
+            src="./assets/graphics/i5.svg"
+            draggable="false"
+            alt="Note Receiver 5 (Inactive)"
+            class="noteReceiver"
+            id="noteReceiver5"
+          />
+        </div>
+      </div>
+    </div>
+    <div id="resultsLeft">
+      <div>
+        <h1>Rank</h1>
+        <div id="rank">?</div>
+      </div>
+      <div>
+        <h1>Score</h1>
+        <div id="score">103650</div>
+      </div>
+      <div>
+        <h1>Accuracy</h1>
+        <div id="accuracy">34</div>
+      </div>
+      <div>
+        <h1>Max Combo</h1>
+        <div id="maxcombo">34</div>
+      </div>
+    </div>
+    <div id="resultsRight">
+      <div class="inlineb categ">
+        <div>Notes Hit</div>
+        <p id="amt-perfect">53</p>
+      </div>
+      <div class="inlineb categ">
+        <div>Notes Missed</div>
+        <p id="amt-miss">13</p>
+      </div>
+    </div>
+    <script src="client.js"></script>
+  </body>
+</html>

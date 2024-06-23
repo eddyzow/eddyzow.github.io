@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <!-- Copyright 2020+ eddyzow. All rights reserved. -->
+  <head>
+    <title>Who Wants To Be A Millionaire?</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.core.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="particles.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-4881W8M3DJ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-4881W8M3DJ");
+    </script>
+  </head>
+  <body>
+    <div id="disclaimer">
+      All copyrights reserved for the owners of the real TV show Who Wants To Be
+      A Millionaire?. I am not making money off this. Press any key to hide.
+    </div>
+    <div id="audience-screen">
+      <div id="gamecode">YOUR GAME CODE</div>
+      <div id="audience-message">WAITING FOR AN ASK THE AUDIENCE</div>
+    </div>
+    <div id="rules-screen">
+      <div class="explain">EXPLAIN THE RULES HERE</div>
+      <div id="askaudience">
+        Ask the Audience is OFF - click here to generate a join code that your
+        audience can use to join!
+      </div>
+      <div class="explain">PRESS SPACE TO CONTINUE</div>
+    </div>
+    <div id="starter-screen">
+      <div id="audience-button">CLICK FOR AUDIENCE</div>
+      <div class="mill-logo"></div>
+      <div class="mill-button" id="start">WAITING ON START</div>
+    </div>
+    <div id="game-screen">
+      <div id="ata-scoreboard">
+        <div id="bara" class="ata-bar inline"></div>
+        <div id="barb" class="ata-bar inline"></div>
+        <div id="barc" class="ata-bar inline"></div>
+        <div id="bard" class="ata-bar inline"></div>
+        <div class="ata-letters">
+          <div class="ata-letter inline">A</div>
+          <div class="ata-letter inline">B</div>
+          <div class="ata-letter inline">C</div>
+          <div class="ata-letter inline">D</div>
+        </div>
+      </div>
+      <div id="lifelines-screen">
+        <div id="gamecodeDisplay">LIFELINES:</div>
+        <div id="5050" class="inline lifeline">50:50</div>
+        <div id="audience" class="inline lifeline">ASK</div>
+        <div id="plusone" class="inline lifeline">+1</div>
+      </div>
+      <div id="questions-screen">
+        <div id="bigprize" class="mill-button">$1,000</div>
+        <div id="num" class="mill-button">
+          <div class="inline" id="questionprize">$100,000</div>
+        </div>
+        <div id="question" class="mill-button">Test question</div>
+        <div id="question1-screen">
+          <div id="correct12" class="mill-button t inline"></div>
+          <div id="final12" class="mill-button t inline"></div>
+          <div id="millb1" class="mill-button t mill-buttonA inline">
+            <div class="inline answerchoice" id="answera1">A:</div>
+            <div class="inline z" id="answer1"></div>
+          </div>
+          <div id="millb2" class="mill-button t mill-buttonB inline">
+            <div class="inline answerchoice" id="answera2">B:</div>
+            <div class="inline z" id="answer2"></div>
+          </div>
+        </div>
+        <div id="question2-screen">
+          <div id="correct34" class="mill-button t inline"></div>
+          <div id="final34" class="mill-button t inline"></div>
+          <div id="millb3" class="mill-button t mill-buttonC inline">
+            <div class="inline answerchoice" id="answera3">C:</div>
+            <div class="inline z" id="answer3"></div>
+          </div>
+          <div id="millb4" class="mill-button t mill-buttonD inline">
+            <div class="inline answerchoice" id="answera4">D:</div>
+            <div class="inline z" id="answer4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="particles-js"></div>
+    <div id="wallpaper"></div>
+    <script src="client.js"></script>
+  </body>
+</html>

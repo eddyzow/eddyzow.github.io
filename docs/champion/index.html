@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+  <!-- Copyright 2020+ eddyzow. All rights reserved. -->
+  <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
+     crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.core.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <script src="particles.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100;0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;0,9..40,1000;1,9..40,100;1,9..40,200;1,9..40,300;1,9..40,400;1,9..40,500;1,9..40,600;1,9..40,700;1,9..40,800;1,9..40,900;1,9..40,1000&display=swap" rel="stylesheet">    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4881W8M3DJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4881W8M3DJ');
+</script>
+  </head>
+  <body>
+    <div id="version" title="v1.6 (January 13, 2020) Patch Notes: &#x0a- New game mode! Words - in beta. You will need a key to play.">TRIVIA CHAMPION v1.6 (2021-01) 🛈</div>
+
+    <div id="pastGamesPrescreen">
+        <div id="closeHostScreen">✖</div>
+        <div class="pastGamesWords">PAST GAMES</div>
+        <div id="pastGamesContainer" style="overflow-y: auto">
+      </div>
+    </div>
+    <div id="chat-box">
+      <div id="chat-show-button">CHAT</div> 
+      <div class="chat-text" id="game-chat-info">
+        Welcome to game chat! Please remember to be civil. If you see hateful or other chat that otherwise breaks our rules, please report the user. Currently, due to our moderation abilities, we will rely more on the community to keep this place safe. Remember that you may turn chat off in Settings!
+      </div>
+      <form class="chat-text-box" id="chat-input-form" autocomplete="off">
+        <input id="chat-text-input" type="text" maxlength="100" placeholder="Enter a message... (ENTER to submit)">
+      </form>
+    </div>
+    <div id="musicPlaying">♫ MUSIC - AUTHOR</div>
+    <div id="matchContent">
+      <div id="actSideLeft"></div>
+      <div id="actSideRight"></div>
+      <div id="ActText">ACT 1</div>
+      <div id="matchResult">VICTORY</div>
+      <div id="matchResultBackground"></div>
+      <div id="matchPoint">MATCH POINT</div>
+      <div id="ingamePlayerInfo">
+        <div id="PlayerUsername">USERNAME</div>
+        <div id="PlayerScore">0</div>
+      </div>
+      <div id="ingameOpponentInfo">
+        <div id="OpponentScore">0</div>
+        <div id="OpponentUsername">USERNAME</div>
+      </div>
+      <div id="actPoints">
+        <div class="sidebysideElements" id="actPointsPla">0</div>
+        <div class="sidebysideElements" id="actPointsOpp">0</div>
+      </div>
+      <div id="QuestionScreen">
+        <div id="QuestionTimer">
+          <div id="timerLeft">10</div>
+        </div>
+        <div id="QuestionNum">Question X</div>
+        <div id="QuestionCategory">Category: CATEGORY</div>
+        <div id="QuestionText">TEXT</div>
+        <div id="QuestionButtons">
+        <div id="QuestionButtons1">
+          <div id="questionButton1" class="question-button">Answer 1</div>
+          <div id="questionButton2" class="question-button">Answer 2</div>
+        </div>
+        <div id="QuestionButtons2">
+          <div id="questionButton3" class="question-button">Answer 3</div>
+          <div id="questionButton4" class="question-button">Answer 4</div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div id="matchInfo">
+      <div id="matchloadStatus">LOADING GAME</div>
+      <div id="matchInfoPlayer">
+        <h1 id="matchInfoPlayerText">PLAYER</h1>
+        <div id="matchInfoPlayerLevel"></div>
+        <div id="matchInfoPlayerRank"></div>
+      </div>
+      <div id="matchInfoOpponent">
+        <div id="matchInfoOpponentText">OPPONENT</div>  
+        <div id="matchInfoOpponentLevel"></div>
+        <div id="matchInfoOpponentRank"></div>
+      </div>
+      <div id="VSWord">VS</div>
+  </div>
+  <div id="gameBackground"></div>
+    <div id="loginModal" class="modal">
+      <div id="newLoginContent" style="visibility: hidden;">
+        <div id="gobutton">LOG IN OR SIGN UP</div>
+        <h1>
+          WELCOME TO EDDYZOW.NET!
+        </h1>
+        <h2 id="logintoyouracc">
+          Log in to your account, or sign up to use trivia services!
+        </h2>
+        <div id="loginButton">LOG IN</div>
+        <p style="visibility: hidden; opacity: 0%" id="forgot-password" title="Send us an email at thegameshowlobby@gmail.com and we'll help you reset the password for the account associated with your email.">Forgot password? 🛈</p>
+        <p id="login-info" style="opacity: 0%"></p>
+        <div
+          id="loginCredentials"
+          style="position: absolute; visibility: hidden; opacity: 0%;"
+        >
+          <h2>WELCOME BACK!</h2>
+          <input type="text" id="usernameInput" placeholder="USERNAME" />
+          <input type="password" id="passwordInput" placeholder="PASSWORD" />
+        </div>
+        <div id="signupButton">REGISTER</div>
+        <div
+          id="signupCredentials"
+          style="position: absolute; visibility: hidden; opacity: 0%;"
+        >
+          <h2>AND SO IT BEGINS...</h2>
+          <input type="text" id="SUusernameInput" placeholder="USERNAME (3-20 CHARS)" />
+          <input type="password" autocomplete="new-password" id="SUpasswordInput" placeholder="PASSWORD (6-20 CHARS)" />
+          <input
+          type="password" autocomplete="new-password"
+            id="SUpassword2Input"
+            placeholder="CONFIRM PASSWORD"
+          />
+        </div>
+      </div>
+      <div id="returnLoginContent" style="visibility: hidden;">
+        <div id="gobuttonreturn">LET'S GO!</div>
+        <div id="notbuttonreturn">NOT YOU?</div>
+        <h1>WELCOME BACK!</h1>
+        <h2>Logged in as</h2>
+        <h1 id="usernameDisplayLogin">Loading...</h2>
+        <p style="font-weight: 400; font-size: 0.73em;">This game is in BETA DEVELOPMENT. You will experience many glitches while playing. Play in an area with stable connection. Report bugs as you play! </p>
+      </div>
+    </div>
+    <div id="noticeModal" class="noticeModal"></div>
+    <div id="noticePopup" class="noticePopup">
+      <div id="noticeNotify">NOTICE</div>
+      <p id="noticeText">NOTICE</p>
+      <div id="notgotitButton">GOT IT</div>
+    </div>
+    
+    <div id="tournWinModal" class="noticeModal"></div>
+    <div id="tournWinPopup">
+      <div id="tournWinNotify">YOU WON!</div>
+      <p id="tournWinText">You won!</p>
+      <input type="email" id="tournWinSubmit" placeholder="PayPal email">
+      <p id="tournWinError"></p>
+      <div id="winSubmitButton">SUBMIT</div>
+    </div>
+
+    
+    </div>
+      <div id="fatalModal" class="noticeModal">
+    </div>
+    <div id="fatalPopup" class="noticePopup">
+      <div id="fatalNotify">FATAL ERROR</div>
+      <p id="fatalText">Fatal Error</p>
+      <div id="reloadButton">RELOAD</div>
+    </div>
+    <div id="wallpaper"></div>
+    <div id="header">
+      <div id="signinup">LOG IN</div>
+      <div id="pageinfo">HOME</div>
+      <div id="playerProfile">
+        <div id="playerProfileTop">
+          <div id="playerUsername">EDDYZOW</div>
+          <div id="playerBadge" title="Rank X"></div>
+        </div>
+        <div id="playerLevel">
+          <h1 id="playerLevelText">#</h1>
+        </div>
+        <div id="playerNextLevelProgress"></div>
+        <div id="playerNextLevelProgress2"></div>
+      </div>
+    <div id="footer">
+      <div id="submit-question-button" title="Submit a question to be used in the game! " class="footer-button ct"></div>
+      <div id="youtube-button" title="Visit eddyzow on YouTube" class="footer-button ct"></div>
+      <div id="patreon-button" title="Support server hosting and development of the game!" class="footer-button ct"></div>
+    </div>
+    </div>
+    <div id="aboutScreen" style="position: fixed; visibility: hidden; opacity: 0%;">
+      <h1 class="largeAbout">Trivia Champion</h1>
+      <h2 class="game-info">Clash with others in a brand-new game where wits and speed matter most! Play trivia and fight for rank!</h2>
+      <p class="credit-title">GAME CREATOR</p>
+      <h2 class="credit-owner">eddyzow (Find me <a href="https://youtube.com/eddyzow" class="credit-author" target="_blank">here</a>!)</h2>
+      <h2 class="credit-owner">Questions, report a bug, etc... <a href="https://twitter.com/eddyzow" class="credit-author" target="_blank">Twitter</a></h2>
+      <p class="credit-title">MUSIC, SOUND EFFECTS</p>
+      <h2 class="credit-owner"><a href="https://hurtrecord.com" target="_blank">HURT RECORD</a></h2>
+      <p class="credit-title">THIRD-PARTY LIBRARIES</p>
+      <h2 class="credit-owner">SOCKET.IO, MONGODB, AND MANY MORE!</h2>
+      <p class="credit-title clast">As someone who has never made a game like this before, your support is very much appreciated! If you could drop by my <a href="https://patreon.com/eddyzow" class="credit-title" target="_blank">Patreon</a>, it would mean a lot! Thanks for playing.</p>
+    </div>
+    <div id="screen1">
+      <div class="select2 ct" id="play">
+        <h1>PLAY</h1>
+        <p>Play trivia in a variety of ways!</p>
+      </div>
+      <div class="select2 ct" id="settings">
+        <h1>SETTINGS</h1>
+        <p>Set your preferences and make account changes here.</p>
+      </div>
+
+      <div class="select2 ct" id="about">
+        <h1>ABOUT</h1>
+        <p>See credits and information about Trivia Champion.</p>
+      </div>
+    
+    </div>
+    <div id="screen2" style="visibility: hidden; opacity: 0%;">
+
+      <div class="select2 ct" id="casual-play">
+        <h1>CASUAL</h1>
+        <p>Match with another player and battle it out in a best of 5!</p>
+      </div>
+      <div class="select2 ct" id="ranked-play">
+        <h1>RANKED</h1>
+        <p>Compete for rank in a higher-stakes mode!</p>
+      </div>
+    
+    </div>
+    <div id="screenTournament" style="visibility: hidden; opacity: 0%;">
+    <div id="screenTournamentQuestions">
+      <div id="tournprog-players">
+        <div id="tournprog-player-icon"></div>
+        <div id="tournprog-player-count">0</div>
+      </div>
+      <div id="tournamentTimerLeft">10</div>
+      <div id="tournamentQuestionNum">Question X</div>
+      <div id="tournamentQuestionCategory">Category: CATEGORY</div>
+      <div id="tournamentQuestionText">TEXT</div>
+      <div id="tournamentQuestionButtons">
+        <div id="tournamentQuestionButtons1">
+          <div id="tournamentquestionButton1" class="tournamentquestion-button">Answer 1</div>
+          <div id="tournamentquestionButton2" class="tournamentquestion-button">Answer 2</div>
+        </div>
+        <div id="QuestionButtons2">
+          <div id="tournamentquestionButton3" class="tournamentquestion-button">Answer 3</div>
+          <div id="tournamentquestionButton4" class="tournamentquestion-button">Answer 4</div>
+        </div>
+      </div>
+    </div>
+      <div id="particles-js"></div>
+      <div id="next-tournament">
+        <div id="tourn-players">
+          <div id="tourn-player-icon"></div>
+          <div id="tourn-player-count">0</div>
+        </div>
+        <div class="nt-tl">Next Tournament:</div>
+        <div class="nt-ts" id="nextTournament-timer">Loading...</div>
+        <div class="nt-ts" id="nextTournament-date">Loading...</div>
+        <div class="nt-tl" id="nextTournament-prize">Prize: Loading...</div>
+        <div class="nt-ts" id="nextTournament-questions">Questions: Loading...</div>
+        <div id="tournament-htp">Welcome to Trivia Champion tournaments! Here we will hold tournaments every so often where you are given the chance to win real money. You and other players will answer a set number of questions. Answer wrong and you're eliminated! The players remaining at the end split the jackpot. You'll be asked for your PayPal email if you win, so make sure you have that ready! When there are 5 minutes left until the next tournament, you will see a Register button. Click that to be entered into the tournament. You must register to be eligible to win! Once you have registered, do not leave the game. Do not make multiple accounts to play or your game will break.</div>
+        <div id="tournament-register-button">REGISTER</div>
+      </div>
+    </div>
+    <div id="back" style="visibility: hidden; opacity: 0%;">BACK</div>
+    <div id="screenCasualResults">
+      <div id="casualResOutcome">VICTORY</div>
+      <div id="casualResPlayerOutcome" class="casualOutcome">
+        <h1 id="casualResPlayerUsername">USERNAME1</h1>
+        <h1 id="casualResPlayerScore">SCORE1</h1>
+        <div id="casualResGameId">GAME ID: GAMEID</div>
+      </div>
+      <div id="casualResOpponentOutcome" class="casualOutcome">
+        <h1 id="casualResOpponentUsername">USERNAME2</h1>
+        <h1 id="casualResOpponentScore">SCORE2</h1>
+      </div>
+    </div>
+    <div id="screenRankedResults">
+      <div id="rankedResOutcome">VICTORY</div>
+      <div id="rankedResPlayerOutcome" class="rankedOutcome">
+        <h1 id="rankedResPlayerUsername">USERNAME1</h1>
+        <h1 id="rankedResPlayerScore">SCORE1</h1>
+        <div id="rankedResGameId">GAME ID: GAMEID</div>
+      </div>
+      <div id="rankedResOpponentOutcome" class="rankedOutcome">
+        <h1 id="rankedResOpponentUsername">USERNAME2</h1>
+        <h1 id="rankedResOpponentScore">SCORE2</h1>
+      </div>
+      <div id="rankedResRanking">
+        <div>
+          <div id="rankedResRating">RATING: ???</div>
+          <div id="rankedResRatingChange">???</div>
+        </div>
+        <div>
+          <div id="rankedResRank">RANK: ???</div>
+          <div id="rankedResRankChange"></div>
+        </div>
+      </div>
+    </div>
+    <div id="screenSettings" style="visibility: hidden; opacity: 0%;">
+      <div class="settings-box">
+        <h1>ACCOUNT SETTINGS</h1>
+        <p>EMAIL SETTINGS (CLICK AND HOLD BOX TO REVEAL)</p>
+        <h2>Your email is only used as verification if you ever forget your password.</h2>
+        <input oninput="flashEmail()" type="email" id="recoveryEmail" placeholder="EMAIL ADDRESS (FOR RECOVERY)" spellcheck="false" autocorrect="off" autocomplete="off" maxlength="128">
+        <div>
+          <div class="log-button" id="save-settings">SAVE SETTINGS</div>
+          <div class="log-button" id="log-out">LOG OUT</div>
+          <div class="log-button" id="del-acc">DELETE ACCOUNT</div>
+          <div id="save-message">Saved</div>
+        </div>
+      </div>
+      <div class="settings-box">
+        <h1>SOUND OPTIONS</h1>
+        <div id="sound-slider">
+          <p id="masterVolume">MASTER VOLUME (50%)</p>
+          <input title="Master Volume" type="range" min="0" max="100" id="masterVolumeSlider" oninput="updateSlider(this)">
+        </div>
+      </div>
+    </div>
+    <div id="screenCasual" style="visibility: hidden; opacity: 0%;">
+      <div class="submit ct" id="enter-casualmatchmaking">
+        <h1 id="casualmatchmakingText">BEGIN MATCHMAKING</h1>
+        <p id="casualmatchmakingCancelText">
+          LEAVING COUNTS AS A LOSS
+        </p>
+      </div>
+      <div class="information" id="how-casual-works">
+        <h1>HOW TO PLAY</h1>
+        <p>
+          When you enter matchmaking, you'll be matched up with another player
+          in the queue. Then, you'll play sets of trivia (5 questions per set)
+          where timing and accuracy matter most! The game ends when a player has
+          won 5 sets. To play for rank, enter Ranked mode!
+        </p>
+      </div>
+      <div class="submitsmall ct" id="casualpast-games">
+        <h1>VIEW PAST GAMES</h1>
+      </div>
+    </div>
+    <div id="screenRanked" style="visibility: hidden; opacity: 0%;">
+      <div id="your-rank">
+        <div class="your-rank-text">YOUR RANK:</div>
+        <div id="your-rank-rank">
+          <div id="your-rank-rankname">LOADING</div>
+          <div id="your-rank-rankpic"></div>
+          <div id="your-rank-rating">LOADING</div>
+        </div>
+        <div id="playersInQueue" class="inline pQRed"></div>
+        <div class="inline pQ">PLAYERS IN QUEUE</div>
+      </div>
+      <div class="submit ct" id="enter-rankedmatchmaking">
+        <h1 id="rankedmatchmakingText">BEGIN MATCHMAKING</h1>
+        <p id="rankedmatchmakingCancelText">
+          LEAVING COUNTS AS A LOSS
+        </p>
+      </div>
+      <div class="information" id="how-ranked-works">
+        <h1>HOW TO PLAY</h1>
+        <p>
+          Welcome to Ranked Mode! In order to play for rank and glory, you must first be Level 5. Then, play 5 ranked games to receive a rating and a rank. You can't lose rating if you win, and vice versa if you lose! Leaving the game or disconnecting at any point will result in a loss. Climb the ranks and become a Trivia Champion!
+        </p>
+      </div>
+      <div class="submitsmall ct" id="rankedpast-games">
+        <h1>VIEW PAST GAMES</h1>
+      </div>
+    </div>
+    <script src="client.js"></script>
+  </body>
+</html>

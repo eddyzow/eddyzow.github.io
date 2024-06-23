@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <!-- Copyright 2020+ eddyzow. All rights reserved. -->
+  <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
+     crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <title>zow</title>
+    <script src="particles.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-4881W8M3DJ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-4881W8M3DJ");
+    </script>
+  </head>
+  <body>
+    <div class="modal"></div>
+        <header class="header">
+        <div class="header-item selected" id="header1">PRACTICE</div>
+        <div class="header-item" id="header2">UNITS</div>
+        <div class="header-item" id="header3">SUBMIT</div>
+        <div class="header-item" id="header4">ABOUT</div>
+        </header>
+        <div id="main-carrier">
+            <div class="main">
+                <div class="blogpost" id="mainScreen1"> 
+                    <div class="title" >
+                        Fermi Questions General Practice
+                    </div>
+                    <p id="questionText">Loading...</p>
+                    <input type="number" placeholder="Answer..." id="FermiPracticeInput">
+                    <div class="legalPlay" id="submitAnswer">SUBMIT</div>
+                    <div style="margin-top: 1em; margin-bottom: 1em;">
+                        <p style="display:inline" id="answerFeedback">Remember to answer in powers of 10! (5×10<sup>5</sup> → 6)</p> 
+                        <div style="display:inline" id="ReportPrevious">Looks wrong?</div>
+                    </div>
+                    <p id="questionNumber">Loading...</p>
+                    <div id="ReportQuestion">Report Question</div>
+                    <div id="questionId">Question ID: Loading...</div>
+                </div>
+                <div class="blogpost"> 
+                    <div class="title" style="display: inline" id="statName">
+                        Session Stats
+                    </div>
+                    <div class="switch" id="statSwitch">Loading...</div>
+                    <div class="switch" id="resetStats">Reset Lifetime Stats</div>
+                    <div class="stats-carrier">
+                        <div class="stats-item" style="background: linear-gradient(rgb(22, 179, 166), rgb(10, 90, 104))">
+                            <p>5-Point Answers</p>
+                            <div id="5PtAnswers">0</div>
+                        </div>
+                        <div class="stats-item" style="background: linear-gradient(rgb(22, 179, 30), rgb(10, 104, 10))">
+                            <p>3-Point Answers</p>
+                            <div id="3PtAnswers">0</div>
+                        </div>
+                        <div class="stats-item" style="background: linear-gradient(rgb(219, 184, 28), rgb(151, 125, 10))">
+                            <p>1-Point Answers</p>
+                            <div id="1PtAnswers">0</div>
+                        </div>
+                        <div class="stats-item" style="background: linear-gradient(rgb(190, 36, 36), rgb(82, 14, 14))">
+                            <p>Incorrect</p>
+                            <div id="0PtAnswers">0</div>
+                        </div>
+                        <div class="stats-item" style="background: linear-gradient(rgb(51, 51, 51), rgb(0, 0, 0))">
+                            <p>PPQ</p>
+                            <div id="ppq">0.00</div>
+                            
+                        </div>
+                        <div class="stats-item" style="background: linear-gradient(rgb(51, 51, 51), rgb(0, 0, 0))">
+                            <p>TPQ (s)</p>
+                            <div id="tpq">0.00</div>
+                            
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+            <div class="main">
+                <div class="blogpost" id="mainScreen2"> 
+                    <div class="title">
+                        Fermi Questions Unit Practice
+                    </div>
+                    <p id="questionText2">Loading...</p>
+                    <input type="number" placeholder="Answer..." id="FermiUnitInput">
+                    <div class="legalPlay" id="submitUnit" >SUBMIT</div> 
+                    <p id="unitFeedback">Remember to answer in powers of 10! (5×10<sup>5</sup> → 6)</p> 
+                </div>
+                <div class="blogpost"> 
+                    <div class="title">
+                        Notice
+                    </div>    
+                    <p class="note">
+                        For now, there are only units of length in one dimension. I plan to add more unit practice in the future!
+                    </p>          
+                </div>
+               <!-- <div class="blogpost"> 
+                    <div class="title" style="display: inline">
+                        Session Stats
+                    </div>
+                    <div class="stats-carrier">
+                        <div class="stats-item" style="background: linear-gradient(rgb(22, 179, 166), rgb(10, 90, 104))">
+                            <p>5-Point Answers</p>
+                            <div id="5PtAnswersU">0</div>
+                        </div>
+                        <div class="stats-item" style="background: linear-gradient(rgb(22, 179, 30), rgb(10, 104, 10))">
+                            <p>3-Point Answers</p>
+                            <div id="3PtAnswersU">0</div>
+                        </div>
+                        <div class="stats-item" style="background: linear-gradient(rgb(219, 184, 28), rgb(151, 125, 10))">
+                            <p>1-Point Answers</p>
+                            <div id="1PtAnswersU">0</div>
+                        </div>
+                        <div class="stats-item" style="background: linear-gradient(rgb(190, 36, 36), rgb(82, 14, 14))">
+                            <p>Incorrect</p>
+                            <div id="0PtAnswersU">0</div>
+                        </div>
+                        <div class="stats-item" style="background: linear-gradient(rgb(51, 51, 51), rgb(0, 0, 0))">
+                            <p>PPQ</p>
+                            <div id="ppqU">0.00</div>
+                            
+                        </div>
+                    </div> 
+                </div> -->
+            </div>
+            <div class="main">
+                
+                <div class="blogpost"> 
+                    <div class="title">
+                        Submit Questions!
+                    </div>
+                    <p class="note">
+                        Want to submit your very own Fermi Questions for use in Practice?
+                    </p>
+                    <p class="note">Enter your question here! You do not need to put the answer; that gives me more practice to figure it out myself! If the question is understandable, I will add it to the pool!</p>
+                    <input type="text" placeholder="Question" id="questionFeedbackInput">
+                    <div class="legalPlay" id="submitQuestion">SUBMIT</div>
+                    <p class="time" id="questionSubmitConfirm">Thanks for submitting feedback!</p>
+                </div>
+                <div class="blogpost"> 
+                    <div class="title">
+                        Feedback!
+                    </div>
+                    <p class="note">
+                        Want a new feature added to help you succeed in Fermi? Want to complain about a problem? Or just want to give general feedback?
+                    </p>
+                    <p class="note">I'm trying to make the best site for Fermi practice; feedback is appreciated!</p>
+                    <input type="text" placeholder="Feedback" id="genFeedbackInput">
+                    <div class="legalPlay" id="submitFeedback">SUBMIT</div>
+                    <p class="time" id="feedbackSubmitConfirm">Thanks for submitting feedback!</p>
+                </div>
+            </div>
+            <div class="main">
+                <div class="blogpost"> 
+                    <div class="title">
+                        About
+                    </div>
+                    <p class="note">
+                        What is Fermi Questions?
+                    </p>
+                    <p class="note">Fermi Questions is a SciOly event all about estimations. The event's main focus is answering seemingly impossible questions. (ex: how many rice grains could fit on a football field?) Often, there is not much data and students must make assumptions. Since Fermi Questions works with small and large numbers, answers are submitted in rounded orders of magnitude, or powers of 10. For example, to say that Earth weighs 6 * 10^24 kg, you would submit 25 as your answer, making sure to round up since you have a 6. </p>
+                    <p class="note">Discord: fermiquestions</p>
+                    <p class="note" style="font-size:0.5em">Note: this changes every so often. If whatever is posted here doesn't work, try eddyzow</p>
+                    <div class="legalPlay" onclick="window.location.href = '../'">OTHER PROJECTS</div>
+                    <p class="note"><b>Changelog</b></p>
+                    <p class="note"><b>(6/30/23) v1.2.0</b></p>
+                    <p class="note">- Report Previous Question function added</p>
+                    <p class="note">- TPQ (Time Per Question) metric added to statistics</p>
+                    <p class="note">- Although only with length units, finally implemented the Unit Practice section to the website</p>
+                    <p class="note"><b>(5/27/23) v1.1.0</b></p>
+                    <p class="note">- Over 1,000 new questions added!!!! Sourced from SLHS Fermi Website Tool. Thanks @ec</p>
+                    <p class="note"><b>(5/20/23) v1.0.3</b></p>
+                    <p class="note">- 20 new questions added, sourced from UGA 2023</p>
+                    <p class="note"><b>(3/3/23) v1.0.2</b></p>
+                    <p class="note">- Fixed some errors in the question bank</p>
+                    <p class="note">- Over 70 new questions have been added! Sourced from public tests newly available from past competitions.</p>
+                    <p class="note"><b>(2/22/23) v1.0.1</b></p>
+                    <p class="note">- Fixed some errors in the question bank</p>
+                    <p class="note">- Added a Question ID feature and a "Report Question" button</p>
+                    <p class="note">- Added Changelog</p>
+                    <p class="note"><b>(2/21/23) v1.0.0</b></p>
+                    <p class="note">- Practice mode is out with ~340 questions, sourced from various tests and the open-source Fermi Questions website by Eric Andrechek</p>
+                    <p class="note">- Added Submit page for feedback, and About page</p>
+                    <div class="legalPlay" onclick="window.location.href = '../privacy'">PRIVACY POLICY</div>
+
+                </div>
+            </div>
+        </div>
+        <div id="particles-js"></div>
+        <script src="question-bank.js"></script>
+      <script src="client.js"></script>
+    </div>
+  </body>
+</html>

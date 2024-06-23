@@ -1,0 +1,13 @@
+Blitz Gamemode: Survival Rules
+
+A new gamemode on Blitz where the goal is to survive as long as you can as a combined team of players!
+
+Your team starts with a total of 1,000,000 health (HP) (this amount also can be custom set by the host) and the HP drains more and more as the game progresses. The game ends
+when your team reaches 0 HP.
+
+Answer questions to earn power, and buy upgrades to increase the amount of power you earn per question! When you answer questions, you generate health for
+the team that scales based on the amount of power you are earning.
+
+With power, you can also purchase health boost upgrades that further increase the health you are generating for your team.
+
+Survive as long as you can, good luck!

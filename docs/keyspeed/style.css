@@ -1,0 +1,165 @@
+@font-face {
+  font-family: "Inter";
+  font-weight: 300;
+  src: url("../champion/Inter-Light.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 500;
+  src: url("../champion/Inter-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 400;
+  src: url("../champion/Inter-Normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 600;
+  src: url("../champion/Inter-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 700;
+  src: url("../champion/Inter-Bold.woff2") format("woff2");
+}
+
+body {
+  font-family: "Inter", Helvetica, sans-serif;
+  width: 100%;
+  user-select: none;
+  overflow: hidden;
+}
+
+#particles-js {
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  position: fixed;
+  background-color: rgb(0, 104, 189);
+  background-image: url(https://ak.picdn.net/shutterstock/videos/1018020805/thumb/1.jpg);
+  background-size: cover;
+  background-repeat: repeat;
+  transition: all 0.5s;
+  z-index: -1;
+}
+
+#intro-screen {
+  width: 80vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-align: center;
+  margin-top: 5vh;
+  padding-top: 5vh;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 4vw;
+  color: white;
+}
+
+div {
+  font-size: 3vh;
+  font-weight: 700;
+}
+
+p {
+  font-size: 2vh;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 5vh;
+  font-weight: 700;
+}
+
+#game-screen {
+  position: fixed;
+  visibility: hidden;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  text-align: center;
+  color: white;
+}
+
+#lanes {
+  height: 100%;
+  width: 20vw;
+  margin-left: 40vw;
+  margin-right: 40vw;
+}
+
+#lane1 {
+  display: inline-block;
+  height: 98%;
+  width: 25%;
+  margin-right: -4px;
+  margin-left: -4px;
+  padding-top: 2vh;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#lane2 {
+  display: inline-block;
+  height: 98%;
+  width: 25%;
+  margin-right: -4px;
+  margin-left: -4px;
+  padding-top: 2vh;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#lane3 {
+  display: inline-block;
+  height: 98%;
+  width: 25%;
+  margin-right: -4px;
+  margin-left: -4px;
+  padding-top: 2vh;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#lane4 {
+  display: inline-block;
+  height: 98%;
+  width: 25%;
+  margin-right: -4px;
+  margin-left: -4px;
+  padding-top: 2vh;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#notespeed {
+  position: fixed;
+  width: 100%;
+  margin-top: 7vh;
+  font-size: 2.5vw;
+  text-align: center;
+}
+
+.note {
+  width: 5vw;
+  height: 10vh;
+  background: rgba(255, 255, 255, 0.5);
+  position: fixed;
+  animation: notefall 0.5s linear;
+}
+
+@keyframes notefall {
+  0% {
+    top: -100vh;
+  }
+  100% {
+    top: 100vh;
+  }
+}
