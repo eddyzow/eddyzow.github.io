@@ -53,11 +53,11 @@ function getLocation() {
       }
 
     function error() {
-        document.getElementById("data-output").innerHTML = "Geolocation didn't work. Trying IP...";
+        document.getElementById("station-estimate").innerHTML = "Geolocation didn't work. Trying IP...";
         fetch(ipGeoUrl)
         .then(response => {
           if (!response.ok) {
-              document.getElementById("data-output").innerHTML = "Error: network response did not return 200 OK when pulling IP data";
+              document.getElementById("station-estimate").innerHTML = "Error: network response did not return 200 OK when pulling IP data";
               throw new Error('Network response was not ok');
           }
           return response.json();
