@@ -1,5 +1,6 @@
 .new-train {
+    display: inline-block;
     border: 6px solid black;
     padding: 20px;
     text-align: left;
-width: 300px;}
+width: 320px;}

@@ -6,6 +6,7 @@ var receivedstopsJSON = {};
 var yourLat = 0;
 var yourLong = 0;
 var lowestDist = 100.1;
+var ratelimited = 0;
 var closestStop = "";
 var closestStopID = "";
 var closestStopLineCode = "";
@@ -20,17 +21,18 @@ var listStations = [
   ["Forge Park/495", "Franklin", "Norfolk", "Walpole", "Foxboro", "Windsor Gardens", "Norwood Central", "Norwood Depot", "Islington", "Dedham Corporate Center", "Endicott", "Readville", "Hyde Park", "Forest Hills", "Ruggles", "Back Bay", "South Station"],
   ["Greenbush", "North Scituate", "Cohasset", "Nantasket Junction", "West Hingham", "East Weymouth", "Weymouth Landing/East Braintree", "Quincy Center", "JFK/UMass", "South Station"],
   ["Haverhill", "Bradford", "Lawrence", "Andover", "Ballardvale", "North Wilmington", "Reading", "Wakefield", "Greenwood", "Melrose Highlands", "Melrose/Cedar Park", "Wyoming Hill", "Oak Grove", "Malden Center", "North Station"],
-  ["Middleborough/Lakeville", "Bridgewater", "Campello", "Brockton", "Montello", "Holbrook/Randolph", "Kingston", "Halifax", "Hanson", "Whitman", "Abington", "South Weymouth", "Braintree", "Quincy Center", "JFK/UMass", "South Station"]
-
-
-
-
-]
+  ["Kingston", "Halifax", "Hanson", "Whitman", "Abington", "South Weymouth", "Braintree", "Quincy Center", "JFK/UMass", "South Station"],
+  ["Lowell", "North Billerica", "Wilmington", "Anderson/Woburn", "Wedgemere", "West Medford", "North Station"],
+  ["Middleborough/Lakeville", "Bridgewater", "Campello", "Brockton", "Montello", "Holbrook/Randolph", "Braintree", "Quincy Center", "JFK/UMass", "South Station"],
+  ["Needham Heights", "Needham Center", "Needham Junction", "Hersey", "West Roxbury", "Highland", "Bellevue", "Roslindale Village", "Forest Hills", "Ruggles", "Back Bay", "South Station"],
+  ["Rockport", "Gloucester", "West Gloucester", "Manchester", "Beverly Farms", "Montserrat", "Newburyport", "Rowley", "Ipswich", "Hamilton/Wenham", "North Beverly", "Beverly", "Salem", "Swampscott", "Lynn Interim", "River Works", "Chelsea", "North Station"],
+  ["Wickford Junction", "TF Green Airport", "Providence", "Pawtucket/Central Falls", "South Attleboro", "Attleboro", "Mansfield", "Sharon", "Stoughton", "Canton Center", "Canton Junction", "Route 128", "Readville", "Hyde Park", "Forest Hills", "Ruggles", "Back Bay", "South Station"]]
 
     fetch(mbtaStopsUrl)
   .then(response => {
     if (!response.ok) {
         document.getElementById("data-output").innerHTML = "Error: network response did not return 200 OK when pulling stops data";
+        ratelimited = 1;
       throw new Error('Network response was not ok');
       
     }
@@ -39,6 +41,7 @@ var listStations = [
   .then(data => {
     receivedstopsJSON = data;
     getLocation();
+    ratelimited = 0;
 
   })
   .catch(error => {
@@ -47,10 +50,55 @@ var listStations = [
 
 
 
+function changeStationAvail() {
+  var classnames = document.getElementsByClassName('station-option');
+
+  while(classnames[0]) {
+  classnames[0].parentNode.removeChild(classnames[0]);
+  }
+
+  if(document.getElementById("stations-trains").value == "unselected") {
+    let item = document.createElement("option");
+    item.setAttribute("class", "station-option");
+    item.innerHTML = "Select a line first";
+    item.setAttribute("value", "unselected");
+    document.getElementById("specific-stations").appendChild(item);
+  } else {
+ 
+  let stationList = listStations[parseInt(document.getElementById("stations-trains").value)];
+  for (let index = 0; index < stationList.length; index++) {
+    let item = document.createElement("option");
+    item.setAttribute("class", "station-option");
+    item.innerHTML = stationList[index];
+    item.setAttribute("value", stationList[index]);
+    document.getElementById("specific-stations").appendChild(item);
+  }
 
 
 
 
+}
+}
+
+function manualSearchGo() {
+  if(document.getElementById("stations-trains").value != "unselected" && document.getElementById("specific-stations").value != "unselected") {
+  for (let index = 0; index < receivedstopsJSON.data.length; index++) {
+
+    if(receivedstopsJSON.data[index].attributes.name == document.getElementById("specific-stations").value) {
+      closestStop = receivedstopsJSON.data[index].attributes.name;
+        closestStopLat = receivedstopsJSON.data[index].attributes.latitude;
+        closestStopLong = receivedstopsJSON.data[index].attributes.longitude;
+        closestStopID = receivedstopsJSON.data[index].id;
+    }
+    document.getElementById("station-estimate").innerHTML = "You've manually set your station to " + closestStop + ". Reload the page to use your location data.";
+
+    runDataGet();
+    
+
+  }
+
+}
+}
 
 
 function getLocation() {
@@ -104,25 +152,53 @@ function pullStopsData(long, lat, ipgeo) {
     if(ipgeo == "geo") {
         document.getElementById("station-estimate").innerHTML = "Due to data from your device's location, your station has been set to " + closestStop + ".";
     }
-    closestStopLineCode = closestStopID.split("-")[0];
     getData();
 
 }
 
 function getData() {
 
-    trainFound = 0;
+
+  runDataGet();
+
+  var timeLeft = 20;
+  
+  var timerId = setInterval(countdown, 1000);
+  
+  function countdown() {
+    if (timeLeft == -1) {
+      clearTimeout(timerId);
+      getData();
+
+    } else {
+      if(ratelimited == 1) {
+        document.getElementById("data-updater").innerHTML = "You're being rate limited. Try again in a minute.";
+
+      } else {
+      document.getElementById("data-updater").innerHTML = "Updating in " + timeLeft + " seconds...";
+      }
+      timeLeft--;
+    }
+  }
+
+
+}
+
+function runDataGet() {
+  trainFound = 0;
 
   fetch(mbtaUrl)
   .then(response => {
     if (!response.ok) {
         document.getElementById("data-output").innerHTML = "Error: network response did not return 200 OK when pulling train data";
+        ratelimited = 1;
       throw new Error('Network response was not ok');
       
     }
     return response.json();
   })
   .then(data => {
+    ratelimited = 0;
 
     var classnames = document.getElementsByClassName('new-train');
 
@@ -132,7 +208,10 @@ classnames[0].parentNode.removeChild(classnames[0]);
 
     receivedtrainJSON = data;
     for (let index = 0; index < receivedtrainJSON.data.length; index++) {
-      if(true){ //if(receivedtrainJSON.data[index].relationships.stop.data.id.split("-")[0] == closestStopLineCode) { // train is running the same line. Deal with South and North Station later
+      if(listStations[listLines.indexOf(receivedtrainJSON.data[index].relationships.route.data.id.split("-")[1])].includes(closestStop)){ //if(receivedtrainJSON.data[index].relationships.stop.data.id.split("-")[0] == closestStopLineCode) { // train is running the same line. Deal with South and North Station later
+
+
+
         trainFound = 1;
         let newObject = document.createElement("div");
         let newText1 = document.createElement("p");
@@ -216,23 +295,4 @@ classnames[0].parentNode.removeChild(classnames[0]);
   .catch(error => {
     console.error('Error:', error);
   });
-
-
-
-  var timeLeft = 20;
-  
-  var timerId = setInterval(countdown, 1000);
-  
-  function countdown() {
-    if (timeLeft == -1) {
-      clearTimeout(timerId);
-      getData();
-    } else {
-      document.getElementById("data-updater").innerHTML = "Updating in " + timeLeft + " seconds...";
-      timeLeft--;
-    }
-  }
-
-
 }
-
