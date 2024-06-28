@@ -17,6 +17,14 @@ a {
   color: white;
 }
 
+#particles-js {
+position:fixed;
+top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+}
+
 button {
   margin-top: 10px;
     display: inline-block;
