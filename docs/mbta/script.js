@@ -1,3 +1,5 @@
+particlesJS.load("particles-js", "particles.json");
+
 const mbtaUrl =
   "https://api-v3.mbta.com/vehicles?page%5Boffset%5D=0&page%5Blimit%5D=100&fields%5Bvehicle%5D=bearing%2Ccarriages%2Ccurrent_status%2Cstop_id%2Ccurrent_stop_sequence%2Cdirection_id%2Clabel%2Clatitude%2Clongitude%2Coccupancy_status%2Cspeed%2Cupdated_at&include=trip%2Cstop%2Croute&filter%5Broute_type%5D=2&filter%5Brevenue%5D=REVENUE";
 const mbtaStopsUrl =
@@ -291,6 +293,11 @@ function manualSearchGo() {
         ". Reload the page to use your location data.";
     }
     runDataGet();
+    document.getElementById("announcement").innerHTML =
+      "Click this button to switch your station!";
+  } else {
+    document.getElementById("announcement").innerHTML =
+      "Select both a line and a station!";
   }
 }
 
@@ -406,6 +413,7 @@ function runDataGet() {
           let numSteps = 999;
           let newObject = document.createElement("div");
           let newText1 = document.createElement("p");
+          newText1.setAttribute("class", "bold");
           newText1.innerHTML =
             receivedtrainJSON.data[index].relationships.route.data.id.split(
               "-"
@@ -536,7 +544,7 @@ function runDataGet() {
           let newText5 = document.createElement("p");
           newText5.innerHTML = "Distance From Your Stop: " + dist + " miles";
           let newText6 = document.createElement("p");
-          let expectedTime = (((dist / 34) * 60 + numSteps * 8.0) / 2).toFixed(
+          let expectedTime = (((dist / 24) * 60 + numSteps * 8.0) / 2).toFixed(
             1
           );
           console.log(expectedTime);
@@ -593,9 +601,7 @@ function runDataGet() {
         let newObject = document.createElement("div");
         let newText1 = document.createElement("p");
         newText1.innerHTML =
-          "Unfortunately, no more trains will run through " +
-          closestStop +
-          " until tomorrow.";
+          "No trains are currently running through " + closestStop + ".";
         newObject.appendChild(newText1);
         newObject.classList.add("new-train");
         document.getElementById("train-carrier").appendChild(newObject);
