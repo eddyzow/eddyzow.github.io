@@ -398,6 +398,7 @@ function runDataGet() {
 
       receivedtrainJSON = data;
       for (let index = 0; index < receivedtrainJSON.data.length; index++) {
+        try {
         if (
           listStations[
             listLines.indexOf(
@@ -550,7 +551,7 @@ function runDataGet() {
           console.log(expectedTime);
 
           if (expectedTime <= 1) {
-            newText6.innerHTML = "Train is Due for Arrival";
+            newText6.innerHTML = "Train is Approaching";
           } else {
             let hours = new Date(
               new Date().getTime() + 1000 * expectedTime * 60
@@ -593,6 +594,9 @@ function runDataGet() {
           newObject.classList.add("new-train");
           document.getElementById("train-carrier").appendChild(newObject);
         }
+          } catch {
+        continue
+      }
       }
 
       if (trainFound == 0) {
