@@ -5,57 +5,76 @@
     <title>Where Is My Commuter Rail Train?</title>
     <!-- <link rel="stylesheet" type="text/css" href="style.css" /> -->
     <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
- 
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-   
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
   </head>
   <body>
     <p>Where Is My Commuter Rail Train?</p>
-    <p>This tool serves to locate the next MBTA Commuter Rail trains to the station closest to your location and estimates the distance and time of such trains. </p>
+    <p>
+      This tool serves to locate the next MBTA Commuter Rail trains to the
+      station closest to your location and estimates the distance and time of
+      such trains.
+    </p>
 
     <p id="station-estimate">Trying to locate your nearest MBTA Station...</p>
 
     Manually select the line of your station:
 
-<select name="stations-trains" id="stations-trains" onchange="changeStationAvail()">
-  <option value="unselected">Select an option</option>
+    <select
+      name="stations-trains"
+      id="stations-trains"
+      onchange="changeStationAvail()"
+    >
+      <option value="unselected">Select an option</option>
 
-  <option value=0>Fairmount</option>
-  <option value=1>Fitchburg</option>
-  <option value=2>Framingham/Worcester</option>
-  <option value=3>Franklin/Foxboro</option>
-  <option value=4>Greenbush</option>
-  <option value=5>Haverhill</option>
-  <option value=6>Kingston</option>
-  <option value=7>Lowell</option>
-  <option value=8>Middleborough/Lakeville</option>
-  <option value=9>Needham</option>
-  <option value=10>Newburyport</option>
-  <option value=11>Providence/Stoughton</option>
-</select>
+      <option value="0">Fairmount</option>
+      <option value="1">Fitchburg</option>
+      <option value="2">Framingham/Worcester</option>
+      <option value="3">Franklin/Foxboro</option>
+      <option value="4">Greenbush</option>
+      <option value="5">Haverhill</option>
+      <option value="6">Kingston</option>
+      <option value="7">Lowell</option>
+      <option value="8">Middleborough/Lakeville</option>
+      <option value="9">Needham</option>
+      <option value="10">Newburyport</option>
+      <option value="11">Providence/Stoughton</option>
+    </select>
 
-<div>
-  Select a station:
-<select name="specific-stations" id="specific-stations">
-  <option value="unselected" class="station-option">Select a line first</option>
-
-</select> <button id="manualSearchGo" onclick="manualSearchGo()">GO</button>
-</div>
+    <div>
+      Select a station:
+      <select name="specific-stations" id="specific-stations">
+        <option value="unselected" class="station-option">
+          Select a line first
+        </option>
+      </select>
+      <button id="manualSearchGo" onclick="manualSearchGo()">GO</button>
+    </div>
 
     <p id="data-updater">Updating in 20 seconds...</p>
 
-
-    <p>Please note that this webapp collects user-consented geolocation data to determine the nearest MBTA station to you. If you do not consent to the use of such data, do not use this app.</p>
-
-    <div id="data-output"></div>
+    <p>
+      Please note that this webapp collects user-consented geolocation data to
+      determine the nearest MBTA station to you. If you do not consent to the
+      use of such data, do not use this app.
+    </p>
 
     <div id="train-carrier"></div>
 
-    <p>May be misleading because time to arrival will be increasing for trains traveling away from you.</p>
+    <p>
+      May be misleading because time to arrival will be increasing for trains
+      traveling away from you.
+    </p>
 
-    <p>Currently does not support stations that serve more than one line of the Commuter Rail (including North and South Stations). I will be working on this.</p>
+    <p>
+      Currently does not support stations that serve more than one line of the
+      Commuter Rail (including North and South Stations). I will be working on
+      this.
+    </p>
     <p>Created by eddyzow (eddyzow.github.io) in June 2024.</p>
     <p>Formatting is nonexistent, but will be here soon!</p>
     <script src="script.js"></script>
