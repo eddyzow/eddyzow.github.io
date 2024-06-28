@@ -544,7 +544,7 @@ function runDataGet() {
           let newText5 = document.createElement("p");
           newText5.innerHTML = "Distance From Your Stop: " + dist + " miles";
           let newText6 = document.createElement("p");
-          let expectedTime = (((dist / 24) * 60 + numSteps * 8.0) / 2).toFixed(
+          let expectedTime = (((dist / 30) * 60 + numSteps * 7.0) / 2).toFixed(
             1
           );
           console.log(expectedTime);
@@ -572,7 +572,7 @@ function runDataGet() {
             } else {
               newText6.innerHTML =
                 "Expected Time of Arrival: " +
-                (hours - 12) +
+                (hours - 11) +
                 ":" +
                 mins +
                 " PM";
