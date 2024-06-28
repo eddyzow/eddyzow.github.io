@@ -570,9 +570,12 @@ function runDataGet() {
               newText6.innerHTML =
                 "Expected Time of Arrival: " + hours + ":" + mins + " AM";
             } else {
-              newText6.innerHTML =
+              if(hours == 12) {
+              hours = 24;
+              }
+               newText6.innerHTML =
                 "Expected Time of Arrival: " +
-                (hours - 11) +
+                (hours - 12) +
                 ":" +
                 mins +
                 " PM";
