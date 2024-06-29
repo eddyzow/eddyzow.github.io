@@ -17,14 +17,23 @@ a {
   color: white;
 }
 
+#particles-js {
+  z-index: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
 button {
   margin-top: 10px;
   display: inline-block;
   outline: none;
   font-family: "Helvetica";
-  font-size: 2em;
+  font-size: 1.25em;
   font-weight: bold;
-  padding: 20px;
+  padding: 10px;
   border: 4px solid white;
   background-color: gold;
   transition: 0.125s ease all;
@@ -47,9 +56,9 @@ select {
   display: inline;
   font-family: "Helvetica";
   outline: none;
-  font-size: 1.5em;
+  font-size: 1em;
   padding: 10px;
-  margin: 20px;
+  margin: 10px;
   margin-top: 0;
 }
 
@@ -60,12 +69,12 @@ body {
   padding: 0;
   margin: 100px;
   margin-top: 30px;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 #data-updater {
   font-weight: bold;
-  font-size: 2em;
+  font-size: 1.5em;
   text-align: left;
 }
 
@@ -74,15 +83,16 @@ body {
 }
 
 #station-estimate {
-  font-size: 2em;
+  font-size: 1.5em;
 }
 
 label {
-  font-size: 1.5em;
+  font-size: 1.25em;
 }
 
 p {
-  font-size: 1.5em;
+  margin: 0.75em;
+  font-size: 1.25em;
   text-align: center;
 }
 
@@ -93,7 +103,7 @@ p {
 
 .header {
   width: 100%;
-  font-size: 4em;
+  font-size: 3em;
   text-align: center;
   font-weight: bold;
   padding-top: 10px;
