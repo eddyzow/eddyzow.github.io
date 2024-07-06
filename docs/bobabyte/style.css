@@ -18,8 +18,8 @@ body {
   justify-content: space-between;
 }
 
-.dark {
-  color: #eedfd6;
+h2 {
+  margin-top: 0;
 }
 
 .wr {
@@ -33,7 +33,7 @@ p {
   font-size: 1rem;
 }
 
-a {
+.navbar a {
   box-shadow: none;
   text-decoration: none;
   color: #eedfd6;
@@ -55,12 +55,17 @@ a {
   color: #917b67;
 }
 
+.bold {
+  font-weight: 900;
+}
+
 .dark h2 {
   color: #eedfd6;
 }
 
 .dark {
-  padding: 1em;
+  color: #eedfd6;
+  padding: 2em;
   background-color: #917b67;
 }
 
@@ -73,6 +78,15 @@ a {
   width: 33%;
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+
+.grid-container p {
+  font-size: 0.8em;
+}
 .sponsor img {
   background: linear-gradient(yellow, gold);
 
@@ -86,7 +100,7 @@ a {
 }
 
 .light {
-  padding: 1em;
+  padding: 2em;
   background-color: #faf5f1;
 }
 
