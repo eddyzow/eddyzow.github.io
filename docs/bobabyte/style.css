@@ -7,6 +7,62 @@ html {
 
 .main-wrapper {
   height: 100vh;
+  z-index: -1;
+}
+
+p {
+  margin: 0;
+}
+
+h1 {
+  margin: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 40px;
+}
+
+.header {
+  position: fixed;
+  font-weight: bold;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+.header-item {
+  color: white;
+  flex-shrink: 0;
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  height: 100px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: all 0.125s ease;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.column {
+  margin-left: 40px;
+  margin-right: 40px;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
 }
 
 body {
@@ -17,11 +73,15 @@ body {
   font-family: IBM Plex Sans, Arial, Arial, Helvetica, sans-serif;
 }
 .main {
+  padding-top: 150px;
   position: relative;
-  padding-top: 100px;
   z-index: 0;
-  background-color: #deb890;
+  background: linear-gradient(-90deg, #ee7752, #deb890);
+
   color: #3d3a85;
+}
+svg {
+  background: linear-gradient(-90deg, #ee7752, #deb890);
 }
 
 .main2 {
