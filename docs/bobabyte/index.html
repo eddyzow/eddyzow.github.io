@@ -12,31 +12,11 @@
       <div class="flex wr">
         <img id="logo" src="assets/logoplaceholder.png" ></img>
         <div>
-          <div class="navbar-item" onclick="window.scrollBy({
-            top: 1630,
-            left: 0,
-            behavior: 'smooth'
-        });">about us</div>
-          <div class="navbar-item" onclick="window.scrollBy({
-            top: 2440,
-            left: 0,
-            behavior: 'smooth'
-        });">FAQs</div>
-          <div class="navbar-item" onclick="window.scrollBy({
-            top: 4340,
-            left: 0,
-            behavior: 'smooth'
-        });">schedule</div>
-        <div class="navbar-item" onclick="window.scrollBy({
-          top: 5185,
-          left: 0,
-          behavior: 'smooth'
-      });">sponsors</div>
-      <div class="navbar-item" onclick="window.scrollBy({
-        top: 6000,
-        left: 0,
-        behavior: 'smooth'
-    });">contact</div>
+          <div class="navbar-item" onclick="document.getElementById('about-box').scrollIntoView({ behavior: 'smooth' });">about us</div>
+          <div class="navbar-item" onclick="document.getElementById('faq-box').scrollIntoView({ behavior: 'smooth' });">FAQs</div>
+          <div class="navbar-item" onclick="document.getElementById('schedule-box').scrollIntoView({ behavior: 'smooth' });">schedule</div>
+        <div class="navbar-item" onclick="document.getElementById('sponsor-box').scrollIntoView({ behavior: 'smooth' });">sponsors</div>
+      <div class="navbar-item" onclick="document.getElementById('contact-box').scrollIntoView({ behavior: 'smooth' });">contact</div>
         </div>
       </div>
     </header>
@@ -78,7 +58,7 @@
       </div>
     </div>
 
-    <div class="info-block dark">
+    <div class="info-block dark" id="about-box">
       <div class="wr">
         <h2>About the Team Behind BobaByte
         </h2>
@@ -112,7 +92,7 @@
       </div>
     </div>
 
-    <div class="info-block light">
+    <div class="info-block light" id="faq-box">
       <div class="wr">
         <h2>Frequently Asked Questions (FAQs)</h2>
         
@@ -158,7 +138,7 @@
       </div>
     </div>
 
-    <div class="info-block dark">
+    <div class="info-block dark" id="schedule-box">
       <div class="wr">
         <h2>Schedule
         </h2>
@@ -179,7 +159,7 @@
       </div>
     </div>
 
-    <div class="info-block light">
+    <div class="info-block light" id="sponsor-box">
       <div class="wr">
         <h2>BobaByte is brought to you by the following amazing sponsors and donors!
         </h2>
@@ -188,11 +168,7 @@
 
         <p>All of our funding and spending is transparent and can be <a target="_blank" href="https://hcb.hackclub.com/bobabyte">accessed though Hack Club's HCB program.</a> Rest assured that funds are being put to good use.</p>
 
-        <h3>To become a sponsor, please <div class="contact-link" onclick="window.scrollBy({
-          top: 6000,
-          left: 0,
-          behavior: 'smooth'
-      });">contact us!</div>
+        <h3>To become a sponsor, please <div class="contact-link" onclick=" document.getElementById('contact-box').scrollIntoView({ behavior: 'smooth' }); ">contact us!</div>
         </h3>
 
         <h3>Platinum Sponsors ($1,000+):
@@ -235,7 +211,7 @@
       </div>
     </div>
 
-    <div class="info-block dark">
+    <div class="info-block dark" id="contact-box">
       <div class="wr">
         <h2>Want to contact us?
         </h2>
