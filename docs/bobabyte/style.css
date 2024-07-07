@@ -18,6 +18,11 @@ body {
   justify-content: space-between;
 }
 
+.picture {
+  border: 4px solid white;
+  border-radius: 50%;
+}
+
 div {
   font-size: 1rem;
 }
@@ -39,16 +44,39 @@ div {
 }
 
 .picture-holder {
+  margin-top: 30px;
+  text-align: center;
   width: 25%;
 }
 
 .picture-holder img {
-  width: 100%;
+  width: 150px;
+  height: 150px;
 }
 
 .picture-holder div {
   text-align: center;
-  margin-top: -30px;
+  margin-top: 10px;
+}
+
+#signup {
+  padding: 24px;
+  background: linear-gradient(135deg, #57514b, #b9a088);
+  border: 4px solid white;
+  border-radius: 20px;
+  font-weight: 900;
+  text-align: center;
+  font-size: 1.5rem;
+  transition: all 0.25s ease;
+}
+
+#signup:hover {
+  transform: scale(0.95);
+  cursor: pointer;
+}
+
+#signup:active {
+  transform: scale(0.9);
 }
 
 h2 {
