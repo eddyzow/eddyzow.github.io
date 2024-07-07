@@ -59,6 +59,14 @@ div {
   margin-top: 10px;
 }
 
+.notice {
+  background-color: rgb(226, 226, 47);
+  padding-left: 32vw;
+  padding-right: 32vw;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 36vw;
+}
 #signup {
   padding: 24px;
   background: linear-gradient(135deg, #57514b, #b9a088);
