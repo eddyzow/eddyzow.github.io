@@ -66,10 +66,25 @@ p {
   font-size: 1rem;
 }
 
-.navbar a {
+.navbar div div {
+  display: inline;
   box-shadow: none;
   text-decoration: none;
   color: #eedfd6;
+}
+
+.navbar-item:hover {
+  cursor: pointer;
+}
+
+.contact-link {
+  font-size: 1em;
+  display: inline;
+  text-decoration: underline;
+}
+
+.contact-link:hover {
+  cursor: pointer;
 }
 
 #logo {
@@ -80,8 +95,7 @@ p {
 .navbar-item {
   text-align: center;
   justify-items: center;
-  margin-left: 20px;
-  margin-right: 20px;
+  padding: 20px;
 }
 
 .light h2 {
@@ -135,9 +149,20 @@ p {
   border-radius: 30px;
   padding: 30px;
   margin: 20px;
-  border: 4px solid white;
+  border: 4px solid #50453a;
   margin: auto;
   text-align: center;
+  transition: all 0.25s ease;
+}
+
+.sponsor img:hover {
+  cursor: pointer;
+  transform: scale(0.95);
+}
+
+.sponsor img:active {
+  cursor: pointer;
+  transform: scale(0.9);
 }
 
 .light {
@@ -168,4 +193,23 @@ p {
   padding-top: 30px;
   padding-bottom: 30px;
   background-color: #917b67;
+}
+
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
