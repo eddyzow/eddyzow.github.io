@@ -21,7 +21,7 @@ body {
 
 @media screen and (max-width: 1080px) {
   .main-columns {
-    display: block;
+    display: block !important;
   }
 }
 
