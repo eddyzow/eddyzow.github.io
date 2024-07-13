@@ -5,12 +5,14 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="stylesheet" type="text/css" href="style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/9673dc3140.js" crossorigin="anonymous"></script>
     <title>bobabyte</title>
+    
   </head>
   <body>
     <header class="navbar">
-      <div class="flex wr">
-        <img id="logo" src="assets/logoplaceholder.png" ></img>
+      <div class="flex wr center">
+        <img id="logo" src="assets/logo.png" ></img>
         <div>
           <div class="navbar-item" onclick="document.getElementById('about-box').scrollIntoView({ behavior: 'smooth' });">about us</div>
           <div class="navbar-item" onclick="document.getElementById('faq-box').scrollIntoView({ behavior: 'smooth' });">FAQs</div>
@@ -20,19 +22,22 @@
         </div>
       </div>
     </header>
-    <div>
+   <!-- <div>
       <div class="notice">This site is still under major construction. Please excuse the lack of a logo or website art. In addition, our team email address is not active yet, so please contact Eddy (eddyzhao828@gmail.com) with any questions.</div>
-    </div>
+    </div> -->
     <header class="explanation dark">
       <div class="wr">
-        <h1 class="logo">BobaByte</h1>
+        <img class="logo" src="assets/logo_text.png" ></img>
         <p>
-          a social coding event in the boston area where you make literally anything you want, alongside free merch,
+          BobaByte is a social coding event in the boston area where you make literally anything you want, alongside free merch,
           food, bubble tea, and prizes.
         </p>
-        <p>october 26, 2024, 9am - 7pm. location TBD.</p>
-        <div id="signup" onclick="window.open('https://airtable.com/appZShRkAnt04QlLd/pagAsbawS5z8VhW9E/form', '_blank')">Sign Up!</div>
+        <p>October 26, 2024, 9am - 5pm. Location: <a href="https://maps.app.goo.gl/MYHxTsGEet2TADWv8" target="_blank">Boston Public Library - Adams Street Branch, Dorchester.</a></p>
+        <p>BobaByte is accessible from public transit! (Red Line at Ashmont or bus to Adams St @ Oakton St)</p>
         <p>Everyone in grades 7-12 is welcome to join us, especially marginalized and underserved groups!</p>
+        <div id="signup" onclick="window.open('https://airtable.com/appZShRkAnt04QlLd/pagAsbawS5z8VhW9E/form', '_blank')">Sign Up!</div>
+        <p>Sign up through the Airtable form by clicking the button above!</p>
+
       </div>
     </header>
 
@@ -41,12 +46,12 @@
         <h2>Ready for a bobatastic adventure of creativity?
         </h2>
         <p>
-          BobaByte is an up-and-coming all-day social coding event for middle and high schoolers, to be held at TBD on October 26, 2024. Scratch, Java, HTML - everyone from newbies to experienced coders are invited! It's absolutely free to attend. Projects will be judged on many categories, so everyone has a chance to win awesome prizes. And let's not forget the best part - free food, merch, and boba will be served!
+          BobaByte is an up-and-coming all-day social coding event for middle and high schoolers, to be held at the Boston Public Library - Adams Street Branch on October 26, 2024. Scratch, Java, HTML - everyone from newbies to experienced coders are invited! It's absolutely free to attend. Projects will be judged on many categories, so everyone has a chance to win awesome prizes. And let's not forget the best part - free food, merch, and boba will be served!
         </p>
         <div class="grid-container">
           <div>
-            <div class="bold">A classic hackathon experience with a twist.</div>
-            <p>We're hoping to see people who have never attended a social coding event (i.e. hackathon) before come to BobaByte. We'll be offering workshops on Scratch apps, Java apps, CAD design, and HTML. There's plenty to learn for everyone!</p>
+            <div class="bold">Easily accessible.</div>
+            <p>We want to let everyone know that they are welcome at BobaByte. We're hoping to see people who have never attended a social coding event (i.e. hackathon) before come to BobaByte. We'll be offering numerous coding workshops and mentoring students as they code. There's plenty to learn for everyone!</p>
           </div>
           <div ><div class="bold">A reputable team.</div>
           <p>BobaByte is led by a team of high school seniors with national-level awards in STEM and robotics. We're taking care of all the logistics - you just have to show up and have fun!</p></div>
@@ -99,45 +104,43 @@
       <div class="wr">
         <h2>Frequently Asked Questions (FAQs)</h2>
         
-        <div class="grid-container">
 
-          <div class="faq">
-            <div class="bold">Who can participate?</div>
+          <div class="faq" id="faq-1" onclick="faqclicker(1)">
+            <div class="iconclick"><i class="fa-solid fa-lg fa-circle-chevron-right" id="faq-clicker-1" onclick="faqclicker(1)"></i><div class="bold">Who can participate?</div></div>
             <p>Anyone in grades 7-12! We will be running two age divisions of awards: Division I (grades 7-9) and Division II (grades 10-12).</p>
           </div>
-          <div class="faq">
-            <div class="bold">How much does it cost?</div>
+          <div class="faq" id="faq-2" onclick="faqclicker(2)">
+            <div class="iconclick"><i class="fa-solid fa-lg fa-circle-chevron-right" id="faq-clicker-2" onclick="faqclicker(2)"></i><div class="bold">How much does it cost?</div></div>
             <p>Free! Our generous sponsors will fund all merchandise, food, boba, and prizes. <a target="_blank" href="https://gas.hackclub.com/">Hack Club's Gas Fund</a> may even cover travel costs.</p>
           </div>
-          <div class="faq">
-            <div class="bold">Can I work with my friends?</div>
+          <div class="faq" id="faq-3" onclick="faqclicker(3)">
+            <div class="iconclick"><i class="fa-solid fa-lg fa-circle-chevron-right" id="faq-clicker-3" onclick="faqclicker(3)"></i><div class="bold">Who can I work with?</div></div>
             <p>Teams of up to 4 people are accepted! You can make new friends when you arrive, bring your own, or work alone!</p>
           </div>
-          <div class="faq">
-            <div class="bold">What can I make?</div>
+          <div class="faq" id="faq-4" onclick="faqclicker(4)">
+            <div class="iconclick"><i class="fa-solid fa-lg fa-circle-chevron-right" id="faq-clicker-4" onclick="faqclicker(4)"></i><div class="bold">What can I make?</div></div>
             <p>Code any project you can make within the eight hours of BobaByte! A video game, a webapp, a Scratch project - the possibilities are endless.</p>
           </div>
-          <div class="faq">
-            <div class="bold">What kinds of prizes will there be?</div>
+          <div class="faq" id="faq-5" onclick="faqclicker(5)">
+            <div class="iconclick"><i class="fa-solid fa-lg fa-circle-chevron-right" id="faq-clicker-5" onclick="faqclicker(5)"></i><div class="bold">What are the prizes?</div></div>
             <p>Each winner will receive a gift card, a box of electronics parts, and more! Even if you don't win an award, you'll still take home a goodie bag full of BobaByte swag! Final prizes are to be determined.</p>
           </div>
-          <div class="faq">
-            <div class="bold">What types of projects will win awards?</div>
+          <div class="faq" id="faq-6" onclick="faqclicker(6)">
+            <div class="iconclick"><i class="fa-solid fa-lg fa-circle-chevron-right" id="faq-clicker-6" onclick="faqclicker(6)"></i><div class="bold">How do I win?</div></div>
             <p>We will be giving out six awards per division: Best Beginner, Fan Favorite, Judges' Choice, Most Creative, Most Technical, and Most Useful.</p>
           </div>
-          <div class="faq">
-            <div class="bold">What's a hackathon? Is BobaByte a hackathon?</div>
+          <div class="faq" id="faq-7" onclick="faqclicker(7)">
+            <div class="iconclick"><i class="fa-solid fa-lg fa-circle-chevron-right" id="faq-clicker-7" onclick="faqclicker(7)"></i><div class="bold">What's a hackathon?</div></div>
             <p>A traditional hackathon is an event where teams "hack" (code projects) for a period of time, often 24 hours. These projects are then judged, and the winners receive prizes. BobaByte is like a hackathon, but the projects are smaller (8 hours) and we will be hosting workshops throughout the day to help young people of all skill levels.</p>
           </div>
-          <div class="faq">
-            <div class="bold">What if I don't have any coding experience?</div>
+          <div class="faq" id="faq-8" onclick="faqclicker(8)">
+            <div class="iconclick"><i class="fa-solid fa-lg fa-circle-chevron-right" id="faq-clicker-8" onclick="faqclicker(8)"></i><div class="bold">I've never coded before!</div></div>
             <p>That's totally fine! This social coding event is about teaching people how awesome coding is. Our Programming Leads, experienced in HTML, JavaScript, CSS, C++, Java, Python, and Scratch, can help guide you in the right direction! If your project strikes a chord in the judges' hearts, you might even win Best Beginner!</p>
           </div>
           <p>Have more questions? Feel free to email us at team@bobabyte.org. Note: this email address is not active yet. You can contact us at the bottom of this page through our personal emails.</p>
 
           
 
-        </div>
       </div>
     </div>
 
@@ -226,9 +229,10 @@
         <p>Eddy: eddyzhao828@gmail.com</p>
         <p>Rick: infant.elfrick@gmail.com</p>
         <p>Tanish: tanishghosh10@gmail.com</p>
+        <p>Website Art by Mei Teng Shao</p>
       </div>
     </div>
 
-    <script type="module" src="main.js"></script>
+    <script type="text/javascript" src="main.js"></script>
   </body>
 </html>

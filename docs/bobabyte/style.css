@@ -46,12 +46,11 @@ div {
 .picture-holder {
   margin-top: 30px;
   text-align: center;
-  width: 25%;
+  width: 80%;
 }
 
 .picture-holder img {
-  width: 150px;
-  height: 150px;
+  width: 80%;
 }
 
 .picture-holder div {
@@ -123,9 +122,14 @@ p {
   cursor: pointer;
 }
 
+.iconclick div {
+  margin-left: 10px;
+  display: inline;
+}
+
 #logo {
-  width: 100px;
   height: 100px;
+  margin-top: 20px;
 }
 
 .navbar-item {
@@ -146,6 +150,10 @@ p {
   color: #eedfd6;
 }
 
+.center {
+  text-align: center;
+}
+
 .dark {
   color: #eedfd6;
   padding: 2em;
@@ -162,16 +170,88 @@ p {
 }
 
 .faq {
+  user-select: none;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  height: 36px;
   background: linear-gradient(135deg, #756759, #b9a088);
   padding: 24px;
+  margin-bottom: 20px;
   color: white;
   border: 4px solid #50453a;
   border-radius: 20px;
 }
 
+.faq:hover {
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 840px) {
+  /* For mobile phones: */
+  [class*="grid-container"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (max-width: 840px) {
+  /* For mobile phones: */
+  [class*="faq"] {
+    height: 24px;
+  }
+  [class*="grid-container"] {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  html {
+    font-size: 1.2rem;
+  }
+  .picture-frame {
+    display: grid;
+    grid-template-columns: repeat(2, 2fr);
+  }
+  .picture-holder {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .navbar div div {
+    font-size: 0.9rem;
+  }
+}
+
+@media only screen and (max-width: 720px) {
+  /* For mobile phones: */
+  .navbar div {
+    display: block;
+  }
+  .navbar div div {
+    display: block;
+  }
+  .navbar-item:nth-child(even) {
+    background-color: #50453a;
+  }
+  .navbar-item:nth-child(odd) {
+    background-color: #79624b;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .picture-holder p {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 420px) {
+  /* For mobile phones: */
+
+  [class*="faq"] {
+    height: 14px;
+  }
+  html {
+    font-size: 0.9rem;
+  }
+}
+
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
@@ -207,6 +287,7 @@ p {
 }
 
 .logo {
+  width: 50%;
   font-weight: 800;
   font-size: 2rem;
   margin: 0;
