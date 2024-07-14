@@ -20,7 +20,7 @@ const earthGroup = new THREE.Group();
 earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
 scene.add(earthGroup);
 new OrbitControls(camera, renderer.domElement);
-const detail = 12;
+const detail = 16;
 const loader = new THREE.TextureLoader();
 const geometry = new THREE.IcosahedronGeometry(1, detail);
 const material = new THREE.MeshPhongMaterial({
@@ -43,13 +43,13 @@ earthGroup.add(lightsMesh);
 const cloudsMat = new THREE.MeshStandardMaterial({
   map: loader.load("04_earthcloudmap.jpg"),
   transparent: true,
-  opacity: 0.8,
+  opacity: 1,
   blending: THREE.AdditiveBlending,
   alphaMap: loader.load("05_earthcloudmaptrans.jpg"),
   // alphaTest: 0.3,
 });
 const cloudsMesh = new THREE.Mesh(geometry, cloudsMat);
-cloudsMesh.scale.setScalar(1.003);
+cloudsMesh.scale.setScalar(1.001);
 earthGroup.add(cloudsMesh);
 
 const fresnelMat = getFresnelMat();
@@ -67,11 +67,11 @@ scene.add(sunLight);
 function animate() {
   requestAnimationFrame(animate);
 
-  earthMesh.rotation.y += 0.002;
-  lightsMesh.rotation.y += 0.002;
-  cloudsMesh.rotation.y += 0.0023;
-  glowMesh.rotation.y += 0.002;
-  stars.rotation.y -= 0.0002;
+  earthMesh.rotation.y += 0.0;
+  lightsMesh.rotation.y += 0.0;
+  cloudsMesh.rotation.y += 0.0002;
+  glowMesh.rotation.y += 0.0;
+  stars.rotation.y -= 0.0;
   renderer.render(scene, camera);
 }
 
