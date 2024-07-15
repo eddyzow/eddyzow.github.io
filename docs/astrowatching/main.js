@@ -2,7 +2,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import getStarfield from "./getStarfield.js";
 import { getFresnelMat } from "./getFresnelMat.js";
-const socket = io("https://astrowatching-server.onrender.com");
+//const socket = io("http://127.0.0.1:3000"); // comment this out if testing on a LIVE BUILD
+
+const socket = io("https://astrowatching-server.onrender.com"); // comment this out if testing on a DEV BUILD
 const replacer = {
   _id: "Database Object ID",
   id: "ID",
@@ -162,20 +164,20 @@ socket.on("starSelect", (star) => {
       div.innerHTML = "Star Name: " + star.proper;
     }
 
-    document.body.append(div);
+    $("#wrapper").append(div);
 
     for (const property in star) {
       var div = document.createElement("div");
       div.classList.add("property");
       div.innerHTML = `${replacer[property]}: ${star[property]}`;
 
-      document.body.append(div);
+      $("#wrapper").append(div);
     }
   } else {
     var div = document.createElement("div");
     div.classList.add("property");
     div.classList.add("starname");
     div.innerHTML = "We're sorry, but we couldn't find that star.";
-    document.body.append(div);
+    $("#wrapper").append(div);
   }
 });

@@ -5,13 +5,23 @@ canvas {
   z-index: -1;
 }
 
+#wrapper {
+  background-color: rgba(53, 141, 87, 0.5);
+}
+
 html {
   color: white;
   z-index: 1;
 }
 
+.property {
+  user-select: none;
+  display: table;
+}
+
 input {
-  width: 400px;
+  display: block;
+  width: 360px;
   padding: 20px;
 }
 button {
