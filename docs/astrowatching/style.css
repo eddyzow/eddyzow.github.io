@@ -6,6 +6,7 @@ canvas {
 }
 
 #wrapper {
+  display: table;
   background-color: rgba(53, 141, 87, 0.5);
 }
 
