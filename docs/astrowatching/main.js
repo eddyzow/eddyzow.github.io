@@ -1,8 +1,48 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-
 import getStarfield from "./getStarfield.js";
 import { getFresnelMat } from "./getFresnelMat.js";
+const socket = io("https://astrowatching-server.onrender.com");
+const replacer = {
+  _id: "Database Object ID",
+  id: "ID",
+  name: "Name",
+  proper: "Proper Name",
+  hip: "Hipparcos ID",
+  hd: "Henry Draper ID",
+  hr: "Harvard Revised ID",
+  flam: "Flamsteed Number",
+  bf: "Bayer-Flamsteed Designation",
+  bayer: "Bayer Designation",
+  gl: "Gliese ID",
+  ra: "Right Ascension",
+  dec: "Declination",
+  dist: "Distance (parsecs)",
+  pmra: "Proper Motion Right Ascension",
+  pmdec: "Proper Motion Declination",
+  rv: "Radial Velocity",
+  mag: "Apparent Magnitude",
+  absmag: "Absolute Magnitude",
+  spect: "Spectral Class",
+  ci: "B-V Color Index",
+  x: "X Position",
+  y: "Y Position",
+  z: "Z Position",
+  vx: "X Motion",
+  vy: "Y Motion",
+  vz: "Z Motion",
+  rarad: "Right Ascension (radians)",
+  decrad: "Declination (radians)",
+  pmrarad: "Proper Motion Right Ascension (radians)",
+  pmdecrad: "Proper Motion Declination (radians)",
+  con: "Constellation",
+  comp: "Companion Number",
+  comp_primary: "ID of Primary Star",
+  lum: "Luminosity (Suns)",
+  var: "Variable Type",
+  var_min: "Minimum Variable Magnitude",
+  var_max: "Maximum Variable Magnitude",
+};
 
 const w = window.innerWidth;
 const h = window.innerHeight;
@@ -83,3 +123,59 @@ function handleWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 window.addEventListener("resize", handleWindowResize, false);
+
+socket.on("hello", (data) => {
+  $("#testtext").text("Successfully connected to server!!");
+});
+
+$("#buttonSelect").on("click", function () {
+  console.log("Star Select");
+  socket.emit("selectStar", $("#star-input").val());
+});
+
+socket.on("starSelect", (star) => {
+  $(".property").remove();
+  if (star) {
+    // generate name
+    var div = document.createElement("div");
+    div.classList.add("property");
+    div.classList.add("starname");
+    if (star.gl) {
+      div.innerHTML = "Star Name: " + star.gl;
+    }
+    if (star.hr) {
+      div.innerHTML = "Star Name: " + "HR " + star.hr;
+    }
+    if (star.hip) {
+      div.innerHTML = "Star Name: " + "HIP " + star.hip;
+    }
+    if (star.hd) {
+      div.innerHTML = "Star Name: " + "HD " + star.hd;
+    }
+    if (star.flam) {
+      div.innerHTML = "Star Name: " + star.flam + " " + star.con;
+    }
+    if (star.bayer) {
+      div.innerHTML = "Star Name: " + star.bayer + " " + star.con;
+    }
+    if (star.proper) {
+      div.innerHTML = "Star Name: " + star.proper;
+    }
+
+    document.body.append(div);
+
+    for (const property in star) {
+      var div = document.createElement("div");
+      div.classList.add("property");
+      div.innerHTML = `${replacer[property]}: ${star[property]}`;
+
+      document.body.append(div);
+    }
+  } else {
+    var div = document.createElement("div");
+    div.classList.add("property");
+    div.classList.add("starname");
+    div.innerHTML = "We're sorry, but we couldn't find that star.";
+    document.body.append(div);
+  }
+});

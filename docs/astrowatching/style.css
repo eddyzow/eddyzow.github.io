@@ -1,0 +1,25 @@
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+html {
+  color: white;
+  z-index: 1;
+}
+
+input {
+  width: 400px;
+  padding: 20px;
+}
+button {
+  width: 400px;
+  padding: 20px;
+}
+
+.starname {
+  font-weight: 800;
+  font-size: 2em;
+}
