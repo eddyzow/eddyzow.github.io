@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import getStarfield from "./getStarfield.js";
 import { getFresnelMat } from "./getFresnelMat.js";
+
 //const socket = io("http://127.0.0.1:3000"); // comment this out if testing on a LIVE BUILD
 
 const socket = io("https://astrowatching-server.onrender.com"); // comment this out if testing on a DEV BUILD
@@ -66,9 +67,9 @@ const detail = 16;
 const loader = new THREE.TextureLoader();
 const geometry = new THREE.IcosahedronGeometry(1, detail);
 const material = new THREE.MeshPhongMaterial({
-  map: loader.load("00_earthmap1k.jpg"),
-  specularMap: loader.load("02_earthspec1k.jpg"),
-  bumpMap: loader.load("01_earthbump1k.jpg"),
+  map: loader.load("./assets/images/00_earthmap1k.jpg"),
+  specularMap: loader.load("./assets/images/02_earthspec1k.jpg"),
+  bumpMap: loader.load("./assets/images/01_earthbump1k.jpg"),
   bumpScale: 0.04,
 });
 // material.map.colorSpace = THREE.SRGBColorSpace;
@@ -76,18 +77,18 @@ const earthMesh = new THREE.Mesh(geometry, material);
 earthGroup.add(earthMesh);
 
 const lightsMat = new THREE.MeshBasicMaterial({
-  map: loader.load("03_earthlights1k.jpg"),
+  map: loader.load("./assets/images/03_earthlights1k.jpg"),
   blending: THREE.AdditiveBlending,
 });
 const lightsMesh = new THREE.Mesh(geometry, lightsMat);
 earthGroup.add(lightsMesh);
 
 const cloudsMat = new THREE.MeshStandardMaterial({
-  map: loader.load("04_earthcloudmap.jpg"),
+  map: loader.load("./assets/images/04_earthcloudmap.jpg"),
   transparent: true,
   opacity: 1,
   blending: THREE.AdditiveBlending,
-  alphaMap: loader.load("05_earthcloudmaptrans.jpg"),
+  alphaMap: loader.load("./assets/images/05_earthcloudmaptrans.jpg"),
   // alphaTest: 0.3,
 });
 const cloudsMesh = new THREE.Mesh(geometry, cloudsMat);
@@ -99,7 +100,7 @@ const glowMesh = new THREE.Mesh(geometry, fresnelMat);
 glowMesh.scale.setScalar(1.01);
 earthGroup.add(glowMesh);
 
-const stars = getStarfield({ numStars: 2000 });
+const stars = getStarfield();
 scene.add(stars);
 
 const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);

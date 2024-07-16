@@ -5,6 +5,14 @@ canvas {
   z-index: -1;
 }
 
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
 #wrapper {
   display: table;
   background-color: rgba(53, 141, 87, 0.5);
