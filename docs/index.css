@@ -264,9 +264,9 @@ i {
 }
 
 .main {
-  width: calc(100vw - 80px);
+  width: calc(100vw - 160px);
   display: inline-block;
-  padding: 40px;
+  padding: 80px;
   height: calc(100vh - 7em);
   overflow-y: auto;
 }
