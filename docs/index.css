@@ -206,6 +206,7 @@ a {
 #main-carrier {
   position: fixed;
   width: 500vw;
+  left: -100vw;
   display: flex;
   justify-content: center;
   align-items: flex-start;
