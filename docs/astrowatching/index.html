@@ -2,8 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/9673dc3140.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,6 +24,31 @@
   </head>
   <body>
     <div id="wrapper">
+      <div id="user-interface">
+        <div id="searchbar">
+          <div class="logo">AstroWatching</div>
+          <div class="spacer"></div>
+          <input
+            id="object-search"
+            autocomplete="off"
+            placeholder="Search Object..."
+          />
+          <div class="spacer"></div>
+          <div
+            id="earth-button"
+            class="tooltip tbutton fa-solid fa-earth fa-2x"
+          >
+            <span class="tooltiptext">Turns Earth off</span>
+          </div>
+          <div
+            id="greenstars-button"
+            class="tooltip tbutton fa-solid fa-star fa-2x"
+          >
+            <span class="tooltiptext">Marks 1,000 brightest stars</span>
+          </div>
+        </div>
+      </div>
+      <!--
       <div>
         Green stars signify one of the 1,000 brightest stars in the night sky.
       </div>
@@ -29,10 +59,13 @@
       <input
         id="star-input"
         placeholder="Or type a star ID here to look up a star, and press the button!"
-      />
+      /> -->
     </div>
     <canvas id="bg"></canvas>
     <script type="text/javascript" src="./assets/data/top1000.js"></script>
     <script type="module" src="main.js"></script>
+    <div style="position: fixed; right: 0; bottom: 0">
+      INDEV 24.33.01 (August 13, 2024)
+    </div>
   </body>
 </html>

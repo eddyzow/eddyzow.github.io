@@ -4,9 +4,9 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import getStarfield from "./getStarfield.js";
 import { getFresnelMat } from "./getFresnelMat.js";
 
-const socket = io("http://127.0.0.1:3000"); // comment this out if testing on a LIVE BUILD
+//const socket = io("http://127.0.0.1:3000"); // comment this out if testing on a LIVE BUILD
 
-//const socket = io("https://astrowatching-server.onrender.com"); // comment this out if testing on a DEV BUILD
+const socket = io("https://astrowatching-server.onrender.com"); // comment this out if testing on a DEV BUILD
 const replacer = {
   _id: "Database Object ID",
   id: "ID",
@@ -73,7 +73,7 @@ earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
 scene.add(earthGroup);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enablePan = false;
-//controls.enableZoom = false;
+controls.enableZoom = false;
 const detail = 16;
 const loader = new THREE.TextureLoader();
 const geometry = new THREE.IcosahedronGeometry(1, detail);
