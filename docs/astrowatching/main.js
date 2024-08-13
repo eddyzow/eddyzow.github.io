@@ -4,9 +4,9 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import getStarfield from "./getStarfield.js";
 import { getFresnelMat } from "./getFresnelMat.js";
 
-//const socket = io("http://127.0.0.1:3000"); // comment this out if testing on a LIVE BUILD
+const socket = io("http://127.0.0.1:3000"); // comment this out if testing on a LIVE BUILD
 
-const socket = io("https://astrowatching-server.onrender.com"); // comment this out if testing on a DEV BUILD
+//const socket = io("https://astrowatching-server.onrender.com"); // comment this out if testing on a DEV BUILD
 const replacer = {
   _id: "Database Object ID",
   id: "ID",
@@ -51,7 +51,7 @@ const replacer = {
 const w = window.innerWidth;
 const h = window.innerHeight;
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 10000);
 camera.position.z = 5;
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(w, h);
@@ -62,19 +62,18 @@ renderer.toneMappingExposure = 0.5;
 renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-//new RGBELoader().load("./assets/images/starmap.hdr", function (texture) {
-//  texture.mapping = THREE.EquirectangularReflectionMapping;
-//
-//  scene.background = texture;
-//  scene.environment = texture;
-//});
+new RGBELoader().load("./assets/images/starmap.hdr", function (texture) {
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = texture;
+  scene.environment = texture;
+});
 
 const earthGroup = new THREE.Group();
 earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
 scene.add(earthGroup);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enablePan = false;
-controls.enableZoom = false;
+//controls.enableZoom = false;
 const detail = 16;
 const loader = new THREE.TextureLoader();
 const geometry = new THREE.IcosahedronGeometry(1, detail);
@@ -114,6 +113,7 @@ earthGroup.add(glowMesh);
 
 const stars = getStarfield();
 scene.add(stars);
+stars.rotation.x -= 1.5708;
 
 const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
 sunLight.position.set(-2, 0.5, 1.5);
@@ -126,7 +126,6 @@ function animate() {
   lightsMesh.rotation.y += 0.0002;
   cloudsMesh.rotation.y += 0.0002;
   glowMesh.rotation.y += 0.0002;
-  stars.rotation.y -= 0.0;
   renderer.render(scene, camera);
 }
 

@@ -23,14 +23,14 @@ export default function getStarfield() {
     const { pos, hue } = p;
     positions.push(p);
     col = new THREE.Color().setHSL(hue, 1, 1);
-    verts.push(pos.x * 500, pos.y * 500, pos.z * 500);
-    colors.push(col.r, col.g, col.b); // col.r, col.g, col.b
+    verts.push(pos.x * 5000, pos.y * 5000, pos.z * 5000);
+    colors.push(0, col.g, 0); // col.r, col.g, col.b
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.Float32BufferAttribute(verts, 3));
   geo.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
   const mat = new THREE.PointsMaterial({
-    size: 5,
+    size: 50,
     vertexColors: true,
     transparent: true,
     map: new THREE.TextureLoader().load("./assets/images/circle.png"),
