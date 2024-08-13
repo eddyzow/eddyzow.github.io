@@ -233,6 +233,11 @@ a {
   right: 32px;
 }
 
+.devtime {
+  margin: 0;
+  font-weight: 900;
+}
+
 i {
   position: absolute;
   top: 50%;
