@@ -58,21 +58,23 @@ renderer.setSize(w, h);
 document.body.appendChild(renderer.domElement);
 // THREE.ColorManagement.enabled = true;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.6;
+renderer.toneMappingExposure = 0.5;
 renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-new RGBELoader().load("./assets/images/starmap.hdr", function (texture) {
-  texture.mapping = THREE.EquirectangularReflectionMapping;
-
-  scene.background = texture;
-  scene.environment = texture;
-});
+//new RGBELoader().load("./assets/images/starmap.hdr", function (texture) {
+//  texture.mapping = THREE.EquirectangularReflectionMapping;
+//
+//  scene.background = texture;
+//  scene.environment = texture;
+//});
 
 const earthGroup = new THREE.Group();
 earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
 scene.add(earthGroup);
-new OrbitControls(camera, renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enablePan = false;
+controls.enableZoom = false;
 const detail = 16;
 const loader = new THREE.TextureLoader();
 const geometry = new THREE.IcosahedronGeometry(1, detail);
@@ -120,10 +122,10 @@ scene.add(sunLight);
 function animate() {
   requestAnimationFrame(animate);
 
-  earthMesh.rotation.y += 0.0;
-  lightsMesh.rotation.y += 0.0;
+  earthMesh.rotation.y += 0.0002;
+  lightsMesh.rotation.y += 0.0002;
   cloudsMesh.rotation.y += 0.0002;
-  glowMesh.rotation.y += 0.0;
+  glowMesh.rotation.y += 0.0002;
   stars.rotation.y -= 0.0;
   renderer.render(scene, camera);
 }

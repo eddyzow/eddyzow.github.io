@@ -8,7 +8,7 @@ const data = [
     dist: 0,
     mag: -26.7,
     spect: "G2V",
-    x: 0.000005,
+    x: 0,
     y: 0,
     z: 0,
   },
