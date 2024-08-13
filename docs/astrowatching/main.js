@@ -1,11 +1,12 @@
 import * as THREE from "three";
+import { RGBELoader } from "../astrowatching/js/RGBELoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import getStarfield from "./getStarfield.js";
 import { getFresnelMat } from "./getFresnelMat.js";
 
-const socket = io("http://127.0.0.1:3000"); // comment this out if testing on a LIVE BUILD
+//const socket = io("http://127.0.0.1:3000"); // comment this out if testing on a LIVE BUILD
 
-//const socket = io("https://astrowatching-server.onrender.com"); // comment this out if testing on a DEV BUILD
+const socket = io("https://astrowatching-server.onrender.com"); // comment this out if testing on a DEV BUILD
 const replacer = {
   _id: "Database Object ID",
   id: "ID",
@@ -57,7 +58,16 @@ renderer.setSize(w, h);
 document.body.appendChild(renderer.domElement);
 // THREE.ColorManagement.enabled = true;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+renderer.toneMappingExposure = 0.6;
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+new RGBELoader().load("./assets/images/starmap.hdr", function (texture) {
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+
+  scene.background = texture;
+  scene.environment = texture;
+});
 
 const earthGroup = new THREE.Group();
 earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
