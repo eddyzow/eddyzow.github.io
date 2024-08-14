@@ -23,49 +23,51 @@
     <title>ez's spinning earth</title>
   </head>
   <body>
-    <div id="wrapper">
-      <div id="user-interface">
-        <div id="searchbar">
-          <div class="logo">AstroWatching</div>
-          <div class="spacer"></div>
+    <div id="user-interface">
+      <div id="searchbar">
+        <div class="logo">AstroWatching</div>
+        <div class="spacer"></div>
+        <div>
           <input
             id="object-search"
             autocomplete="off"
-            placeholder="Search Object..."
+            placeholder="Search Object (ID)..."
           />
-          <div class="spacer"></div>
-          <div
-            id="earth-button"
-            class="tooltip tbutton fa-solid fa-earth fa-2x"
+        </div>
+        <div
+          id="search-button"
+          class="tooltip tbutton fa-solid fa-search fa-2x"
+        >
+          <span class="tooltiptext" id="earth-tooltip">Search!</span>
+        </div>
+        <div class="spacer"></div>
+        <div id="earth-button" class="tooltip tbutton fa-solid fa-earth fa-2x">
+          <span class="tooltiptext" id="earth-tooltip">Turns Earth on/off</span>
+        </div>
+        <div
+          id="greenstars-button"
+          class="tooltip tbutton fa-solid fa-star fa-2x"
+        >
+          <span class="tooltiptext" id="stars-tooltip"
+            >Marks 1,000 brightest stars</span
           >
-            <span class="tooltiptext">Turns Earth off</span>
-          </div>
-          <div
-            id="greenstars-button"
-            class="tooltip tbutton fa-solid fa-star fa-2x"
-          >
-            <span class="tooltiptext">Marks 1,000 brightest stars</span>
-          </div>
         </div>
       </div>
-      <!--
-      <div>
-        Green stars signify one of the 1,000 brightest stars in the night sky.
+      <div id="wrapper">
+        <div class="property starname">
+          Use the Search Bar and press the search button to find a star.
+        </div>
+        <div class="property">
+          Enter an ID, or leave blank for a random star.
+        </div>
       </div>
-      <div id="testtext">Connecting...</div>
-      <button id="buttonSelect">
-        Click this button to select a star! (Random if left blank)
-      </button>
-      <input
-        id="star-input"
-        placeholder="Or type a star ID here to look up a star, and press the button!"
-      /> -->
     </div>
     <canvas id="bg"></canvas>
     <script type="text/javascript" src="./assets/data/top1000.js"></script>
     <script type="module" src="main.js"></script>
-    <div style="position: fixed; right: 0; bottom: 0">
-      INDEV 24.33.01 (August 13, 2024)
+
+    <div class="tooltip" style="position: fixed; right: 0; bottom: 0" title="Changelog (INDEV 24.33.02): &#x0a-Made searchbar functional! &#x0a-Made buttons functional!">
+      INDEV 24.33.02 (August 13, 2024)
     </div>
   </body>
 </html>

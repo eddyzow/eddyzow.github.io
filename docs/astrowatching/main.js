@@ -68,6 +68,37 @@ new RGBELoader().load("./assets/images/starmap.hdr", function (texture) {
   scene.environment = texture;
 });
 
+var earthtooltip = true;
+var startooltip = true;
+
+document.getElementById("earth-button").onclick = function () {
+  if (earthtooltip == true) {
+    earthtooltip = false;
+    earthGroup.visible = false;
+    document.getElementById("earth-button").style =
+      "color: white; background-color: rgba(0, 0, 0, 0.5);";
+  } else {
+    earthtooltip = true;
+    earthGroup.visible = true;
+    document.getElementById("earth-button").style =
+      "color: black; background-color: rgba(255, 255, 255, 1);";
+  }
+};
+
+document.getElementById("greenstars-button").onclick = function () {
+  if (startooltip == true) {
+    startooltip = false;
+    stars.visible = false;
+    document.getElementById("greenstars-button").style =
+      "color: white; background-color: rgba(0, 0, 0, 0.5);";
+  } else {
+    startooltip = true;
+    stars.visible = true;
+    document.getElementById("greenstars-button").style =
+      "color: black; background-color: rgba(255, 255, 255, 1);";
+  }
+};
+
 const earthGroup = new THREE.Group();
 earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
 scene.add(earthGroup);
@@ -142,9 +173,9 @@ socket.on("hello", (data) => {
   $("#testtext").text("Successfully connected to server!!");
 });
 
-$("#buttonSelect").on("click", function () {
+$("#search-button").on("click", function () {
   console.log("Star Select");
-  socket.emit("selectStar", $("#star-input").val());
+  socket.emit("selectStar", $("#object-search").val());
 });
 
 socket.on("starSelect", (star) => {
