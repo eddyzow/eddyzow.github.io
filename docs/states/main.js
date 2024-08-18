@@ -129,7 +129,7 @@ document.getElementById("copy-share").addEventListener("click", function (e) {
   document.getElementById("copy-share").innerHTML = "Copied!";
   clearTimeout(timer);
   timer = setTimeout(() => {
-    document.getElementById("copy-share").innerHTML = "Share Copy Link";
+    document.getElementById("copy-share").innerHTML = "Copy Share Link";
   }, 1000);
 });
 

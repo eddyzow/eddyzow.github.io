@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <!-- Copyright 2024+ eddyzow. All rights reserved. -->
+  <head>
+    <title>Passcodle</title>
+    <!-- Google tag (gtag.js) -->
+    <script
+      src="https://kit.fontawesome.com/9673dc3140.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-4881W8M3DJ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-4881W8M3DJ");
+    </script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+  </head>
+  <body>
+    <div id="header">
+      <div style="font-size: 2em; font-weight: 900; margin-left: 20px">
+        Passcode
+      </div>
+      <div class="icon-holder">
+        <div id="help" class="iconb fa-solid fa-question fa-2x"></div>
+        <div id="darktheme" class="iconb fa-solid fa-moon fa-2x"></div>
+      </div>
+    </div>
+
+    <div id="main-wrapper">
+      <div class="row">
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="avg">0.00</div>
+      </div>
+      <div class="row">
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="avg">0.00</div>
+      </div>
+      <div class="row">
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="avg">0.00</div>
+      </div>
+      <div class="row">
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="avg">0.00</div>
+      </div>
+      <div class="row">
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="avg">0.00</div>
+      </div>
+      <div class="row">
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="avg">0.00</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="keyboard">
+        <div class="key">0</div>
+        <div class="key">1</div>
+        <div class="key">2</div>
+        <div class="key">3</div>
+        <div class="key">4</div>
+        <div class="key">5</div>
+        <div class="key">6</div>
+        <div class="key">7</div>
+        <div class="key">8</div>
+        <div class="key">9</div>
+      </div>
+    </div>
+
+    <div id="rules-screen">
+      <div style="display: flex">
+        <h1>How to Play <green>Passcode</green></h1>
+        <div id="close-rules">×</div>
+      </div>
+
+      <ul>
+        <li>
+          You'll have six tries to guess the six-digit <green>code.</green>
+        </li>
+        <li>
+          For each guess, if a tile turns <green>green</green>, the digit is
+          correct and in the correct spot.
+        </li>
+        <li>
+          If a tile turns
+          <yellow>yellow</yellow>, the digit is in the code, but not in the
+          correct spot.
+        </li>
+        <li>If a tile turns <b>black</b>, the digit is not in the code.</li>
+        <li>
+          You'll also get the average number of digits away your answer is from
+          the code.
+        </li>
+      </ul>
+    </div>
+    <script type="text/javascript" src="main.js"></script>
+  </body>
+</html>
