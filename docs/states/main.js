@@ -84,7 +84,7 @@ function updateStates() {
   document.getElementById("area-count").innerHTML = totalArea.toLocaleString();
   document.getElementById("states-percentage").innerHTML =
     "That's " +
-    ((statesArea / 9833519) * 100).toFixed(2) +
+    ((totalArea / 9833519) * 100).toFixed(2) +
     "% of the United States!";
   if (numStates == 1) {
     document.getElementById("states-plural").innerHTML = "state,";
