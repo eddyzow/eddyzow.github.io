@@ -3,6 +3,14 @@
   <!-- Copyright 2024+ eddyzow. All rights reserved. -->
   <head>
     <title>Passcode</title>
+    <meta property="og:title" content="eddyzow.net" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://eddyzow.net/passcode/" />
+    <meta property="og:description" content="Can you crack today's passcode?" />
+    <meta
+      property="og:image"
+      content="https://media.discordapp.net/attachments/852687392959365130/1275017141451620382/image.png?ex=66c45bbf&is=66c30a3f&hm=bbe76f55ed1c189f0494f5231204117f7a3db0a56ae5d759261b110d3d7f9f4b&=&format=webp&quality=lossless"
+    />
     <!-- Google tag (gtag.js) -->
     <script
       src="https://kit.fontawesome.com/9673dc3140.js"
@@ -34,12 +42,18 @@
         Passcode
       </div>
       <div class="icon-holder">
-        <div id="stats" class="iconb fa-solid fa-chart-simple fa-2x"></div>
-        <div id="help" class="iconb fa-solid fa-question fa-2x"></div>
-        <div id="darktheme" class="iconb fa-solid fa-moon fa-2x"></div>
+        <div id="stats" class="tooltip iconb fa-solid fa-chart-simple fa-2x">
+          <span class="tooltiptext">Statistics (Coming Soon!)</span>
+        </div>
+        <div id="help" class="tooltip iconb fa-solid fa-question fa-2x">
+          <span class="tooltiptext">How to Play</span>
+        </div>
+        <div id="darktheme" class="tooltip iconb fa-solid fa-moon fa-2x">
+          <span class="tooltiptext">Toggle Theme</span>
+        </div>
       </div>
     </div>
-
+    <div id="passcode-gameid">Loading...</div>
     <div id="main-wrapper">
       <div class="row">
         <div class="square" id="square-1"></div>
@@ -86,32 +100,35 @@
         <div class="square" id="square-30"></div>
         <div class="avg" id="avg-5">0</div>
       </div>
-      <div class="row">
-        <div class="square" id="square-31"></div>
-        <div class="square" id="square-32"></div>
-        <div class="square" id="square-33"></div>
-        <div class="square" id="square-34"></div>
-        <div class="square" id="square-35"></div>
-        <div class="square" id="square-36"></div>
-        <div class="avg" id="avg-6">0</div>
-      </div>
     </div>
 
     <div class="footer">
       <div class="keyboard">
-        <div class="key fa-solid fa-delete-left" style="line-height: 1.4"></div>
-        <div class="key">0</div>
-        <div class="key">1</div>
-        <div class="key">2</div>
-        <div class="key">3</div>
-        <div class="key">4</div>
-        <div class="key">5</div>
-        <div class="key">6</div>
-        <div class="key">7</div>
-        <div class="key">8</div>
-        <div class="key">9</div>
-        <div class="key">SUBMIT</div>
+        <div
+          class="key fa-solid fa-delete-left"
+          id="key-bs"
+          style="line-height: 1.4"
+        ></div>
+        <div class="key" id="key-0">0</div>
+        <div class="key" id="key-1">1</div>
+        <div class="key" id="key-2">2</div>
+        <div class="key" id="key-3">3</div>
+        <div class="key" id="key-4">4</div>
+        <div class="key" id="key-5">5</div>
+        <div class="key" id="key-6">6</div>
+        <div class="key" id="key-7">7</div>
+        <div class="key" id="key-8">8</div>
+        <div class="key" id="key-9">9</div>
+        <div class="key" id="key-sub">SUBMIT</div>
       </div>
+    </div>
+
+    <div id="share-button" class="tooltip">
+      Share Result!
+      <span class="tooltiptext" style="width: 400px; left: 0"
+        >This share button doesn't share much useful stuff right now... will be
+        fixed later</span
+      >
     </div>
 
     <div id="modal"></div>
@@ -124,7 +141,7 @@
 
       <ul>
         <li>
-          You have six tries to guess the six-digit <green>passcode</green>.
+          You have five tries to guess the six-digit <green>passcode</green>.
         </li>
         <li>
           For each guess, if a tile turns <green>green</green>, the digit is
@@ -138,13 +155,16 @@
         <li>If a tile turns <b>black</b>, the digit is not in the passcode.</li>
         <li>
           With each guess, you'll also get the sum of differences of digits from
-          the passcode. This will tell you how far away you are from the
-          passcode.
+          the passcode. Don't underestimate the usefulness of this!
+        </li>
+        <li>
+          In Hard Mode, you're only told how many yellows and greens are in your
+          guess. You don't get to know where they are.
         </li>
       </ul>
       <div style="font-size: 1.5em">
         Can you crack the <green>passcode</green>? A new puzzle is released at
-        midnight Eastern time every day.
+        8:00 P.M. Eastern Time every day.
       </div>
       <div style="margin-top: 10px">
         App created by
