@@ -7,6 +7,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://eddyzow.net/passcode/" />
     <meta property="og:description" content="Can you crack today's passcode?" />
+    <script src="confetti.min.js"></script>
     <meta
       property="og:image"
       content="https://media.discordapp.net/attachments/852687392959365130/1275017141451620382/image.png?ex=66c45bbf&is=66c30a3f&hm=bbe76f55ed1c189f0494f5231204117f7a3db0a56ae5d759261b110d3d7f9f4b&=&format=webp&quality=lossless"
@@ -43,7 +44,7 @@
       </div>
       <div class="icon-holder">
         <div id="stats" class="tooltip iconb fa-solid fa-chart-simple fa-2x">
-          <span class="tooltiptext">Statistics (Coming Soon!)</span>
+          <span class="tooltiptext">Statistics</span>
         </div>
         <div id="help" class="tooltip iconb fa-solid fa-question fa-2x">
           <span class="tooltiptext">How to Play</span>
@@ -123,15 +124,69 @@
       </div>
     </div>
 
-    <div id="share-button" class="tooltip">
-      Share Result!
-      <span class="tooltiptext" style="width: 400px; left: 0"
-        >This share button doesn't share much useful stuff right now... will be
-        fixed later</span
-      >
-    </div>
+    <div id="share-button">Share Result!</div>
 
     <div id="modal"></div>
+
+    <div id="stats-screen">
+      <div style="display: flex">
+        <h1>Statistics</h1>
+        <div id="close-stats">×</div>
+      </div>
+
+      <div class="stats-section">
+        <div class="stat">
+          <h2 id="games-played">0</h2>
+          <p>Games Played</p>
+        </div>
+        <div class="stat">
+          <h2 id="win-percentage">0%</h2>
+          <p>Win %</p>
+        </div>
+        <div class="stat">
+          <h2 id="current-streak">0</h2>
+          <p>Current Streak</p>
+        </div>
+        <div class="stat">
+          <h2 id="best-streak">0</h2>
+          <p>Best Streak</p>
+        </div>
+      </div>
+
+      <h2>Guess Distribution</h2>
+      <div class="distribution-section">
+        <div class="guess-row" id="guessbar-1">
+          <p>1</p>
+          <div class="bar-container"></div>
+          <p id="guess-1-count">0</p>
+        </div>
+        <div class="guess-row" id="guessbar-2">
+          <p>2</p>
+          <div class="bar-container"></div>
+          <p id="guess-2-count">0</p>
+        </div>
+        <div class="guess-row" id="guessbar-3">
+          <p>3</p>
+          <div class="bar-container"></div>
+          <p id="guess-3-count">0</p>
+        </div>
+        <div class="guess-row" id="guessbar-4">
+          <p>4</p>
+          <div class="bar-container"></div>
+          <p id="guess-4-count">0</p>
+        </div>
+        <div class="guess-row" id="guessbar-5">
+          <p>5</p>
+          <div class="bar-container"></div>
+          <p id="guess-5-count">0</p>
+        </div>
+      </div>
+
+      <div id="share-button2">Share Result!</div>
+      <p id="notif-share">
+        To share your exact stats for today's game, complete it first!
+      </p>
+    </div>
 
     <div id="rules-screen">
       <div style="display: flex">
@@ -145,22 +200,35 @@
         </li>
         <li>
           For each guess, if a tile turns <green>green</green>, the digit is
-          correct and in the correct spot.
-        </li>
-        <li>
-          If a tile turns
+          correct and in the correct spot. If a tile turns
           <yellow>yellow</yellow>, the digit is in the passcode, but not in the
-          correct spot.
-        </li>
-        <li>If a tile turns <b>black</b>, the digit is not in the passcode.</li>
-        <li>
-          With each guess, you'll also get the sum of differences of digits from
-          the passcode. Don't underestimate the usefulness of this!
+          correct spot. If a tile turns <b>black</b>, the digit is not in the
+          passcode.
         </li>
         <li>
-          In Hard Mode, you're only told how many yellows and greens are in your
-          guess. You don't get to know where they are.
+          Each guess also shows the sum of the error between your guess's
+          digits, and the passcode's digits. The error is the positive
+          difference of two numbers. For example:
         </li>
+        <div>
+          <div class="guess-ex">Guess: 7 6 5 4 3 2</div>
+          <div class="guess-ex">Code: &nbsp;1 2 3 4 5 6</div>
+          <div class="guess-ex">Diff: &nbsp;6 4 2 0 2 4</div>
+          <div class="guess-ex">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6+4+2+0+2+4 =
+            <div
+              class="avg"
+              style="
+                width: 72px;
+                height: 36px;
+                margin: 0;
+                background-color: rgb(134, 30, 0);
+              "
+            >
+              18
+            </div>
+          </div>
+        </div>
       </ul>
       <div style="font-size: 1.5em">
         Can you crack the <green>passcode</green>? A new puzzle is released at
