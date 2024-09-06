@@ -2,9 +2,16 @@ Date.prototype.getJulian = function () {
   return this / 86400000 - this.getTimezoneOffset() / 1440 + 2440587.16666667;
 };
 
+// TODO:
+// fix screen size
+
+var disabledkey = 1;
+var guessList = [];
 var colors = [];
 var hardMode = false;
 var darkTheme = 0;
+var qum = 1;
+var alreadyPlayed = 0;
 var numGuesses = 0;
 var numbersSubmitted = 0; // 1 to 36
 var numbersGuessed = 0; // 1 to 6
@@ -23,16 +30,6 @@ try {
 } catch {
   statistics = [];
   localStorage.setItem("statistics", "[]");
-}
-
-// TODO remove later
-if (localStorage.getItem("lastPlay") == gameID) {
-  alert(
-    "You've already played Passcode today, so there won't be another game until tomorrow! You'll be able to see your game later... I'm just not done coding"
-  );
-  setInterval(function () {
-    guessing = 1;
-  }, 500);
 }
 
 function longestWinningStreak(statistics) {
@@ -211,11 +208,7 @@ function julianToHumanReadable(julianDate) {
 generateSixDigitCode().then((code) => {
   passcode = code;
   $("#passcode-gameid").html(
-    "Passcode #" +
-      gameID +
-      " (" +
-      julianToHumanReadable(today.getJulian()) +
-      ")"
+    "Passcode #" + gameID + " (" + julianToHumanReadable(gameID + 2460540) + ")"
   );
   guessing = 0;
 });
@@ -229,7 +222,8 @@ function submitGuess() {
     if (numbersGuessed == 6) {
       numGuesses++;
       guessing = 1;
-      let guess =
+
+      guess =
         $("#square-" + (numbersSubmitted - 5)).html() +
         $("#square-" + (numbersSubmitted - 4)).html() +
         $("#square-" + (numbersSubmitted - 3)).html() +
@@ -237,15 +231,19 @@ function submitGuess() {
         $("#square-" + (numbersSubmitted - 1)).html() +
         $("#square-" + (numbersSubmitted - 0)).html();
 
+      if (alreadyPlayed == 0) {
+        guessList.push(guess);
+      }
+
       let totalDist = 0;
       let passcodeMatched = Array(6).fill(false); // Tracking array for the passcode
       let guessMatched = Array(6).fill(false); // Tracking array for the guess
 
       // First pass: Check for green tiles and check for digits not in the code
       for (let i = 0; i < 6; i++) {
-        if (!passcode.includes(guess[i]) && !hardMode) {
+        /*    if (!passcode.includes(guess[i]) && !hardMode) {
           $("#key-" + guess[i]).addClass("disabled");
-        }
+       }*/
         if (parseInt(guess[i]) == parseInt(passcode[i])) {
           passcodeMatched[i] = true;
           guessMatched[i] = true;
@@ -307,10 +305,12 @@ function submitGuess() {
 
               // TODO: delete this after
               localStorage.setItem("lastPlay", gameID);
+              localStorage.setItem("lastGame", JSON.stringify(guessList));
 
               statistics.push([gameID, numGuesses]);
-              localStorage.setItem("statistics", JSON.stringify(statistics));
-
+              if (alreadyPlayed == 0) {
+                localStorage.setItem("statistics", JSON.stringify(statistics));
+              }
               console.log(colors);
               guessing = 1;
               console.log("WIN");
@@ -336,6 +336,15 @@ function submitGuess() {
 
               $("#share-button").css("visibility", "visible");
               $("#share-button").css("opacity", "100%");
+              $("#end-message").css("visibility", "visible");
+              $("#end-message").css("opacity", "100%");
+              $("#end-message").text("Congratulations!");
+
+              setTimeout(() => {
+                $("#end-message").css("visibility", "hidden");
+                $("#end-message").css("opacity", "0%");
+              }, 3000);
+
               confetti.start();
               setTimeout(function () {
                 confetti.stop();
@@ -345,16 +354,30 @@ function submitGuess() {
                 $("#stats-screen").css("visibility", "visible");
                 $("#modal").css("opacity", "100%");
                 $("#modal").css("visibility", "visible");
-              }, 2000);
+              }, 3000);
             } else {
               if (numGuesses == 5) {
                 // LOSE
+                localStorage.setItem("lastGame", JSON.stringify(guessList));
 
+                $("#end-message").css("visibility", "visible");
+                $("#end-message").css("opacity", "100%");
+                $("#end-message").text("Better luck tomorrow");
+
+                setTimeout(() => {
+                  $("#end-message").css("visibility", "hidden");
+                  $("#end-message").css("opacity", "0%");
+                }, 3000);
                 // TODO: delete this after
                 localStorage.setItem("lastPlay", gameID);
 
                 statistics.push([gameID, 0]);
-                localStorage.setItem("statistics", JSON.stringify(statistics));
+                if (alreadyPlayed == 0) {
+                  localStorage.setItem(
+                    "statistics",
+                    JSON.stringify(statistics)
+                  );
+                }
                 $("#notif-share").remove();
                 shareString = "Passcode #" + gameID + " " + "X/5\n";
                 for (let j = 0; j < numGuesses; j++) {
@@ -383,11 +406,11 @@ function submitGuess() {
                   $("#stats-screen").css("visibility", "visible");
                   $("#modal").css("opacity", "100%");
                   $("#modal").css("visibility", "visible");
-                }, 2000);
+                }, 3000);
               }
             }
           }
-        }, 200 * i);
+        }, 150 * i * qum);
       }
 
       $("#avg-" + numGuesses).text(totalDist);
@@ -423,13 +446,23 @@ document
 
 $(document).keydown(function (event) {
   console.log(event.key);
-  if (event.key == "Enter" && numbersSubmitted > 0 && guessing == 0) {
+  if (
+    event.key == "Enter" &&
+    numbersSubmitted > 0 &&
+    guessing == 0 &&
+    disabledkey == 0
+  ) {
     submitGuess();
   }
-  if (event.key == "Backspace" && numbersGuessed > 0) {
+  if (event.key == "Backspace" && numbersGuessed > 0 && disabledkey == 0) {
     deleteNumber();
   }
-  if (event.key >= 0 && event.key <= 9 && event.key != " ") {
+  if (
+    event.key >= 0 &&
+    event.key <= 9 &&
+    event.key != " " &&
+    disabledkey == 0
+  ) {
     // number pressed
     if (
       numbersGuessed < 6 &&
@@ -566,6 +599,22 @@ $("#help").click(function () {
   $("#modal").css("visibility", "visible");
 });
 
+$("#changelog").click(function () {
+  $("#changelog-screen").css("top", "50%");
+  $("#changelog-screen").css("opacity", "1");
+  $("#changelog-screen").css("visibility", "visible");
+  $("#modal").css("opacity", "100%");
+  $("#modal").css("visibility", "visible");
+});
+
+$("#close-changelog").click(function () {
+  $("#changelog-screen").css("top", "150%");
+  $("#changelog-screen").css("opacity", "0");
+  $("#changelog-screen").css("visibility", "hidden");
+  $("#modal").css("opacity", "0%");
+  $("#modal").css("visibility", "hidden");
+});
+
 $("#close-rules").click(function () {
   $("#rules-screen").css("top", "150%");
   $("#rules-screen").css("opacity", "0");
@@ -608,6 +657,8 @@ $("#darktheme").click(function () {
     $("#rules-screen").css("color", "white");
     $("#stats-screen").css("background-color", "rgb(80, 80, 80)");
     $("#stats-screen").css("color", "white");
+    $("#changelog-screen").css("background-color", "rgb(80, 80, 80)");
+    $("#changelog-screen").css("color", "white");
   } else {
     darkTheme = 0;
     localStorage.setItem("darkTheme", "false");
@@ -624,6 +675,8 @@ $("#darktheme").click(function () {
     $("#rules-screen").css("color", "black");
     $("#stats-screen").css("background-color", "white");
     $("#stats-screen").css("color", "black");
+    $("#changelog-screen").css("background-color", "white");
+    $("#changelog-screen").css("color", "black");
   }
 });
 
@@ -643,6 +696,8 @@ if (localStorage.getItem("darkTheme") == "true") {
   $("#rules-screen").css("color", "white");
   $("#stats-screen").css("background-color", "rgb(80, 80, 80)");
   $("#stats-screen").css("color", "white");
+  $("#changelog-screen").css("background-color", "rgb(80, 80, 80)");
+  $("#changelog-screen").css("color", "white");
 }
 
 if (localStorage.getItem("rulesRead") != "true") {
@@ -656,4 +711,31 @@ if (localStorage.getItem("rulesRead") != "true") {
 }
 window.onload = function () {
   readStatistics();
+  // TODO remove later
+  if (localStorage.getItem("lastPlay") == gameID) {
+    alreadyPlayed = 1;
+    qum = 0;
+    disabledkey = 1;
+    try {
+      guessList = JSON.parse(localStorage.getItem("lastGame"));
+      let squaren = 0;
+      for (let i = 0; i < guessList.length; i++) {
+        setTimeout(function () {
+          for (let j = 0; j < 6; j++) {
+            $("#square-" + (squaren + 1)).text(guessList[i].charAt(j));
+            squaren++;
+            numbersSubmitted++;
+          }
+
+          numbersGuessed = 6;
+          guessing = 0;
+          submitGuess();
+        }, i * 150);
+      }
+    } catch {
+      localStorage.setItem("lastGame", "[]");
+    }
+  } else {
+    disabledkey = 0;
+  }
 };

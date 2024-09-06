@@ -44,6 +44,23 @@ body {
   transition: all 0.5s ease;
 }
 
+#changelog-screen {
+  color: black;
+  z-index: 2;
+  width: 500px;
+  background-color: rgb(245, 245, 245);
+  padding: 40px;
+  border-radius: 20px;
+  position: fixed;
+  top: 150%;
+  visibility: hidden;
+  opacity: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px 2px #000000;
+  transition: all 0.5s ease;
+}
+
 .stats-section {
   display: flex;
   justify-content: space-between;
@@ -101,6 +118,22 @@ p {
   transition: all 0.5s ease;
 }
 
+#close-changelog {
+  font-size: 4em;
+  height: 0;
+  width: 0;
+  bottom: 24px;
+  left: 300px;
+  position: relative;
+  text-align: right;
+  margin: 0;
+  flex: 0;
+  transition: all 0.25s ease;
+}
+
+#close-changelog:hover {
+  cursor: pointer;
+}
 #close-stats {
   font-size: 4em;
   height: 0;
@@ -119,7 +152,7 @@ p {
 }
 
 #close-rules {
-  font-size: 4em;
+  font-size: 4em !important;
   height: 0;
   width: 0;
   bottom: 24px;
@@ -138,11 +171,22 @@ p {
 #rules-screen h1 {
   margin: 0;
 }
+a {
+  color: white;
+}
 
 #stats-screen h1 {
   margin: 0;
 }
 
+#changelog-screen h1 {
+  margin: 0;
+}
+
+#changelog-screen li {
+  margin: 10px;
+  font-size: 1.25em;
+}
 .iconb {
   width: 32px;
   text-align: center;
@@ -198,6 +242,74 @@ body {
   grid-gap: 5px;
   padding: 10px;
   box-sizing: border-box;
+}
+
+@media screen and (max-height: 900px) {
+  #main-wrapper {
+    width: 448px;
+    height: 320px;
+  }
+  .square {
+    font-size: 1.5rem !important;
+  }
+  .key {
+    padding: 10px !important;
+    margin: 0 !important;
+    font-size: 1.5em !important;
+  }
+  #passcode-gameid {
+    font-size: 1.75em !important;
+  }
+  #rules-screen li {
+    font-size: 1em !important;
+  }
+  #rules-screen h1 {
+    font-size: 1.75em !important;
+  }
+  #stats-screen h1 {
+    font-size: 1.75em !important;
+  }
+  #changelog-screen h1 {
+    font-size: 1.75em !important;
+  }
+  #rules-screen div {
+    font-size: 1em;
+  }
+  #header {
+    padding: 10px 0px !important;
+  }
+  #header div {
+    font-size: 1.5em !important;
+  }
+  .iconb {
+    transform: scale(0.8);
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .key {
+    margin: 0 !important;
+    font-size: 1.5em !important;
+    padding: 10px !important;
+  }
+}
+
+#end-message {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  position: fixed;
+  user-select: none;
+  left: 50%;
+  font-size: 1.5rem;
+  top: 120px;
+  font-weight: bold;
+  transform: translate(-50%, -50%);
+  transition: all 0.25s ease;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .square {
@@ -283,6 +395,30 @@ body {
   transition: 0.125s ease all;
 }
 
+#ez-button {
+  display: block;
+  color: white;
+  font-size: 1.5em;
+  border-radius: 20px;
+  text-align: center;
+  padding: 20px;
+  background: green;
+  width: 300px;
+  margin: auto;
+  margin-top: 30px;
+  transition: 0.125s ease all;
+}
+
+#ez-button:hover {
+  filter: brightness(0.8);
+  transform: scale(0.97);
+  cursor: pointer;
+}
+
+#ez-button:active {
+  transform: scale(0.94);
+}
+
 #share-button:hover {
   filter: brightness(0.8);
   transform: scale(0.97);
@@ -326,7 +462,6 @@ body {
 
 .keyboard {
   text-align: center;
-  width: 1000px;
   height: 40px;
   margin: auto;
   user-select: none;

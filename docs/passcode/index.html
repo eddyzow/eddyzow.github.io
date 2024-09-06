@@ -38,11 +38,15 @@
     />
   </head>
   <body>
+    <div id="end-message">Nice job!</div>
     <div id="header">
       <div style="font-size: 2em; font-weight: 900; margin-left: 20px">
         Passcode
       </div>
       <div class="icon-holder">
+        <div id="changelog" class="tooltip iconb fa-solid fa-hammer fa-2x">
+          <span class="tooltiptext">Changelog</span>
+        </div>
         <div id="stats" class="tooltip iconb fa-solid fa-chart-simple fa-2x">
           <span class="tooltiptext">Statistics</span>
         </div>
@@ -188,6 +192,33 @@
       </p>
     </div>
 
+    <div id="changelog-screen">
+      <div style="display: flex">
+        <h1>Changelog</h1>
+        <div id="close-changelog">×</div>
+      </div>
+
+      <h2>Game Update (September 6, 2024)</h2>
+      <ul>
+        <li>
+          Hooray! You can now see the past results of your game when you exit
+          the page - they are saved to local storage. No more popup
+        </li>
+        <li>
+          The game now shows a little congrats/better luck next time popup when
+          you win or lose Passcode
+        </li>
+        <li>
+          Fixed screen size issues by adding responsive media query to the game!
+        </li>
+        <li>
+          Removed automatic disabling of numbers that aren't in the passcode
+        </li>
+        <li>Added an option to delete all your statistics and game data</li>
+        <li>Squashed some bugs</li>
+      </ul>
+    </div>
+
     <div id="rules-screen">
       <div style="display: flex">
         <h1>How to Play <green>Passcode</green></h1>
@@ -232,13 +263,16 @@
       </ul>
       <div style="font-size: 1.5em">
         Can you crack the <green>passcode</green>? A new puzzle is released at
-        8:00 P.M. Eastern Time every day.
+        8:00 P.M. local time every day.
       </div>
       <div style="margin-top: 10px">
-        App created by
-        <a href="https://eddyzow.net" target="_blank">eddyzow</a>. Credits to
-        Josh Wardle for Wordle, the inspiration for this project.
+        App created by Eddy Zhao (eddyzow). Credits to Josh Wardle for Wordle,
+        the inspiration for this project. Credits for Daniel Ren for explaining
+        the rules of Passcode better than I could.
       </div>
+      <a href="https://eddyzow.net" target="_blank">
+        <div id="ez-button">Check out my projects!</div></a
+      >
     </div>
 
     <script type="text/javascript" src="main.js"></script>
