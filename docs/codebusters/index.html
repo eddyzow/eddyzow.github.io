@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codebusters Timer</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <p>Codebusters Timed Question</p>
+    <h2 class="big">Bonus Time: <span id="time-left">10:00</span></h2>
+    <h2 class="big">TQ Bonus Points: <span id="current-score">1200</span></h2>
+
+    <div>
+      <input
+        type="text"
+        id="competitor-name"
+        placeholder="Enter competitor name"
+      />
+      <button id="add-competitor">Add Competitor</button>
+    </div>
+
+    <div id="competitors-list"></div>
+
+    <button id="start-timer">Start Timer</button>
+    <button id="reset-timer">Reset Timer</button>
+
+    <script src="main.js"></script>
+  </body>
+</html>
