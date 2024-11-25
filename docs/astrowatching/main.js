@@ -103,6 +103,8 @@ const earthGroup = new THREE.Group();
 earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
 scene.add(earthGroup);
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.1;
 controls.enablePan = false;
 controls.enableZoom = false;
 const detail = 16;
@@ -152,6 +154,7 @@ scene.add(sunLight);
 
 function animate() {
   requestAnimationFrame(animate);
+  controls.update();
 
   earthMesh.rotation.y += 0.0002;
   lightsMesh.rotation.y += 0.0002;
@@ -181,41 +184,58 @@ $("#search-button").on("click", function () {
 socket.on("starSelect", (star) => {
   $(".property").remove();
   if (star) {
-    // generate name
+    // Generate star properties display
     var div = document.createElement("div");
     div.classList.add("property");
     div.classList.add("starname");
-    if (star.gl) {
-      div.innerHTML = "Star Name: " + star.gl;
-    }
-    if (star.hr) {
-      div.innerHTML = "Star Name: " + "HR " + star.hr;
-    }
-    if (star.hip) {
-      div.innerHTML = "Star Name: " + "HIP " + star.hip;
-    }
-    if (star.hd) {
-      div.innerHTML = "Star Name: " + "HD " + star.hd;
-    }
-    if (star.flam) {
-      div.innerHTML = "Star Name: " + star.flam + " " + star.con;
-    }
-    if (star.bayer) {
-      div.innerHTML = "Star Name: " + star.bayer + " " + star.con;
-    }
     if (star.proper) {
       div.innerHTML = "Star Name: " + star.proper;
+    } else if (star.bayer) {
+      div.innerHTML = "Star Name: " + star.bayer + " " + star.con;
+    } else {
+      div.innerHTML = "Star Name: Unknown";
     }
-
     $("#wrapper").append(div);
 
     for (const property in star) {
       var div = document.createElement("div");
       div.classList.add("property");
       div.innerHTML = `${replacer[property]}: ${star[property]}`;
-
       $("#wrapper").append(div);
     }
+
+    // Convert star RA and Dec to 3D spherical coordinates
+    const raRad = (star.ra / 24) * Math.PI * 2; // Right Ascension in radians
+    const decRad = (star.dec * Math.PI) / 180; // Declination in radians
+
+    // Target star position on celestial sphere
+    const starX = Math.cos(decRad) * Math.cos(raRad);
+    const starY = Math.sin(decRad);
+    const starZ = Math.cos(decRad) * Math.sin(raRad);
+    const starPosition = new THREE.Vector3(starX, starY, starZ);
+
+    // Camera position on the sphere (distance = 5)
+    const distance = 5;
+    const cameraX = distance * -starX; // Opposite direction from the star
+    const cameraY = distance * -starY;
+    const cameraZ = distance * -starZ;
+
+    // Animate camera to this new position
+    const targetPosition = new THREE.Vector3(cameraX, cameraY, cameraZ);
+    gsap.to(camera.position, {
+      x: targetPosition.x,
+      y: targetPosition.y,
+      z: targetPosition.z,
+      duration: 1.5,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        controls.update(); // Update controls during animation
+      },
+      onComplete: () => {
+        // Point camera to Earth (at origin)
+        controls.target.set(0, 0, 0);
+      },
+    });
   } else {
     var div = document.createElement("div");
     div.classList.add("property");
