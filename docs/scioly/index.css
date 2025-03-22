@@ -284,13 +284,12 @@ i {
 
 .body-carrier {
   overflow-y: auto;
-    height: calc(100vh - 100px);
+  height: calc(100vh - 100px);
   width: calc(100vw - 200px);
   padding-left: 100px;
   padding-right: 100px;
   padding-top: 50px;
   font-size: 1em;
-
 }
 
 .main {

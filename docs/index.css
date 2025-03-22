@@ -73,8 +73,15 @@ body {
   width: 100%;
   height: 100%;
   z-index: -2;
-  opacity: 0.2;
-  background: linear-gradient(45deg, #d58223, #41d523, #ee7752, #e73c7e);
+  opacity: 0.1;
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #88ff00,
+    #12dbe2,
+    #ea07ff,
+    #ff0000
+  );
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   height: 100vh;
@@ -228,8 +235,8 @@ a {
   position: fixed;
   bottom: 32px;
   padding: 40px;
-  border-radius: 20px;
-  filter: drop-shadow(0px 0px 8px #ffffff);
+  border-radius: 10px;
+  filter: drop-shadow(0px 0px 4px #ffffff);
   right: 32px;
 }
 
@@ -312,14 +319,14 @@ i {
   padding-left: 10px;
   padding-right: 10px;
   font-size: 0.8em;
-  border-radius: 8px;
+  border-radius: 4px;
   font-weight: 800;
   background: repeating-linear-gradient(
     -45deg,
     /* angle for diagonal lines */ #00000010,
-    /* start color */ #00000010 10px,
-    /* end color of the line */ #ffffff10 10px,
-    /* start of the next stripe */ #ffffff10 20px /* end color of the gap */
+    /* start color */ #00000010 5px,
+    /* end color of the line */ #ffffff10 5px,
+    /* start of the next stripe */ #ffffff10 10px /* end color of the gap */
   );
 }
 
