@@ -179,7 +179,7 @@ a {
   width: 4em;
   cursor: pointer;
   font-weight: 800;
-  animation: colorChange 3s infinite;
+  animation: colorChange 10s infinite;
 }
 
 @keyframes colorChange {
