@@ -1,4 +1,4 @@
-const socket = io("https://eddyzow.onrender.com/"); // Socket
+const socket = io("https://eddyzow.herokuapp.com/"); // Socket
 var stage = 0;
 var questionState = 0;
 var qnum = 0;

@@ -3,7 +3,7 @@
 //NOTES BEFORE RELEASE:
 //- CHANGE ALL SESSION STORAGE TO LOCAL STORAGE AS IT ALLOWS ONLY ONE ACCOUNT TO BE LOGGED IN AT ONCE
 document.title = "Trivia Champion";
-const socket = io("https://eddyzow.onrender.com/"); // Socket
+const socket = io("https://eddyzow.herokuapp.com/"); // Socket
 var musics = [
   "GO GO GO SUMMER - NOBUHAMU",
   "HANGING OUT IN TOKYO - MEESAN",

@@ -1,4 +1,4 @@
-const socket = io("https://eddyzow.onrender.com/"); // Socket
+const socket = io("https://eddyzow.herokuapp.com/"); // Socket
 
 document.getElementById("wallpaper").style["background-image"] =
   'url("../assets/art/wallpapers/' +

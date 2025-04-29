@@ -1,4 +1,4 @@
-const socket = io("https://eddyzow.onrender.com"); // Socket
+const socket = io("https://eddyzow.herokuapp.com/"); // Socket
 var inputGameCode = 0;
 var answered = 1;
 var gamemode = 0;
