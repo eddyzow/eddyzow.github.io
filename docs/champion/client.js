@@ -3,8 +3,8 @@
 //NOTES BEFORE RELEASE:
 //- CHANGE ALL SESSION STORAGE TO LOCAL STORAGE AS IT ALLOWS ONLY ONE ACCOUNT TO BE LOGGED IN AT ONCE
 document.title = "Trivia Champion";
-const socket = io("http://127.0.0.1:3000"); // Socket
-
+//const socket = io("http://127.0.0.1:3000"); // Socket
+const socket = io("eddyzow.herokuapp.com");
 var musics = [
   "GO GO GO SUMMER - NOBUHAMU",
   "HANGING OUT IN TOKYO - MEESAN",
