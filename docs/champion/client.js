@@ -460,6 +460,10 @@ socket.on("account-created", (credentials) => {
 
 document.getElementById("gobuttonreturn").onclick =
   function gobuttonretclicked() {
+    if (sessionStorage.getItem("dir") == "home") {
+      sessionStorage.removeItem("dir");
+      window.location.href = "../";
+    }
     if (localStorage.getItem("userToken") !== null) {
       verifyToken();
       // Remove the modal and log in.
