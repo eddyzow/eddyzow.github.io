@@ -213,7 +213,7 @@ a {
 #main-carrier {
   position: fixed;
   width: 500vw;
-  left: -100vw;
+  left: -50vw;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -246,12 +246,25 @@ a {
   font-weight: 900;
 }
 
+#login-notice {
+  font-weight: 800;
+  color: rgb(255, 251, 0);
+}
+
 i {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 40px;
+}
+
+#loginbutton {
+  text-decoration: underline;
+}
+
+#loginbutton:hover {
+  cursor: pointer;
 }
 
 #theme-changer {

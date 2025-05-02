@@ -393,6 +393,10 @@ socket.on("loginSuccess", (credentials) => {
     sessionStorage.removeItem("dir");
     window.location.href = "../jsb";
   }
+  if (sessionStorage.getItem("dir") == "home") {
+    sessionStorage.removeItem("dir");
+    window.location.href = "../";
+  }
   setLevels(localStorage.getItem("id"));
   document.getElementById("playerUsername").innerHTML = localStorage
     .getItem("username")
@@ -2442,4 +2446,7 @@ if (sessionStorage.getItem("dir") == null) {
 } else if (sessionStorage.getItem("dir") == "jsb") {
   document.getElementById("logintoyouracc").innerHTML =
     "REDIRECTING TO: JSBeats";
+} else if (sessionStorage.getItem("dir") == "home") {
+  document.getElementById("logintoyouracc").innerHTML =
+    "REDIRECTING TO: eddyzow.net";
 }

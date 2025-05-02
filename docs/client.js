@@ -1,5 +1,5 @@
 particlesJS.load("particles-js", "particles.json");
-minipages = ["about", "projects", "contact"];
+minipages = ["about", "blog", "projects", "contact"];
 
 if (localStorage.getItem("homepage-theme") != "light") {
   localStorage.setItem("homepage-theme", "dark");
@@ -99,7 +99,7 @@ function switchLightTheme() {
     el.classList.add("selected");
     window.location.hash = minipages[el.id.split("header")[1] - 1];
     document.getElementById("main-carrier").style.left =
-      "-" + el.id.split("header")[1] * 100 + "vw";
+      "-" + (el.id.split("header")[1] * 100 - 50) + "vw";
   };
 });
 
@@ -116,6 +116,15 @@ document.getElementById("theme-changer").onclick = function () {
 };
 
 window.onload = () => {
+  if (localStorage.getItem("userToken") == null) {
+    document.getElementById("login-notice").innerHTML =
+      "Log in or create an eddyzow.net account to access all cloud-based apps! (Trivia Champion, JSBeats, etc.)";
+  } else {
+    document.getElementById("login-notice").innerHTML =
+      "You are currently logged into eddyzow.net. Welcome, " +
+      localStorage.getItem("username") +
+      "!";
+  }
   try {
     console.log(minipages.indexOf(window.location.hash.split("#")[1]));
     [...document.getElementsByClassName("header-item")].forEach((el2) => {
@@ -128,7 +137,7 @@ window.onload = () => {
       .classList.add("selected");
     document.getElementById("main-carrier").style.left =
       "-" +
-      (minipages.indexOf(window.location.hash.split("#")[1]) + 1) * 100 +
+      ((minipages.indexOf(window.location.hash.split("#")[1]) + 1) * 100 - 50) +
       "vw";
   } catch {
     window.location.hash = "about";
@@ -136,6 +145,11 @@ window.onload = () => {
       el2.classList.remove("selected");
     });
     document.getElementById("header1").classList.add("selected");
-    document.getElementById("main-carrier").style.left = "-100vw";
+    document.getElementById("main-carrier").style.left = "-50vw";
   }
 };
+
+function login() {
+  sessionStorage.setItem("dir", "home");
+  window.location.href = "../champion";
+}
