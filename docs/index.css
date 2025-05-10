@@ -240,9 +240,22 @@ a {
   right: 32px;
 }
 
+.ucbp {
+  border: 12px solid goldenrod !important;
+}
+
 .devtime {
   display: inline-block;
   margin: 0;
+  margin-right: 8px;
+  font-weight: 900;
+}
+
+.uc {
+  color: goldenrod;
+  display: inline-block;
+  margin: 0;
+  margin-right: 8px;
   font-weight: 900;
 }
 
