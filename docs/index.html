@@ -1,126 +1,89 @@
 <!DOCTYPE html>
-<html>
-  <!-- Copyright 2020+ eddyzow. All rights reserved. -->
+<html lang="en">
   <head>
-    <script src="https://kit.fontawesome.com/9673dc3140.js" crossorigin="anonymous"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
-     crossorigin="anonymous"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>eddyzow</title>
-    <script src="particles.js"></script>
-    <link rel="stylesheet" type="text/css" href="index.css" />
-    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <link rel="stylesheet" href="style.css" />
     <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-4881W8M3DJ"
+      src="https://kit.fontawesome.com/9673dc3140.js"
+      crossorigin="anonymous"
     ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
+    <script defer src="client.js"></script>
+    <script src="particles.js"></script>
+  <script>
+    // Fetch moon phase from a free API (ipgeolocation.io)
+    fetch("https://api.ipgeolocation.io/astronomy?apiKey=8368c0cfcae44cdabc5bcfb1d0d068d1")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("moon-phase").textContent = `🌙 Moon Phase: ${data.moon_phase}`;
+        document.getElementById("planet-visible").textContent = `🌌 Sunrise: ${data.sunrise} | Sunset: ${data.sunset}`;
+        const moonEmojis = {
+  "NEW_MOON": "🌑",
+  "WAXING_CRESCENT": "🌒",
+  "FIRST_QUARTER": "🌓",
+  "WAXING_GIBBOUS": "🌔",
+  "FULL_MOON": "🌕",
+  "WANING_GIBBOUS": "🌖",
+  "LAST_QUARTER": "🌗",
+  "WANING_CRESCENT": "🌘"
+};
 
-      gtag("config", "G-4881W8M3DJ");
-    </script>
+const emoji = moonEmojis[data.moon_phase] || "🌙";
+document.getElementById("moon-phase").textContent = `${emoji} Moon Phase: ${data.moon_phase}`;
+      })
+      .catch(() => {
+        document.getElementById("moon-phase").textContent = "🌘 Moon Phase: Unavailable";
+        document.getElementById("planet-visible").textContent = "🔭 Astronomy data unavailable";
+      });
+  </script>
   </head>
-  <body>
-    <div class="button" id="theme-changer"><i id="theme-changer-icon" class="fa-solid fa-sun"></i>
+  <body class="dark">
+    <p id="last-updated">Last updated 11 May 2025</p>
+    <div class="music-widget" id="now-playing">
+      🎧 Listening to:
+      <a
+        href="https://open.spotify.com/track/5mtTAScDytxMMqZj14NmlN"
+        target="_blank"
+        >love. - wave to earth</a
+      >
     </div>
+    <div id="particles-js"></div>
 
-    <div class="modal"></div>
-        <!-- <header class="header" id="onlinex">
-            Online servers will be down indefinitely. Stay tuned for more information!
-        </header> -->
-        <header class="header">
-        <div class="header-item selected" id="header1">ABOUT</div>
-        <div class="header-item" id="header2">BLOG</div>
-        <div class="header-item" id="header3">PROJECTS</div>
-        <div class="header-item" id="header4">CONTACT</div>
-     <!--   <div class="header-item" id="header5">HACKS</div> -->
-        </header>
-        <div id="main-carrier">
-           
-            <div class="main-columns">
-                
-                <div class="column">
-                    <div class="title">
-                        ABOUT
-                    </div>
-                    <ul class="note">
-                        <li>18 / massachusetts</li>
-                        <li>astrophysics @ uc berkeley</li>
-                        <li><p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package jquery">jQuery</p> <p class="dev-package socket">WebSockets</p> <p class="dev-package api">APIs</p></li>
-                    </ul>
+    <nav class="nav">
+      <a href="#home" class="fade-link">home</a>
+      <a href="#projects" class="fade-link">projects</a>
+      <a href="#scioly" class="fade-link">scioly</a>
+      <a href="#contact" class="fade-link">contact</a>
+    </nav>
 
-                    <div class="songr">cool song:</div>
-                    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2LlOeW5rVcvl3QcPNPcDus?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>                    <p style="font-size: 0.7em;"> Page last updated: 2 May 2025</p>
-                    <div style="margin-bottom: 20px;" id="login-notice">Loading...</div>
-                    <a id= "loginbutton" onclick="login()" target="_blank">To log in or log out of your account, visit this link! (You will be redirected back here)</a>
-                </div>
-                <div class="column">
-                    <div class="title">
-                        LINKS
-                    </div>
-                    <p>personal links:</p>
-                    <ul>
-                        <li><a target="_blank" href="https://youtube.com/eddyzow">youtube</a></li>
-                        <li><a target="_blank" href="https://github.com/eddyzow">github</a></li>
-                        <li><a target="_blank" href="https://www.last.fm/user/eddyzow">last.fm</a></li>
-                        <li><a target="_blank" href="https://eddyzow.net/scioly/">scioly exams/keys</a></li>
-                        <li><a target="_blank" href="https://monkeytype.com/profile/eddyzow">monkeytype</a></li>
-                        <li><a target="_blank" href="mailto:eddyz@berkeley.edu">email</a></li>
-                    </ul>
-                <p>organizations / projects:</p>
-                    <ul>
-                        <li><a target="_blank" href="https://bobabyte.org">BobaByte - middle/high school hackathon in Boston awarding over $35,000 of prizes</a></li>
-                        <li><a target="_blank" href="https://www.youtube.com/@abscioly">Acton-Boxborough Science Olympiad YouTube</a></li>
-                        <li><a target="_blank" href="https://technomaniacs.web.app/">FTC Team 16021 Techno Maniacs Website</a></li>
-                        <li><a target="_blank" href="https://www.youtube.com/@TechnoManiacs16021">FTC Team 16021 Techno Maniacs YouTube</a></li>
-                    </ul>
-                <p>All links open in new tabs.</p>
-                </div>
-                
-                   
-                
-                
+    <main class="center" id="home">
+      <p>eddy zhao</p>
+      <div class="terminal">
+        <div class="prompt">
+          $ <span id="typewriter"></span><span class="cursor">█</span>
+        </div>
+      </div>
+      <div class="glow-links">
+        <a href="https://github.com/eddyzow" target="_blank" class="glow"
+          >github</a
+        >
+        <a href="https://youtube.com/eddyzow" target="_blank" class="glow"
+          >youtube</a
+        >
+        <a href="https://www.last.fm/user/eddyzow" target="_blank" class="glow"
+          >last.fm</a
+        >
+        <a href="mailto:eddyz@berkeley.edu" class="glow">email</a>
+      </div>
+    </main>
 
-             
-                
-            </div>
-            <div class="main">
-                <div class="title">
-                    Blog
-                </div>
-                <p class="note" style="padding-bottom: 5px;">
-                </p>
-
-                 <div class="blogpost ucbp"> 
-                        <div class="title">
-                           New Game!!
-                        </div>
-                        <p class="uc">Posted 5/10/2025 at 1:51 AM ET</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package jquery">jQuery</p> <p class="dev-package socket">WebSockets</p>
-                        <p class="note">
-                            I'm making a new online competitive game! This is my return to the scene, way back from when I made Trivia Champion (nearly 5 years ago, back when I was in 7th grade!!). I'm making this game as part of Hack Club's San Francisco Neighborhood program. The estimated completion time of the game will be in late May or early June.
-                        </p>
-                                            </div>
-
-                <div class="blogpost"> 
-                    <div class="title">
-                       hello world
-                    </div>
-                    <p class="devtime">Posted 5/2/2025 at 2:01 AM ET</p>
-                    <p class="note">
-                        Thanks to the Heroku student pack, cloud servers are now up 24/7! Also, the blog is finally back. For now, my blog posts will be manually hardcoded into the site, but eventually I'll write a way to post them remotely. Lastly, a new big online game is in the works! I'm making it for Hack Club's Neighborhood program. Stay tuned.
-                    </p></div>
-                
-
-            </div>
-            
-            <div class="main">
-                
-                    <div class="title">
-                        Projects
-                    </div>
+    <section
+      class="page-section"
+      id="projects"
+      style="display: none; flex-direction: column; text-align: center"
+    >
+      <h1 class="glow" style="margin-top: 40px;">Projects</h1>
                     <p class="note" style="padding-bottom: 5px;">
                     </p>
 
@@ -280,22 +243,147 @@
                     </p>
                     <div class="projectPlay" onclick="window.open('/champion')" target=_blank>CLICK TO OPEN</div>
                 </div>
-            </div>
-            <div class="main">
-                <div class="title">
-                    Contact
-                </div>
-                <p class="note" style="padding-bottom: 5px;"></p>                
-                <div class="blogpost"> 
-                    <p class="note">discord: eddyzow</p>
-                    <p class="note">email: eddyz@berkeley.edu</p>
-                </div>
-               
+                <p class="center" style="margin-bottom: 80px;">Unfortunately, you've reached the end :(</p>
             </div>
            
+    </section>
+
+    <section
+      class="center"
+      id="contact"
+      style="display: none; flex-direction: column; text-align: center"
+    >
+      <h1 class="glow">Contact</h1>
+      <p>discord: eddyzow</p>
+      <p>email: eddyz@berkeley.edu</p>
+    </section>
+
+    <section class="page-section" id="scioly" style="display: none">
+      <div class="body-carrier">
+        <h1>
+          I am currently a captain of the Acton-Boxborough Science Olympiad
+          Team. On this page, you can find all Science Olympiad exams I've
+          written. Tests are ordered chronologically.
+        </h1>
+        <div>
+          <ul>
+            <li>
+              2025 Lexington Invitational - Astronomy C (April 2025)
+              <ul>
+                <li class="smaller disable">exam | key | solutions</li>
+              </ul>
+            </li>
+            <li>
+              2025 Lexington Invitational - Codebusters C (April 2025)
+              <ul>
+                <li class="smaller disable">exam | key | solutions</li>
+              </ul>
+            </li>
+            <li>
+              2025 Lexington Invitational - Fermi Questions C (April 2025)
+              <ul>
+                <li class="smaller disable">exam | key | solutions</li>
+              </ul>
+            </li>
+            <li>
+              2025 UMass Amherst Invitational - Astronomy C (February 2025)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1nW_AtA1QRctejWxZnvOM69i7NiiFyoS0?usp=sharing"
+                    target="_blank"
+                    >exam | sheet | key | images</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2025 Acton-Boxborough Tryouts - Astronomy C (November 2024)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1OfmFGY27_QJSrEKJDYHUgfMLgjpNA2Cr?usp=sharing"
+                    target="_blank"
+                    >exam | key | solutions</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2025 Acton-Boxborough Tryouts - Codebusters C (October 2024)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1qZOZLFkDA12T3xGa5sl8ZsKBOLUHZwlD?usp=sharing"
+                    target="_blank"
+                    >exam | key</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2025 Acton-Boxborough Tryouts - Dynamic Planet C (October 2024)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1viR--S54rVLXfcUwfAc7I-OE0n6lBlSx?usp=sharing"
+                    target="_blank"
+                    >exam | key</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2025 Acton-Boxborough Tryouts - Fossils C (November 2024)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1YBj0FFnLxvr8qN4dXRlyvpejwnAPvxRG?usp=sharing"
+                    target="_blank"
+                    >exam | key</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2024 UMass Amherst Invitational - Fermi Questions C (February
+              2024)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/11q1KwmNOAxg3HvnZXZHN-BQeSCvlDWgB"
+                    target="_blank"
+                    >exam, key, solutions, statistics</a
+                  >
+                  |
+                  <a
+                    href="https://docs.google.com/document/d/1uxdq72pnmBMfV0WB-tKzd7iEpEcVLyN2QqBsjA7lX3s/edit?usp=sharing"
+                    target="_blank"
+                    >reflection</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2024 SSSS - Fermi Questions C (July 2023)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1sLG1hxSMqW_UomHGLIUNP-vYnuBZm7ad?usp=sharing"
+                    target="_blank"
+                    >exam, solutions</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
-        <div id="particles-js"></div>
-      <script src="client.js"></script>
-    </div>
+      </div>
+    </section>
+
+    <div class="astronomy-widget" id="astronomy-widget">
+    <p id="moon-phase">🌘 Moon Phase: Loading...</p>
+    <p id="planet-visible">🔭 Visible Planets: Loading...</p>
+  </div>
   </body>
 </html>
