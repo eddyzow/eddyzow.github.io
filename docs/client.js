@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Page section transitions
   const links = document.querySelectorAll("a.fade-link");
-  const sections = ["home", "projects", "scioly", "contact"];
+  const sections = ["home", "projects", "builds", "scioly", "contact"];
 
   const setActiveLink = (id) => {
     links.forEach((link) => {
