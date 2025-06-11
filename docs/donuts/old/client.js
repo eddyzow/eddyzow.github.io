@@ -8,7 +8,7 @@ var clickf = false;
 Howler.volume(0.2);
 console.log(saveData);
 document.getElementById("wallpaper").style["background-image"] =
-  'url("../champion/assets/art/wallpapers/' +
+  'url("../../champion/assets/art/wallpapers/' +
   (Math.floor(Math.random() * 8) + 1).toString() +
   '.jpg")';
 if (saveData == undefined) {

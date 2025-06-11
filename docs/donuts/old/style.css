@@ -1,31 +1,31 @@
 @font-face {
   font-family: "Inter";
   font-weight: 300;
-  src: url("../champion/Inter-Light.woff2") format("woff2");
+  src: url("../../champion/Inter-Light.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "Inter";
   font-weight: 500;
-  src: url("../champion/Inter-Medium.woff2") format("woff2");
+  src: url("../../champion/Inter-Medium.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "Inter";
   font-weight: 400;
-  src: url("../champion/Inter-Normal.woff2") format("woff2");
+  src: url("../../champion/Inter-Normal.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "Inter";
   font-weight: 600;
-  src: url("../champion/Inter-SemiBold.woff2") format("woff2");
+  src: url("../../champion/Inter-SemiBold.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "Inter";
   font-weight: 700;
-  src: url("../champion/Inter-Bold.woff2") format("woff2");
+  src: url("../../champion/Inter-Bold.woff2") format("woff2");
 }
 
 #donut-count {
@@ -168,7 +168,7 @@ body {
       rgba(255, 255, 255, 0.5),
       rgba(0, 0, 0, 0.5)
     ),
-    url("../champion/crystal.png");
+    url("../../champion/crystal.png");
 }
 
 .notice:nth-child(4n + 1) {
@@ -177,7 +177,7 @@ body {
       rgba(255, 255, 255, 0.5),
       rgba(0, 0, 0, 0.5)
     ),
-    url("../champion/crystal2.png");
+    url("../../champion/crystal2.png");
 }
 
 .notice:nth-child(4n + 2) {
@@ -186,7 +186,7 @@ body {
       rgba(255, 255, 255, 0.5),
       rgba(0, 0, 0, 0.5)
     ),
-    url("../champion/crystal3.png");
+    url("../../champion/crystal3.png");
 }
 
 .notice:nth-child(4n + 3) {
@@ -195,7 +195,7 @@ body {
       rgba(255, 255, 255, 0.5),
       rgba(0, 0, 0, 0.5)
     ),
-    url("../champion/crystal4.png");
+    url("../../champion/crystal4.png");
 }
 
 #header div {
