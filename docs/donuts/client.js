@@ -1,929 +1,648 @@
-// things to do
+// Originally by eddyzow
 
-saveData = localStorage.getItem("saveData");
-let particleStage = 0;
-var frenzy = false;
-var autoclick = false;
-var clickf = false;
-Howler.volume(0.2);
-console.log(saveData);
-document.getElementById("wallpaper").style["background-image"] =
-  'url("../champion/assets/art/wallpapers/' +
-  (Math.floor(Math.random() * 8) + 1).toString() +
-  '.jpg")';
-if (saveData == undefined) {
-  saveData = {
-    donuts: 0,
-    dps: 0,
-    dpc: 1,
-    items: {
-      cursor: 0,
-      deepfry: 0,
-      restaurant: 0,
-      factory: 0,
-      time_machine: 0,
-      shipment: 0,
-      mc: 0,
-      planet: 0,
-      um: 0,
-      js: 0,
-    },
-    bakeryname: "",
-    lastLoggedOn: Math.floor(new Date().getTime() / 1000),
-  };
-  localStorage.setItem("saveData", JSON.stringify(saveData));
-}
-try {
-  saveData = JSON.parse(saveData);
-} catch {
-  saveData = {
-    donuts: 0,
-    dps: 0,
-    dpc: 1,
-    items: {
-      cursor: 0,
-      deepfry: 0,
-      restaurant: 0,
-      factory: 0,
-      time_machine: 0,
-      shipment: 0,
-      mc: 0,
-      planet: 0,
-      um: 0,
-      js: 0,
-    },
-    bakeryname: "",
-    lastLoggedOn: Math.floor(new Date().getTime() / 1000),
-  };
-  localStorage.setItem("saveData", JSON.stringify(saveData));
-}
+// ==================================================================================
+// GAME SETUP
+// ==================================================================================
+const Game = {
+  // --------------- STATE ---------------
+  state: {},
 
-if (saveData.items.planet == undefined) {
-  saveData.items.planet = 0;
-}
-if (saveData.items.um == undefined) {
-  saveData.items.um = 0;
-}
-if (saveData.items.js == undefined) {
-  saveData.items.js = 0;
-}
-if (saveData.items.factory == undefined) {
-  saveData.items.factory = 0;
-}
-if (saveData.items.shipment == undefined) {
-  saveData.items.shipment = 0;
-}
-if (saveData.items.time_machine == undefined) {
-  saveData.items.time_machine = 0;
-}
-if (saveData.items.mc == undefined) {
-  saveData.items.mc = 0;
-}
-
-if (localStorage.getItem("detail") == "false") {
-  document.getElementById("detail").innerHTML = "GRAPHICS: OFF";
-  localStorage.setItem("detail", "false");
-} else {
-  document.getElementById("detail").innerHTML = "GRAPHICS: ON";
-  localStorage.setItem("detail", "true");
-  particleStage = 5;
-}
-
-document.getElementById("reset-save").onclick = function () {
-  resetSave();
-};
-
-document.getElementById("pn").onclick = function () {
-  document.getElementById("welcomeback").innerHTML = "Patch Notes (Beta v0.3)";
-  document.getElementById("loggedOutModal").style.visibility = "visible";
-  document.getElementById("loggedOutModal").style.opacity = "100%";
-  document.getElementById("loggedOutPopup").style.visibility = "visible";
-  document.getElementById("loggedOutPopup").style.opacity = "100%";
-  document.getElementById("amountEarned").innerHTML =
-    "-Decreased price of doubling DPC towards the start, but increased price further into the game<br><br>-Made large numbers smaller (1000000 contracts to 1.0M)";
-  document.getElementById("loggedOutPopup").style.transform =
-    "translate(-50%, -50%) scale(1, 1)";
-};
-
-document.getElementById("detail").onclick = function () {
-  if (localStorage.getItem("detail") != "false") {
-    localStorage.setItem("detail", "false");
-    document.getElementById("detail").innerHTML = "GRAPHICS: OFF";
-    document.getElementById("particles-js").remove();
-  } else {
-    let pjs = document.createElement("div");
-    pjs.setAttribute("id", "particles-js");
-    document.body.appendChild(pjs);
-    localStorage.setItem("detail", "true");
-    document.getElementById("detail").innerHTML = "GRAPHICS: ON";
-    particleStage = 5;
-  }
-};
-
-const formatCash = (n) => {
-  if (n < 1e6) return n;
-  if (n >= 1e6 && n < 1e9) return (n / 1e6).toFixed(3) + "M";
-  if (n >= 1e9 && n < 1e12) return (n / 1e9).toFixed(3) + "B";
-  if (n >= 1e12 && n < 1e15) return (n / 1e12).toFixed(3) + "T";
-  if (n >= 1e15 && n < 1e18) return (n / 1e15).toFixed(3) + "q";
-  if (n >= 1e18 && n < 1e21) return (n / 1e18).toFixed(3) + "Q";
-  if (n >= 1e21 && n < 1e24) return (n / 1e21).toFixed(3) + "s";
-  if (n >= 1e24 && n < 1e27) return (n / 1e24).toFixed(3) + "S";
-  if (n >= 1e27 && n < 1e30) return (n / 1e27).toFixed(3) + "O";
-  if (n >= 1e30 && n < 1e33) return (n / 1e30).toFixed(3) + "N";
-  if (n >= 1e33 && n < 1e36) return (n / 1e33).toFixed(3) + "D";
-  if (n >= 1e36) return (n / 1e36).toFixed(3) + "D";
-};
-
-function resetSave() {
-  if (
-    confirm("Are you sure you'd like to restart your Donut Simulator save?") &&
-    confirm(
-      "THIS IS THE LAST WARNING!! Are you SURE you want to RESET EVERYTHING?"
-    )
-  ) {
-    saveData = {
-      donuts: 0,
-      dps: 0,
-      dpc: 1,
-      items: {
-        cursor: 0,
-        deepfry: 0,
-        restaurant: 0,
-        factory: 0,
-        time_machine: 0,
-        shipment: 0,
-        mc: 0,
-        planet: 0,
-        um: 0,
-        js: 0,
+  // --------------- CONFIG ---------------
+  config: {
+    buildings: {
+      cursor: { baseCost: 10, baseDps: 0.2, name: "Cursor" },
+      deepfry: { baseCost: 200, baseDps: 5, name: "Deep Fryer" },
+      restaurant: { baseCost: 1000, baseDps: 32, name: "Restaurant" },
+      factory: { baseCost: 11000, baseDps: 400, name: "Factory" },
+      shipment: { baseCost: 240000, baseDps: 8000, name: "Shipment" },
+      time_machine: { baseCost: 3000000, baseDps: 66666, name: "Time Machine" },
+      mc: { baseCost: 50000000, baseDps: 1000000, name: "Matter Creator" },
+      portal: { baseCost: 950000000, baseDps: 15000000, name: "Donut Portal" }, // New!
+      planet: {
+        baseCost: 18000000000,
+        baseDps: 250000000,
+        name: "Donut Planet",
       },
-      bakeryname: "",
-      lastLoggedOn: Math.floor(new Date().getTime() / 1000),
+      um: {
+        baseCost: 330000000000,
+        baseDps: 2700000000,
+        name: "Universe Manipulation",
+      },
+      js: {
+        baseCost: 5000000000000,
+        baseDps: 140000000000,
+        name: "JavaScript Console",
+      },
+    },
+    saveInterval: 5000, // 5 seconds
+    gameTick: 50, // 20 times per second
+    ascendDonutRequirement: 1e12, // 1 Trillion
+    costIncreaseRate: 1.15,
+  },
+
+  // --------------- DOM ELEMENTS ---------------
+  els: {},
+
+  // ==================================================================================
+  // INITIALIZATION
+  // ==================================================================================
+  init() {
+    this.cacheDOMElements();
+    this.loadGame();
+    this.bindEvents();
+    this.runGameLoop();
+    this.runSaveLoop();
+    this.updateUI();
+    this.showWelcomeModal();
+    Howler.volume(0.2);
+    this.setRandomWallpaper();
+    console.log("Donut Simulator: Re-Fried Edition Initialized!");
+  },
+
+  cacheDOMElements() {
+    this.els = {
+      // Stats
+      donutCount: document.getElementById("donut-count"),
+      dpsCount: document.getElementById("dps-count"),
+      bakeryName: document.getElementById("bakeryname"),
+      // Donut
+      mainDonut: document.getElementById("main-donut"),
+      clickTextContainer: document.getElementById("click-text-container"),
+      wallpaper: document.getElementById("wallpaper"),
+      // Buttons
+      pnButton: document.getElementById("pn-button"),
+      graphicsButton: document.getElementById("graphics-button"),
+      resetButton: document.getElementById("reset-button"),
+      // Modals
+      modalBackdrop: document.getElementById("modal-backdrop"),
+      welcomeModal: document.getElementById("welcome-modal"),
+      modalTitle: document.getElementById("modal-title"),
+      modalText: document.getElementById("modal-text"),
+      modalCloseButton: document.getElementById("modal-close-button"),
+      ascendModal: document.getElementById("ascend-modal"),
+      ascendModalReward: document.getElementById("ascend-modal-reward"),
+      ascendConfirmButton: document.getElementById("ascend-confirm-button"),
+      ascendCancelButton: document.getElementById("ascend-cancel-button"),
     };
-    localStorage.setItem("saveData", JSON.stringify(saveData));
-    window.location.reload();
-  }
-}
-
-// dpc (donuts per click add)
-// frenzy time (depends on dpc)
-function saveDonuts() {
-  localStorage.setItem("saveData", JSON.stringify(saveData));
-  if (clickf == true) {
-    document.getElementById("donut-count").innerHTML =
-      formatCash(Math.floor(saveData.donuts)) +
-      " Donuts (" +
-      formatCash(saveData.dps) +
-      " DPS, " +
-      formatCash(saveData.dpc) +
-      "x333" +
-      " DPC)";
-  } else if (frenzy == true) {
-    document.getElementById("clickf-price").innerHTML = formatCash(
-      Math.ceil(saveData.dpc * 30000)
-    );
-    document.getElementById("donut-count").innerHTML =
-      formatCash(Math.floor(saveData.donuts)) +
-      " Donuts (" +
-      formatCash(saveData.dps) +
-      "x7" +
-      " DPS, " +
-      formatCash(saveData.dpc) +
-      "x7" +
-      " DPC)";
-  } else {
-    document.getElementById("clickf-price").innerHTML = formatCash(
-      Math.ceil(saveData.dpc * 30000)
-    );
-    document.getElementById("minif-price").innerHTML = formatCash(
-      Math.ceil((saveData.dps / 1.2 + 7 * saveData.dpc) * 30 + 200)
-    );
-    document.getElementById("frenzy-price").innerHTML = formatCash(
-      Math.ceil((saveData.dps / 1.2 + 7 * saveData.dpc) * 300 + 2000)
-    );
-    document.getElementById("donut-count").innerHTML =
-      formatCash(Math.floor(saveData.donuts)) +
-      " Donuts (" +
-      formatCash(saveData.dps) +
-      " DPS, " +
-      formatCash(saveData.dpc) +
-      " DPC)";
-  }
-  document.getElementById("cursor-count").innerHTML =
-    "Cursor (x" + saveData.items.cursor + ")";
-  document.getElementById("oven-count").innerHTML =
-    "Deep Fryer (x" + saveData.items.deepfry + ")";
-  document.getElementById("restaurant-count").innerHTML =
-    "Restaurant (x" + saveData.items.restaurant + ")";
-  document.getElementById("factory-count").innerHTML =
-    "Factory (x" + saveData.items.factory + ")";
-  document.getElementById("tm-count").innerHTML =
-    "Time Machine (x" + saveData.items.time_machine + ")";
-  document.getElementById("shipment-count").innerHTML =
-    "Shipment (x" + saveData.items.shipment + ")";
-  document.getElementById("planet-count").innerHTML =
-    "Donut Planet (x" + saveData.items.planet + ")";
-  document.getElementById("um-count").innerHTML =
-    "Universe Manipulation (x" + saveData.items.um + ")";
-  document.getElementById("js-count").innerHTML =
-    "JavaScript Console (x" + saveData.items.js + ")";
-  document.getElementById("mc-count").innerHTML =
-    "Matter Creator (x" + saveData.items.mc + ")";
-  document.getElementById("dpc-price").innerHTML = formatCash(
-    Math.floor((saveData.dpc * 40) ** 1.4)
-  );
-  if (autoclick == false) {
-    document.getElementById("autoclick-price").innerHTML = formatCash(
-      Math.floor(saveData.dpc * 480)
-    );
-  }
-  if (localStorage.getItem("detail") == "true") {
-    if (saveData.donuts > 1000000) {
-      if (particleStage != 4) {
-        particleStage = 4;
-        document.getElementById("particles-js").remove();
-        let pjs = document.createElement("div");
-        pjs.setAttribute("id", "particles-js");
-        document.body.appendChild(pjs);
-        particlesJS.load("particles-js", "particles4.json");
-      }
-    } else if (saveData.donuts > 1000000) {
-      if (particleStage != 3) {
-        particleStage = 3;
-        document.getElementById("particles-js").remove();
-        let pjs = document.createElement("div");
-        pjs.setAttribute("id", "particles-js");
-        document.body.appendChild(pjs);
-        particlesJS.load("particles-js", "particles3.json");
-      }
-    } else if (saveData.donuts > 25000) {
-      if (particleStage != 2) {
-        particleStage = 2;
-        document.getElementById("particles-js").remove();
-        let pjs = document.createElement("div");
-        pjs.setAttribute("id", "particles-js");
-        document.body.appendChild(pjs);
-        particlesJS.load("particles-js", "particles2.json");
-      }
-    } else if (particleStage != 1) {
-      particleStage = 1;
-      document.getElementById("particles-js").remove();
-      let pjs = document.createElement("div");
-      pjs.setAttribute("id", "particles-js");
-      document.body.appendChild(pjs);
-      particlesJS.load("particles-js", "particles1.json");
+    // Cache shop items
+    for (const key in this.config.buildings) {
+      this.els[`buy-${key}`] = document.getElementById(`buy-${key}`);
+      this.els[`${key}-count`] = document.getElementById(`${key}-count`);
+      this.els[`${key}-price`] = document.getElementById(`${key}-price`);
     }
-  }
-}
+    this.els["buy-portal"] = document.getElementById("buy-portal"); // New building
+    this.els["portal-count"] = document.getElementById("portal-count");
+    this.els["portal-price"] = document.getElementById("portal-price");
 
-secDiff = Math.floor(new Date().getTime() / 1000) - saveData.lastLoggedOn;
-donutsAway = secDiff * saveData.dps * 0.5;
-if (donutsAway >= saveData.dps * 604800) {
-  donutsAway = saveData.dps * 604800;
-}
-saveData.donuts += donutsAway;
-if (secDiff >= 1800) {
-  document.getElementById("welcomeback").innerHTML = "WELCOME BACK!";
-  document.getElementById("loggedOutModal").style.visibility = "visible";
-  document.getElementById("loggedOutModal").style.opacity = "100%";
-  document.getElementById("loggedOutPopup").style.visibility = "visible";
-  document.getElementById("loggedOutPopup").style.opacity = "100%";
-  document.getElementById("amountEarned").innerHTML =
-    "While you were away, you earned " +
-    Math.floor(donutsAway) +
-    " donuts. (50% DPS)";
-  document.getElementById("loggedOutPopup").style.transform =
-    "translate(-50%, -50%) scale(1, 1)";
-}
+    // Cache Powerups
+    this.els["buy-dpc"] = document.getElementById("buy-dpc");
+    this.els["dpc-price"] = document.getElementById("dpc-price");
+    this.els["buy-frenzy"] = document.getElementById("buy-frenzy");
+    this.els["frenzy-price"] = document.getElementById("frenzy-price");
+    this.els["buy-clickf"] = document.getElementById("buy-clickf");
+    this.els["clickf-price"] = document.getElementById("clickf-price");
+    this.els["buy-autoclick"] = document.getElementById("buy-autoclick");
+    this.els["autoclick-price"] = document.getElementById("autoclick-price");
 
-document.getElementById("loggedOutButton").onclick = function () {
-  document.getElementById("loggedOutModal").style.visibility = "hidden";
-  document.getElementById("loggedOutModal").style.opacity = "0%";
-  document.getElementById("loggedOutPopup").style.visibility = "hidden";
-  document.getElementById("loggedOutPopup").style.opacity = "0%";
-  document.getElementById("loggedOutPopup").style.transform =
-    "translate(-50%, -50%) scale(0.5, 0.5)";
-};
+    // Ascension
+    this.els["ascend-button"] = document.getElementById("ascend-button");
+    this.els["ascend-info"] = document.getElementById("ascend-info");
+    this.els["ascend-reward"] = document.getElementById("ascend-reward");
+  },
 
-document.getElementById("bakeryname").value = saveData.bakeryname;
-document.getElementById("bakeryname").oninput = function () {
-  saveData["bakeryname"] = document.getElementById("bakeryname").value;
-  saveDonuts();
-};
+  // ==================================================================================
+  // SAVE & LOAD
+  // ==================================================================================
 
-if (localStorage.getItem("detail") == "true") {
-  if (saveData.donuts <= 1000) {
-    particlesJS.load("particles-js", "particles1.json");
-  } else if (saveData.donuts <= 50000) {
-    particlesJS.load("particles-js", "particles2.json");
-  } else if (saveData.donuts <= 1000000) {
-    particlesJS.load("particles-js", "particles3.json");
-  } else {
-    particlesJS.load("particles-js", "particles4.json");
-  }
-}
+  createDefaultSave() {
+    const defaultState = {
+      donuts: 0,
+      dpc: 1,
+      bakeryname: "",
+      lastLoggedOn: Math.floor(Date.now() / 1000),
+      graphicsOn: true,
+      donutsEver: 0,
+      prestige: 0,
+      buildings: {},
+      activeBoosts: {}, // { frenzy: endTime, clickf: endTime, ... }
+    };
+    for (const key in this.config.buildings) {
+      defaultState.buildings[key] = 0;
+    }
+    return defaultState;
+  },
 
-document.getElementById("cursor-count").innerHTML =
-  "Cursor (x" + saveData.items.cursor + ")";
-document.getElementById("oven-count").innerHTML =
-  "Deep Fryer (x" + saveData.items.deepfry + ")";
-document.getElementById("restaurant-count").innerHTML =
-  "Restaurant (x" + saveData.items.restaurant + ")";
-document.getElementById("factory-count").innerHTML =
-  "Factory (x" + saveData.items.factory + ")";
-document.getElementById("dpc-price").innerHTML = formatCash(
-  Math.floor((saveData.dpc * 40) ** 1.4)
-);
-document.getElementById("shipment-price").innerHTML = formatCash(
-  Math.floor(saveData.items.shipment * 48000 + 240000)
-);
-document.getElementById("tm-price").innerHTML = formatCash(
-  Math.floor(saveData.items.time_machine * 600000 + 3000000)
-);
-document.getElementById("mc-price").innerHTML = formatCash(
-  Math.floor(saveData.items.mc * 10000000 + 50000000)
-);
-document.getElementById("frenzy-price").innerHTML = formatCash(
-  Math.ceil((saveData.dps / 1.2 + 7 * saveData.dpc) * 300 + 2000)
-);
-document.getElementById("minif-price").innerHTML = formatCash(
-  Math.ceil((saveData.dps / 1.2 + 7 * saveData.dpc) * 30 + 200)
-);
-document.getElementById("clickf-price").innerHTML = formatCash(
-  Math.ceil(saveData.dpc * 30000)
-);
-document.getElementById("cursor-price").innerHTML = formatCash(
-  saveData.items.cursor * 2 + 10
-);
-document.getElementById("oven-price").innerHTML = formatCash(
-  saveData.items.deepfry * 40 + 200
-);
-document.getElementById("restaurant-price").innerHTML = formatCash(
-  saveData.items.restaurant * 500 + 1000
-);
-document.getElementById("factory-price").innerHTML = formatCash(
-  saveData.items.factory * 2200 + 11000
-);
-document.getElementById("planet-price").innerHTML = formatCash(
-  saveData.items.planet * 200000000 + 1000000000
-);
-document.getElementById("um-price").innerHTML = formatCash(
-  saveData.items.deepfry * 20000000000 + 100000000000
-);
-document.getElementById("js-price").innerHTML = formatCash(
-  saveData.items.restaurant * 1000000000000 + 5000000000000
-);
-setInterval(function () {
-  saveData.lastLoggedOn = Math.floor(new Date().getTime() / 1000);
-  if (frenzy == true) {
-    saveData.donuts += (saveData.dps / 20) * 7;
-  } else {
-    saveData.donuts += saveData.dps / 20;
-  }
-  saveDonuts();
-}, 50);
+  loadGame() {
+    let savedData;
+    try {
+      savedData = JSON.parse(localStorage.getItem("donutSimulatorSave"));
+    } catch (e) {
+      console.warn("Could not parse save data. Starting fresh.");
+    }
 
-document.getElementById("buy-frenzy").onclick = function () {
-  if (
-    saveData.donuts >= (saveData.dps / 1.2 + 7 * saveData.dpc) * 300 + 2000 &&
-    frenzy == false &&
-    clickf == false
-  ) {
-    saveData.donuts -= (saveData.dps / 1.2 + 7 * saveData.dpc) * 300 + 2000;
-    frenzy = true;
-    let dpc = saveData.dpc;
-    saveData.dpc = parseFloat(dpc);
-    document.getElementById("frenzy-price").innerHTML = "Active (77s)";
-    document.getElementById("frenzy-price").style = "color: yellow";
-    document.getElementById("donut-count").style = "color: yellow";
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-    let tryF = 0;
-    buyfrenzy = setInterval(function () {
-      tryF += 1;
-      document.getElementById("frenzy-price").innerHTML =
-        "Active (" + (77 - tryF) + "s)";
-      if (tryF == 77) {
-        clearInterval(buyfrenzy);
-        frenzy = false;
-        document.getElementById("frenzy-price").innerHTML = formatCash(
-          Math.ceil((saveData.dps / 1.2 + 7 * saveData.dpc) * 300 + 2000)
-        );
-        document.getElementById("frenzy-price").style = "";
-        document.getElementById("donut-count").style = "";
+    this.state = Object.assign(this.createDefaultSave(), savedData);
+    this.recalculateDPS();
+  },
+
+  saveGame() {
+    this.state.lastLoggedOn = Math.floor(Date.now() / 1000);
+    localStorage.setItem("donutSimulatorSave", JSON.stringify(this.state));
+  },
+
+  resetSave() {
+    if (
+      confirm(
+        "Are you sure you want to completely reset your save? There is no going back!"
+      )
+    ) {
+      this.state = this.createDefaultSave();
+      this.saveGame();
+      window.location.reload();
+    }
+  },
+
+  // ==================================================================================
+  // GAME LOOP & CALCULATIONS
+  // ==================================================================================
+
+  runGameLoop() {
+    setInterval(() => {
+      const dps = this.state.dps * this.getFrenzyMultiplier();
+      this.earnDonuts(dps / (1000 / this.config.gameTick));
+      this.updateBoosts();
+      this.updateUI();
+    }, this.config.gameTick);
+  },
+
+  runSaveLoop() {
+    setInterval(() => {
+      this.saveGame();
+    }, this.config.saveInterval);
+  },
+
+  recalculateDPS() {
+    let totalDps = 0;
+    for (const key in this.state.buildings) {
+      totalDps +=
+        this.state.buildings[key] * this.config.buildings[key].baseDps;
+    }
+    const prestigeBonus = 1 + this.state.prestige * 0.01;
+    this.state.dps = totalDps * prestigeBonus;
+  },
+
+  earnDonuts(amount) {
+    this.state.donuts += amount;
+    this.state.donutsEver += amount;
+  },
+
+  getClickValue() {
+    const prestigeBonus = 1 + this.state.prestige * 0.01;
+    let clickValue = this.state.dpc * prestigeBonus;
+    clickValue *= this.getFrenzyMultiplier();
+    clickValue *= this.getClickFrenzyMultiplier();
+    return clickValue;
+  },
+
+  getBuildingCost(key) {
+    return Math.ceil(
+      this.config.buildings[key].baseCost *
+        Math.pow(this.config.costIncreaseRate, this.state.buildings[key])
+    );
+  },
+
+  // ==================================================================================
+  // ACTIONS (Clicking, Buying, Selling)
+  // ==================================================================================
+
+  donutClicked(event) {
+    const clickValue = this.getClickValue();
+    this.earnDonuts(clickValue);
+    this.playSound("click.mp3");
+
+    // Create click text animation
+    const text = document.createElement("div");
+    text.className = "click-text";
+    text.textContent = `+${this.formatNumber(clickValue)}`;
+    const rect = this.els.mainDonut.getBoundingClientRect();
+    const containerRect = this.els.clickTextContainer.getBoundingClientRect();
+
+    const x = event.clientX - containerRect.left;
+    const y = event.clientY - containerRect.top;
+
+    text.style.left = `${x}px`;
+    text.style.top = `${y}px`;
+
+    this.els.clickTextContainer.appendChild(text);
+    setTimeout(() => text.remove(), 1500);
+  },
+
+  buyBuilding(key) {
+    const cost = this.getBuildingCost(key);
+    if (this.state.donuts >= cost) {
+      this.state.donuts -= cost;
+      this.state.buildings[key]++;
+      this.recalculateDPS();
+      // this.playSound('buy.mp3'); // Sound removed
+    }
+  },
+
+  sellBuilding(key) {
+    if (this.state.buildings[key] > 0) {
+      const costOfLastOne = Math.ceil(
+        this.config.buildings[key].baseCost *
+          Math.pow(this.config.costIncreaseRate, this.state.buildings[key] - 1)
+      );
+      const refund = costOfLastOne * 0.4; // Sell for 40% of what the last one cost
+      this.state.donuts += refund;
+      this.state.buildings[key]--;
+      this.recalculateDPS();
+      // this.playSound('sell.mp3'); // Sound removed
+    }
+  },
+
+  // ==================================================================================
+  // POWERUPS & BOOSTS
+  // ==================================================================================
+
+  buyDPC() {
+    const cost = Math.floor((this.state.dpc * 40) ** 1.35);
+    if (this.state.donuts >= cost) {
+      this.state.donuts -= cost;
+      this.state.dpc *= 2;
+      // this.playSound('upgrade.mp3'); // Sound removed
+    }
+  },
+
+  buyFrenzy() {
+    const cost = Math.ceil((this.state.dps + 7 * this.state.dpc) * 200 + 2000);
+    if (this.state.donuts >= cost && !this.state.activeBoosts.frenzy) {
+      this.state.donuts -= cost;
+      this.state.activeBoosts.frenzy = Date.now() + 77000;
+      // this.playSound('upgrade.mp3'); // Sound removed
+    }
+  },
+
+  buyClickFrenzy() {
+    const cost = Math.ceil(this.state.dpc * 25000);
+    if (this.state.donuts >= cost && !this.state.activeBoosts.clickf) {
+      this.state.donuts -= cost;
+      this.state.activeBoosts.clickf = Date.now() + 15000;
+      // this.playSound('upgrade.mp3'); // Sound removed
+    }
+  },
+
+  buyAutoclick() {
+    const cost = this.state.dpc * 480;
+    if (this.state.donuts >= cost && !this.state.activeBoosts.autoclick) {
+      this.state.donuts -= cost;
+      this.state.activeBoosts.autoclick = Date.now() + 60000;
+      // this.playSound('upgrade.mp3'); // Sound removed
+      // Start clicking
+      const autoClicker = setInterval(() => {
+        if (this.state.activeBoosts.autoclick) {
+          this.earnDonuts(this.getClickValue());
+        } else {
+          clearInterval(autoClicker);
+        }
+      }, 100);
+    }
+  },
+
+  updateBoosts() {
+    const now = Date.now();
+    for (const boost in this.state.activeBoosts) {
+      if (now > this.state.activeBoosts[boost]) {
+        delete this.state.activeBoosts[boost];
       }
-    }, 1000);
-  }
-};
+    }
+  },
 
-document.getElementById("buy-minif").onclick = function () {
-  if (
-    saveData.donuts >= (saveData.dps / 1.2 + 7 * saveData.dpc) * 30 + 200 &&
-    frenzy == false &&
-    clickf == false
-  ) {
-    saveData.donuts -= (saveData.dps / 1.2 + 7 * saveData.dpc) * 30 + 200;
-    frenzy = true;
-    let dpc = saveData.dpc;
-    saveData.dpc = parseFloat(dpc);
-    document.getElementById("minif-price").innerHTML = "Active (7.0s)";
-    document.getElementById("minif-price").style = "color: yellow";
-    document.getElementById("donut-count").style = "color: yellow";
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-    let tryF = 0;
-    buyminif = setInterval(function () {
-      tryF += 1;
-      document.getElementById("minif-price").innerHTML =
-        "Active (" + (70 - tryF) / 10 + "s)";
-      console.log(tryF);
-      if (tryF == 70) {
-        clearInterval(buyminif);
-        frenzy = false;
-        document.getElementById("minif-price").innerHTML = formatCash(
-          Math.ceil((saveData.dps / 1.2 + 7 * saveData.dpc) * 30 + 200)
-        );
-        document.getElementById("minif-price").style = "";
-        document.getElementById("donut-count").style = "";
+  getFrenzyMultiplier() {
+    return this.state.activeBoosts.frenzy ? 7 : 1;
+  },
+  getClickFrenzyMultiplier() {
+    return this.state.activeBoosts.clickf ? 333 : 1;
+  },
+
+  // ==================================================================================
+  // ASCENSION
+  // ==================================================================================
+
+  calculatePrestigeGain() {
+    return Math.floor(Math.sqrt(this.state.donutsEver / 1e12)) * 5;
+  },
+
+  ascend() {
+    const prestigeGain = this.calculatePrestigeGain();
+    if (prestigeGain > 0) {
+      const defaultSave = this.createDefaultSave();
+      this.state.donuts = defaultSave.donuts;
+      this.state.dpc = defaultSave.dpc;
+      this.state.buildings = defaultSave.buildings;
+      this.state.donutsEver = defaultSave.donutsEver;
+      this.state.prestige += prestigeGain;
+      this.recalculateDPS();
+      this.saveGame();
+      this.showModal(
+        "welcome-modal",
+        `ASCENDED!`,
+        `You have gained ${prestigeGain} Prestige levels! Your production is now permanently boosted by ${this.state.prestige}%.`
+      );
+      // this.playSound('ascend.mp3'); // Sound removed
+    }
+  },
+
+  // ==================================================================================
+  // UI & VISUALS
+  // ==================================================================================
+
+  updateUI() {
+    // Stats
+    this.els.donutCount.textContent = `${this.formatNumber(
+      this.state.donuts
+    )} Donuts`;
+    const prestigeBonus =
+      this.state.prestige > 0 ? ` (+${this.state.prestige}%)` : "";
+    this.els.dpsCount.textContent = `${this.formatNumber(
+      this.state.dps * this.getFrenzyMultiplier()
+    )} DPS${prestigeBonus}`;
+    this.els.bakeryName.value = this.state.bakeryname;
+
+    // Building Shop
+    for (const key in this.config.buildings) {
+      const cost = this.getBuildingCost(key);
+      this.els[`${key}-count`].textContent = `x${this.state.buildings[key]}`;
+      this.els[`${key}-price`].textContent = this.formatNumber(cost);
+      this.els[`buy-${key}`].classList.toggle(
+        "can-buy",
+        this.state.donuts >= cost
+      );
+    }
+
+    // Powerups
+    const dpcCost = Math.floor((this.state.dpc * 40) ** 1.35);
+    this.els["dpc-price"].textContent = this.formatNumber(dpcCost);
+    this.els["buy-dpc"].classList.toggle(
+      "can-buy",
+      this.state.donuts >= dpcCost
+    );
+
+    this.updateBoostUI(
+      "frenzy",
+      77,
+      "frenzy-price",
+      Math.ceil((this.state.dps + 7 * this.state.dpc) * 200 + 2000)
+    );
+    this.updateBoostUI(
+      "clickf",
+      15,
+      "clickf-price",
+      Math.ceil(this.state.dpc * 25000)
+    );
+    this.updateBoostUI(
+      "autoclick",
+      60,
+      "autoclick-price",
+      this.state.dpc * 480
+    );
+
+    this.els.dpsCount.classList.toggle(
+      "frenzy-active-text",
+      !!this.state.activeBoosts.frenzy
+    );
+
+    // Ascension
+    const prestigeGain = this.calculatePrestigeGain();
+    const canAscend =
+      this.state.donutsEver >= this.config.ascendDonutRequirement;
+    this.els["ascend-button"].classList.toggle("can-buy", canAscend);
+    this.els["ascend-reward"].textContent = `+${prestigeGain} Prestige`;
+    this.els["ascend-info"].textContent = canAscend
+      ? `(Ready!)`
+      : `(Requires ${this.formatNumber(
+          this.config.ascendDonutRequirement
+        )} total donuts)`;
+  },
+
+  updateBoostUI(boostName, duration, elId, cost) {
+    if (this.state.activeBoosts[boostName]) {
+      const timeLeft = (this.state.activeBoosts[boostName] - Date.now()) / 1000;
+      this.els[elId].textContent = `${timeLeft.toFixed(1)}s`;
+      this.els[elId].classList.add("frenzy-active");
+    } else {
+      this.els[elId].textContent = this.formatNumber(cost);
+      this.els[elId].classList.remove("frenzy-active");
+      this.els[`buy-${boostName}`].classList.toggle(
+        "can-buy",
+        this.state.donuts >= cost
+      );
+    }
+  },
+
+  showWelcomeModal() {
+    const timeDiff = Math.floor(Date.now() / 1000) - this.state.lastLoggedOn;
+    if (timeDiff > 60) {
+      // 1 minute
+      const offlineDps = this.state.dps * 0.5; // 50% offline production
+      const donutsGained = Math.min(
+        offlineDps * timeDiff,
+        this.state.dps * 3600 * 24
+      ); // Capped at 24h
+      this.earnDonuts(donutsGained);
+      const title = this.state.donutsEver > 1 ? "WELCOME BACK!" : "WELCOME!";
+      const text =
+        timeDiff > 3600
+          ? `While you were away for over an hour, your bakery earned ${this.formatNumber(
+              donutsGained
+            )} donuts!`
+          : `You earned ${this.formatNumber(
+              donutsGained
+            )} donuts while you were away.`;
+      this.showModal("welcome-modal", title, text);
+    }
+  },
+
+  showModal(modalId, title, text) {
+    const modal = document.getElementById(modalId);
+    if (title) document.getElementById("modal-title").textContent = title;
+    if (text) document.getElementById("modal-text").textContent = text;
+
+    this.els.modalBackdrop.classList.add("visible");
+    modal.classList.add("visible");
+  },
+
+  hideModals() {
+    this.els.modalBackdrop.classList.remove("visible");
+    document
+      .querySelectorAll(".modal.visible")
+      .forEach((m) => m.classList.remove("visible"));
+  },
+
+  toggleGraphics() {
+    this.state.graphicsOn = !this.state.graphicsOn;
+    const pjs = document.getElementById("particles-js");
+    if (this.state.graphicsOn) {
+      this.els.graphicsButton.textContent = "GRAPHICS: ON";
+      pjs.style.display = "block";
+    } else {
+      this.els.graphicsButton.textContent = "GRAPHICS: OFF";
+      pjs.style.display = "none";
+    }
+  },
+
+  // ==================================================================================
+  // UTILITIES (Sound, Formatting, etc.)
+  // ==================================================================================
+
+  playSound(soundFile) {
+    new Howl({ src: [soundFile], volume: 0.5 }).play();
+  },
+
+  setRandomWallpaper() {
+    const wallpaperId = Math.floor(Math.random() * 8) + 1;
+    this.els.wallpaper.style.backgroundImage = `url('../champion/assets/art/wallpapers/${wallpaperId}.jpg')`;
+  },
+
+  formatNumber(n) {
+    if (n < 1e6)
+      return n.toLocaleString(undefined, { maximumFractionDigits: 0 });
+    const suffixes = [
+      "M",
+      "B",
+      "T",
+      "q",
+      "Q",
+      "s",
+      "S",
+      "O",
+      "N",
+      "D",
+      "A",
+      "B",
+      "C",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "P",
+      "R",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z",
+      "AA",
+      "AB",
+      "AC",
+      "AD",
+      "AE",
+      "AF",
+      "AG",
+      "AH",
+      "AI",
+      "AJ",
+      "AK",
+      "AL",
+      "AM",
+      "AN",
+      "AO",
+      "AP",
+      "AQ",
+      "AR",
+      "AS",
+      "AT",
+      "AU",
+      "AV",
+      "AW",
+      "AX",
+      "AY",
+      "AZ",
+      "I bet nobody will get this far",
+    ];
+    const i = Math.floor(Math.log10(n) / 3) - 2;
+    const num = n / 10 ** ((i + 2) * 3);
+    return `${num.toFixed(3)} ${suffixes[i]}`;
+  },
+
+  // ==================================================================================
+  // EVENT BINDING
+  // ==================================================================================
+
+  bindEvents() {
+    this.els.mainDonut.addEventListener("click", (e) => this.donutClicked(e));
+    this.els.bakeryName.addEventListener("input", (e) => {
+      this.state.bakeryname = e.target.value;
+    });
+    this.els.resetButton.addEventListener("click", () => this.resetSave()); // <<< SYNTAX CORRECTED HERE
+    this.els.graphicsButton.addEventListener("click", () =>
+      this.toggleGraphics()
+    );
+    this.els.modalCloseButton.addEventListener("click", () =>
+      this.hideModals()
+    );
+    this.els.modalBackdrop.addEventListener("click", () => this.hideModals());
+
+    // Bind building purchases
+    for (const key in this.config.buildings) {
+      this.els[`buy-${key}`].addEventListener("click", () =>
+        this.buyBuilding(key)
+      );
+      this.els[`buy-${key}`].addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        this.sellBuilding(key);
+      });
+    }
+
+    // Bind powerup purchases
+    this.els["buy-dpc"].addEventListener("click", () => this.buyDPC());
+    this.els["buy-frenzy"].addEventListener("click", () => this.buyFrenzy());
+    this.els["buy-clickf"].addEventListener("click", () =>
+      this.buyClickFrenzy()
+    );
+    this.els["buy-autoclick"].addEventListener("click", () =>
+      this.buyAutoclick()
+    );
+
+    // Bind Ascension
+    this.els["ascend-button"].addEventListener("click", () => {
+      if (this.state.donutsEver >= this.config.ascendDonutRequirement) {
+        this.els.ascendModalReward.textContent = `+${this.calculatePrestigeGain()}`;
+        this.showModal("ascend-modal");
       }
-    }, 100);
-  }
-};
-
-document.getElementById("buy-clickf").onclick = function () {
-  if (
-    saveData.donuts >= Math.ceil(saveData.dpc * 30000) &&
-    frenzy == false &&
-    clickf == false
-  ) {
-    saveData.donuts -= Math.ceil(saveData.dpc * 30000);
-    clickf = true;
-    let dpc = saveData.dpc;
-    saveData.dpc = parseFloat(dpc);
-    document.getElementById("clickf-price").innerHTML = "Active (15.0s)";
-    document.getElementById("clickf-price").style = "color: yellow";
-    document.getElementById("donut-count").style = "color: yellow";
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-    let tryF = 0;
-    buyclickf = setInterval(function () {
-      tryF += 1;
-      document.getElementById("clickf-price").innerHTML =
-        "Active (" + (150 - tryF) / 10 + "s)";
-      console.log(tryF);
-      if (tryF == 150) {
-        clearInterval(buyclickf);
-        clickf = false;
-        document.getElementById("clickf-price").innerHTML = formatCash(
-          Math.ceil(saveData.dpc * 30000)
-        );
-        document.getElementById("clickf-price").style = "";
-        document.getElementById("donut-count").style = "";
-      }
-    }, 100);
-  }
-};
-
-document.getElementById("buy-autoclick").onclick = function () {
-  if (saveData.donuts >= saveData.dpc * 480 && autoclick == false) {
-    saveData.donuts -= saveData.dpc * 480;
-    autoclick = true;
-    let dpc = saveData.dpc;
-    saveData.dpc = parseFloat(dpc);
-    document.getElementById("autoclick-price").innerHTML = "Active (60.0s)";
-    document.getElementById("autoclick-price").style = "color: yellow";
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-    let tryF = 0;
-    buyautoclick = setInterval(function () {
-      tryF += 1;
-      document.getElementById("autoclick-price").innerHTML =
-        "Active (" + (60 - tryF / 10).toFixed(1) + "s)";
-      if (frenzy == true) {
-        saveData["donuts"] += saveData["dpc"] * 7;
-      } else {
-        saveData["donuts"] += saveData["dpc"];
-      }
-      if (tryF == 600) {
-        clearInterval(buyautoclick);
-        autoclick = false;
-        document.getElementById("autoclick-price").innerHTML = formatCash(
-          Math.ceil(saveData.dpc * 480)
-        );
-        document.getElementById("autoclick-price").style = "";
-      }
-    }, 100);
-  }
-};
-
-document.getElementById("buy-dpc").onclick = function () {
-  if (saveData.donuts >= Math.floor((saveData.dpc * 40) ** 1.4)) {
-    saveData.donuts -= Math.floor((saveData.dpc * 40) ** 1.4);
-    saveData.dpc = saveData.dpc * 2;
-    let dpc = saveData.dpc;
-    saveData.dpc = parseFloat(dpc);
-    document.getElementById("dpc-price").innerHTML = formatCash(
-      Math.floor((saveData.dpc * 40) ** 1.4)
+    });
+    this.els.ascendConfirmButton.addEventListener("click", () => {
+      this.hideModals();
+      this.ascend();
+    });
+    this.els.ascendCancelButton.addEventListener("click", () =>
+      this.hideModals()
     );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
+
+    // Patch notes (simple modal)
+    this.els.pnButton.addEventListener("click", () => {
+      this.showModal(
+        "welcome-modal",
+        "Patch Notes (v2.0)",
+        "I threw this into AI to see what it could do to the game. Added Ascension, new UI, a new building, balancing, and tons of visual polish. Enjoy lol"
+      );
+    });
+  },
 };
 
-document.getElementById("buy-cursor").onclick = function () {
-  if (saveData.donuts >= saveData.items.cursor * 2 + 10) {
-    saveData.donuts -= saveData.items.cursor * 2 + 10;
-    saveData.items.cursor += 1;
-    saveData.dps += 0.2;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    document.getElementById("cursor-price").innerHTML =
-      saveData.items.cursor * 2 + 10;
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
+// ==================================================================================
+// LET'S BAKE!
+// ==================================================================================
+window.onload = () => {
+  // We need to wait for particles.js to be loaded if it exists
+  if (typeof particlesJS !== "undefined") {
+    particlesJS.load("particles-js", "particles1.json", () => {
+      console.log("particles.js loaded");
+    });
   }
-};
-
-document.getElementById("buy-oven").onclick = function () {
-  if (saveData.donuts >= saveData.items.deepfry * 40 + 200) {
-    saveData.donuts -= saveData.items.deepfry * 40 + 200;
-    saveData.items.deepfry += 1;
-    saveData.dps += 5;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    document.getElementById("oven-price").innerHTML =
-      saveData.items.deepfry * 40 + 200;
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-};
-
-document.getElementById("buy-restaurant").onclick = function () {
-  if (saveData.donuts >= saveData.items.restaurant * 200 + 1000) {
-    saveData.donuts -= saveData.items.restaurant * 200 + 1000;
-    saveData.items.restaurant += 1;
-    saveData.dps += 32;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    document.getElementById("restaurant-price").innerHTML =
-      saveData.items.restaurant * 200 + 1000;
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-};
-
-document.getElementById("buy-factory").onclick = function () {
-  if (saveData.donuts >= saveData.items.factory * 2200 + 11000) {
-    saveData.donuts -= saveData.items.factory * 2200 + 11000;
-    saveData.items.factory += 1;
-    saveData.dps += 400;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    document.getElementById("factory-price").innerHTML =
-      saveData.items.factory * 2200 + 11000;
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-};
-
-document.getElementById("buy-shipment").onclick = function () {
-  if (saveData.donuts >= saveData.items.shipment * 48000 + 240000) {
-    saveData.donuts -= saveData.items.shipment * 48000 + 240000;
-    saveData.items.shipment += 1;
-    saveData.dps += 8000;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    document.getElementById("shipment-price").innerHTML = formatCash(
-      saveData.items.shipment * 48000 + 240000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-};
-
-document.getElementById("buy-tm").onclick = function () {
-  if (saveData.donuts >= saveData.items.time_machine * 600000 + 3000000) {
-    saveData.donuts -= saveData.items.time_machine * 600000 + 3000000;
-    saveData.items.time_machine += 1;
-    saveData.dps += 66666;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    document.getElementById("tm-price").innerHTML = formatCash(
-      saveData.items.time_machine * 600000 + 3000000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-};
-
-document.getElementById("buy-planet").onclick = function () {
-  if (saveData.donuts >= saveData.items.planet * 200000000 + 1000000000) {
-    saveData.donuts -= saveData.items.planet * 200000000 + 1000000000;
-    saveData.items.planet += 1;
-    saveData.dps += 25000000;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    document.getElementById("planet-price").innerHTML = formatCash(
-      saveData.items.planet * 200000000 + 1000000000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-};
-
-document.getElementById("buy-um").onclick = function () {
-  if (saveData.donuts >= saveData.items.um * 20000000000 + 100000000000) {
-    saveData.donuts -= saveData.items.um * 20000000000 + 100000000000;
-    saveData.items.um += 1;
-    saveData.dps += 2700000000;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    document.getElementById("um-price").innerHTML = formatCash(
-      saveData.items.um * 20000000000 + 100000000000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-};
-
-document.getElementById("buy-mc").onclick = function () {
-  if (saveData.donuts >= saveData.items.mc * 10000000 + 50000000) {
-    saveData.donuts -= saveData.items.mc * 10000000 + 50000000;
-    saveData.items.mc += 1;
-    saveData.dps += 1000000;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    document.getElementById("mc-price").innerHTML = formatCash(
-      saveData.items.mc * 10000000 + 50000000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-};
-
-document.getElementById("buy-js").onclick = function () {
-  if (saveData.donuts >= saveData.items.js * 1000000000000 + 5000000000000) {
-    saveData.donuts -= saveData.items.js * 1000000000000 + 5000000000000;
-    saveData.items.js += 1;
-    saveData.dps += 140000000000;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    document.getElementById("js-price").innerHTML = formatCash(
-      saveData.items.js * 1000000000000 + 5000000000000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-};
-
-document.getElementById("buy-cursor").oncontextmenu = function (e) {
-  e.preventDefault();
-  if (saveData.items.cursor >= 1) {
-    saveData.items.cursor -= 1;
-    saveData.dps -= 0.2;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    saveData.donuts += (saveData.items.cursor * 2 + 10) * 0.8;
-    document.getElementById("cursor-price").innerHTML =
-      saveData.items.cursor * 2 + 10;
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-  return false;
-};
-
-document.getElementById("buy-oven").oncontextmenu = function (e) {
-  e.preventDefault();
-  if (saveData.items.deepfry >= 1) {
-    saveData.items.deepfry -= 1;
-    saveData.dps -= 5;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    saveData.donuts += (saveData.items.deepfry * 40 + 200) * 0.8;
-    document.getElementById("oven-price").innerHTML =
-      saveData.items.deepfry * 40 + 200;
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-  return false;
-};
-
-document.getElementById("buy-restaurant").oncontextmenu = function (e) {
-  e.preventDefault();
-  if (saveData.items.restaurant >= 1) {
-    saveData.items.restaurant -= 1;
-    saveData.dps -= 32;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    saveData.donuts += (saveData.items.restaurant * 200 + 1000) * 0.8;
-    document.getElementById("restaurant-price").innerHTML =
-      saveData.items.restaurant * 200 + 1000;
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-  return false;
-};
-
-document.getElementById("buy-factory").oncontextmenu = function (e) {
-  e.preventDefault();
-  if (saveData.items.factory >= 1) {
-    saveData.items.factory -= 1;
-    saveData.dps -= 400;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    saveData.donuts += (saveData.items.factory * 2200 + 11000) * 0.8;
-    document.getElementById("factory-price").innerHTML =
-      saveData.items.factory * 2200 + 11000;
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-  return false;
-};
-
-document.getElementById("buy-shipment").oncontextmenu = function (e) {
-  e.preventDefault();
-  if (saveData.items.shipment >= 1) {
-    saveData.items.shipment -= 1;
-    saveData.dps -= 8000;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    saveData.donuts += (saveData.items.shipment * 48000 + 240000) * 0.8;
-    document.getElementById("shipment-price").innerHTML = formatCash(
-      saveData.items.shipment * 48000 + 240000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-  return false;
-};
-
-document.getElementById("buy-tm").oncontextmenu = function (e) {
-  e.preventDefault();
-  if (saveData.items.time_machine >= 1) {
-    saveData.items.time_machine -= 1;
-    saveData.dps -= 66666;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    saveData.donuts += (saveData.items.time_machine * 600000 + 3000000) * 0.8;
-    document.getElementById("tm-price").innerHTML = formatCash(
-      saveData.items.time_machine * 600000 + 3000000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-  return false;
-};
-
-document.getElementById("buy-mc").oncontextmenu = function (e) {
-  e.preventDefault();
-  if (saveData.items.mc >= 1) {
-    saveData.items.mc -= 1;
-    saveData.dps -= 1000000;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    saveData.donuts += (saveData.items.mc * 10000000 + 50000000) * 0.8;
-    document.getElementById("mc-price").innerHTML = formatCash(
-      saveData.items.mc * 10000000 + 50000000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-  return false;
-};
-
-document.getElementById("buy-planet").oncontextmenu = function (e) {
-  e.preventDefault();
-  if (saveData.items.planet >= 1) {
-    saveData.items.planet -= 1;
-    saveData.dps -= 25000000;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    saveData.donuts += (saveData.items.planet * 200000000 + 1000000000) * 0.8;
-    document.getElementById("planet-price").innerHTML = formatCash(
-      saveData.items.planet * 200000000 + 1000000000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-  return false;
-};
-
-document.getElementById("buy-um").oncontextmenu = function (e) {
-  e.preventDefault();
-  if (saveData.items.um >= 1) {
-    saveData.items.um -= 1;
-    saveData.dps -= 2700000000;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    saveData.donuts += (saveData.items.um * 20000000000 + 100000000000) * 0.8;
-    document.getElementById("um-price").innerHTML = formatCash(
-      saveData.items.um * 20000000000 + 100000000000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-  return false;
-};
-
-document.getElementById("buy-js").oncontextmenu = function (e) {
-  e.preventDefault();
-  if (saveData.items.js >= 1) {
-    saveData.items.js -= 1;
-    saveData.dps -= 140000000000;
-    let dps = saveData.dps;
-    dps = dps.toFixed(1);
-    saveData.dps = parseFloat(dps);
-    saveData.donuts +=
-      (saveData.items.js * 1000000000000 + 5000000000000) * 0.8;
-    document.getElementById("js-price").innerHTML = formatCash(
-      saveData.items.js * 1000000000000 + 5000000000000
-    );
-    saveDonuts();
-    new Howl({
-      src: ["button_click.mp3"],
-    }).play();
-  }
-  return false;
-};
-
-document.getElementById("real-donut").onclick = function clickDonut() {
-  if (clickf == true) {
-    saveData["donuts"] += saveData["dpc"] * 333;
-  } else if (frenzy == true) {
-    saveData["donuts"] += saveData["dpc"] * 7;
-  } else {
-    saveData["donuts"] += saveData["dpc"];
-  }
-  saveDonuts();
-  new Howl({
-    src: ["button_click.mp3"],
-  }).play();
+  Game.init();
 };

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+  <!-- Copyright 2020+ eddyzow. All rights reserved. -->
+  <head>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7530972383300357"
+      crossorigin="anonymous"
+    ></script>
+    <title>Donut Simulator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.core.min.js"></script>
+    <script async src="https://arc.io/widget.min.js#jJ14Tn6w"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://cdn.socket.io/socket.io-2.3.0.js"></script>
+    <script src="particles.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-4881W8M3DJ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-4881W8M3DJ");
+    </script>
+  </head>
+  <body>
+    <div id="wallpaper"></div>
+    <div id="body-contain">
+      <div id="buttons">
+        <div class="inlineb" id="pn">PATCH NOTES</div>
+        <div class="inlineb" id="detail">GRAPHICS: ON</div>
+        <div class="inlineb" id="reset-save">RESET SAVE</div>
+      </div>
+      <div id="loggedOutModal" class="noticeModal"></div>
+      <div id="loggedOutPopup">
+        <h1 id="welcomeback">WELCOME BACK!</h1>
+        <p id="amountEarned"></p>
+        <div id="loggedOutButton">START CLICKING!</div>
+      </div>
+
+      <input
+        id="bakeryname"
+        spellcheck="false"
+        type="text"
+        placeholder="enter a bakery name"
+      />
+      <div id="donut-count">Loading...</div>
+      <div id="powerbar">
+        <div class="shop-item">
+          <h1>Powerup Shop</h1>
+          <p style="margin-top: 1vh">
+            Purchase upgrades which give you temporary boosts or permanent DPC
+            (Donuts per Click) upgrades
+          </p>
+          <h4 style="margin: 1vh 0">
+            Left click to buy an item. You cannot sell these!
+          </h4>
+        </div>
+        <div class="shop-item" id="buy-dpc">
+          <h1>Reinforced Donuts</h1>
+          <h2 class="inline" id="dpc-price">45154</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>Doubles the donuts that you bake when you click the donut once.</p>
+        </div>
+        <div class="shop-item" id="buy-frenzy">
+          <h1>Frenzy Time</h1>
+          <h2 class="inline" id="frenzy-price">45154</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>Multiplies your donut production by 7 for 77 seconds.</p>
+        </div>
+        <div class="shop-item" id="buy-autoclick">
+          <h1>Super Cursor</h1>
+          <h2 class="inline" id="autoclick-price"></h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>
+            Spawns in an autoclicker to click for you 10 times per second for 60
+            seconds.
+          </p>
+        </div>
+        <div class="shop-item" id="buy-minif">
+          <h1>Mini Frenzy</h1>
+          <h2 class="inline" id="minif-price"></h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>
+            Frenzy, but smaller! Multiplies your donut production by 7 for 7
+            seconds. Can't be stacked with Frenzy Time.
+          </p>
+        </div>
+        <div class="shop-item" id="buy-clickf">
+          <h1>Click Frenzy</h1>
+          <h2 class="inline" id="clickf-price"></h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>
+            This might be a bit broken... Multiplies your DPC by 333 for 15
+            seconds.
+          </p>
+        </div>
+      </div>
+      <div id="shopbar">
+        <div class="shop-item">
+          <h1 style="margin-top: 3vh">Building Shop</h1>
+          <p style="margin-top: 1vh">
+            Purchase buildings which will increase your DPS (Donuts per Second).
+          </p>
+          <h4 style="margin: 1vh 0">
+            Left click to buy an item, right click to sell for 80% of its
+            original price
+          </h4>
+        </div>
+        <div class="shop-item" id="buy-cursor">
+          <h1 id="cursor-count">Cursor</h1>
+          <h2 class="inline" id="cursor-price">10</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>
+            A cursor, which automatically clicks for you once per 5 seconds.
+            (0.2 DPS)
+          </p>
+        </div>
+        <div class="shop-item" id="buy-oven">
+          <h1 id="oven-count">Deep Fryer</h1>
+          <h2 class="inline" id="oven-price">200</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>Fresh baked donuts, a taste nobody could possibly hate. (5 DPS)</p>
+        </div>
+        <div class="shop-item" id="buy-restaurant">
+          <h1 id="restaurant-count">Restaurant</h1>
+          <h2 class="inline" id="restaurant-price">1,000</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>Bakes donuts at a faster rate! (32 DPS)</p>
+        </div>
+        <div class="shop-item" id="buy-factory">
+          <h1 id="factory-count">Factory</h1>
+          <h2 class="inline" id="factory-price">11,000</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>Make donuts in bulk with an automated factory. (400 DPS)</p>
+        </div>
+        <div class="shop-item" id="buy-shipment">
+          <h1 id="shipment-count">Shipment</h1>
+          <h2 class="inline" id="shipment-price">240,000</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>Ships daily from the world of donuts. (8,000 DPS)</p>
+        </div>
+        <div class="shop-item" id="buy-tm">
+          <h1 id="tm-count">Time Machine</h1>
+          <h2 class="inline" id="tm-price">3,000,000</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>Brings donuts from the past before they're eaten. (66,666 DPS)</p>
+        </div>
+        <div class="shop-item" id="buy-mc">
+          <h1 id="mc-count">Matter Creator</h1>
+          <h2 class="inline" id="mc-price">50,000,000</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>
+            Using brand new technology, creates donuts from nothing... (1.000M
+            DPS)
+          </p>
+        </div>
+        <div class="shop-item" id="buy-planet">
+          <h1 id="planet-count">Donut Planet</h1>
+          <h2 class="inline" id="planet-price">1,000,000,000</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>
+            Why get donuts shipped from the donut world when you can buy the
+            world yourself? (25.000M DPS)
+          </p>
+        </div>
+        <div class="shop-item" id="buy-um">
+          <h1 id="um-count">Universe Manipulation</h1>
+          <h2 class="inline" id="um-price">100,000,000,000</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>
+            It can rip apart space and time to bring you... more donuts. (2.700B
+            DPS)
+          </p>
+        </div>
+        <div class="shop-item" id="buy-js">
+          <h1 id="js-count">JavaScript Console</h1>
+          <h2 class="inline" id="js-price">5,000,000,000,000</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>
+            Born from the very code this game was created from. (140.000B DPS)
+          </p>
+        </div>
+        <div class="shop-item" id="ascend">
+          <h1 id="ascend-count">Ascend // UNDER CONSTRUCTION</h1>
+          <h2 class="inline" id="ascend-price">9.999q</h2>
+          <div
+            class="inline"
+            style="
+              position: relative;
+              height: 2.5vh;
+              width: 2.5vh;
+              top: 0.1vh;
+              content: url(https://pixy.org/src/464/4649689.png);
+            "
+          ></div>
+          <p>When you're ready...</p>
+          <p>
+            This action will delete all your powerups, buildings, and donuts.
+            You will be able to select a skill in the skill tree that you can
+            keep for your next life.
+          </p>
+        </div>
+      </div>
+      <div class="donut-contain">
+        <div id="real-donut"></div>
+      </div>
+    </div>
+    <div id="particles-js"></div>
+    <script src="client.js"></script>
+  </body>
+</html>
