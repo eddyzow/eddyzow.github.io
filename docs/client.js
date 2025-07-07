@@ -1,131 +1,147 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const text = "I build games, tools, and hackathons.";
-  const target = document.getElementById("typewriter");
-  let i = 0;
+  const themeToggle = document.querySelector(".theme-button");
+  const navLinks = document.querySelectorAll(".nav-link");
+  const header = document.querySelector("header");
 
-  const lines = [
-    "👋 I'm Eddy Zhao, from Boston, MA, USA.",
-    "I'm a self-taught JavaScript developer specializing in UI/UX.",
-    "I'm also an astrophysics/aerospace engineering student at UC Berkeley.",
-    "I build the tools I wish someone else had made.",
-    "I'm driven by R&B, boba, and the stars.",
-    "I don't sleep enough, but when I do, I dream in dark mode.",
-  ];
-  let lineIndex = 0;
-
-  function loopType() {
-    const line = lines[lineIndex];
-    let charIndex = 0;
-    target.textContent = "";
-
-    function typeChar() {
-      if (charIndex < line.length) {
-        target.textContent += line.charAt(charIndex);
-        charIndex++;
-        setTimeout(typeChar, 60);
-      } else {
-        setTimeout(deleteChar, 1500);
-      }
-    }
-
-    function deleteChar() {
-      if (charIndex > 0) {
-        target.textContent = target.textContent.slice(0, -1);
-        charIndex--;
-        setTimeout(deleteChar, 32);
-      } else {
-        lineIndex = (lineIndex + 1) % lines.length;
-        setTimeout(loopType, 300);
-      }
-    }
-
-    typeChar();
-  }
-
-  setTimeout(() => {
-    loopType();
-  }, 1000);
-
-  // Theme toggle
-  const themeToggle = document.createElement("button");
-  themeToggle.textContent = "🌓";
-  themeToggle.className = "theme-button";
-  document.body.appendChild(themeToggle);
-
-  const navLinks = document.querySelectorAll(".nav a");
-
+  // --- Theme Toggle ---
   const setTheme = (theme) => {
-    document.body.classList.remove("light", "dark");
-    document.body.classList.add(theme);
+    document.body.className = theme;
     localStorage.setItem("theme", theme);
-
-    // Adjust button and link colors based on theme
-    const light = theme === "light";
-    const color = light ? "#333" : "#fff";
-    themeToggle.style.borderColor = color;
-    themeToggle.style.color = color;
-    navLinks.forEach((link) => {
-      link.style.color = color;
-    });
+    if (themeToggle) {
+      themeToggle.textContent = `theme: ${theme}`;
+    }
   };
-
   const toggleTheme = () => {
-    const current = document.body.classList.contains("light")
+    const currentTheme = document.body.classList.contains("light")
       ? "dark"
       : "light";
-    setTheme(current);
+    setTheme(currentTheme);
   };
+  const storedTheme = localStorage.getItem("theme");
+  setTheme(storedTheme || "dark");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", toggleTheme);
+  }
 
-  const stored = localStorage.getItem("theme");
-  setTheme(stored || "dark");
+  // --- Particles ---
+  if (typeof particlesJS !== "undefined") {
+    particlesJS.load("particles-js", "particles.json");
+  }
 
-  themeToggle.addEventListener("click", toggleTheme);
+  // --- Typewriter ---
+  const target = document.getElementById("typewriter");
+  if (target) {
+    const lines = [
+      "I'm a self-taught JavaScript developer specializing in UI/UX.",
+      "I'm also an astrophysics/aerospace engineering student at UC Berkeley.",
+      "I build the tools I wish someone else had made.",
+      "I'm driven by R&B, boba, and the stars.",
+    ];
+    let lineIndex = 0;
+    const loopType = () => {
+      const line = lines[lineIndex];
+      let charIndex = 0;
+      target.textContent = "";
+      function typeChar() {
+        if (charIndex < line.length) {
+          target.textContent += line.charAt(charIndex);
+          charIndex++;
+          setTimeout(typeChar, 50);
+        } else {
+          setTimeout(deleteChar, 2000);
+        }
+      }
+      function deleteChar() {
+        if (charIndex > 0) {
+          target.textContent = target.textContent.slice(0, -1);
+          charIndex--;
+          setTimeout(deleteChar, 30);
+        } else {
+          lineIndex = (lineIndex + 1) % lines.length;
+          setTimeout(loopType, 500);
+        }
+      }
+      typeChar();
+    };
+    loopType();
+  }
 
-  // Load particles
-  particlesJS.load("particles-js", "particles.json");
-
-  // Page section transitions
-  const links = document.querySelectorAll("a.fade-link");
-  const sections = ["home", "projects", "builds", "scioly", "contact"];
-
-  const setActiveLink = (id) => {
-    links.forEach((link) => {
-      const target = link.getAttribute("href").slice(1);
-      if (target === id) {
-        link.classList.add("active");
-      } else {
-        link.classList.remove("active");
+  // --- Mobile Hamburger Menu ---
+  const hamburger = document.querySelector(".hamburger-menu");
+  const navMenu = document.querySelector(".nav");
+  hamburger.addEventListener("click", () => {
+    navMenu.classList.toggle("mobile-active");
+    header.classList.toggle("mobile-menu-active");
+  });
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      if (navMenu.classList.contains("mobile-active")) {
+        navMenu.classList.remove("mobile-active");
+        header.classList.remove("mobile-menu-active");
       }
     });
-  };
+  });
 
-  links.forEach((link) => {
+  // --- Show More/Less Projects ---
+  const projectGrid = document.querySelector(".project-grid");
+  const showMoreBtn = document.querySelector(".show-more-btn");
+  const showLessBtn = document.querySelector(".show-less-btn");
+
+  if (showMoreBtn) {
+    showMoreBtn.addEventListener("click", () => {
+      projectGrid.classList.add("show-all");
+      showMoreBtn.style.display = "none";
+      showLessBtn.style.display = "inline-block";
+    });
+  }
+  if (showLessBtn) {
+    showLessBtn.addEventListener("click", () => {
+      projectGrid.classList.remove("show-all");
+      showMoreBtn.style.display = "inline-block";
+      showLessBtn.style.display = "none";
+      document
+        .getElementById("projects")
+        .scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+  // --- Smooth Scrolling for Desktop Nav ---
+  navLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
-      const id = link.getAttribute("href").slice(1);
-
-      document.body.classList.remove("fade-in");
-      document.body.classList.add("fade-out");
-
-      setTimeout(() => {
-        sections.forEach((sec) => {
-          const el = document.getElementById(sec);
-          el.style.display = sec === id ? "flex" : "none";
+      const targetId = link.getAttribute("href");
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
         });
-
-        document.body.classList.remove("fade-out");
-        document.body.classList.add("fade-in");
-
-        window.location.hash = id;
-        setActiveLink(id);
-      }, 400);
+      }
     });
   });
 
-  const visible = location.hash?.substring(1) || "home";
-  sections.forEach((sec) => {
-    const el = document.getElementById(sec);
-    el.style.display = sec === visible ? "flex" : "none";
+  // --- Active Nav Link on Scroll ---
+  const sections = document.querySelectorAll("section");
+  const observerOptions = {
+    root: null,
+    rootMargin: "-20% 0px -75% 0px", // Creates a trigger line near the top of the viewport
+    threshold: 0,
+  };
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach((link) => {
+          link.classList.toggle(
+            "active",
+            link.getAttribute("href") === `#${id}`
+          );
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach((section) => {
+    sectionObserver.observe(section);
   });
-  setActiveLink(visible);
 });
