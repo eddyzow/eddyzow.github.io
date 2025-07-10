@@ -23,12 +23,25 @@ document.addEventListener("DOMContentLoaded", () => {
     themeToggle.addEventListener("click", toggleTheme);
   }
 
-  // --- Particles ---
+  window.addEventListener("scroll", () => {
+    const scrollableHeight =
+      document.documentElement.scrollHeight - window.innerHeight;
+    const scrollTop = window.scrollY;
+
+    if (scrollTop <= 10) {
+      header.style.borderColor = "";
+    } else {
+      const scrollPercent = scrollTop / scrollableHeight;
+      const hue = Math.floor(scrollPercent * 360); // 360 degrees in the color wheel
+
+      header.style.borderColor = `hsl(${hue}, 40%, 60%)`;
+    }
+  });
+
   if (typeof particlesJS !== "undefined") {
     particlesJS.load("particles-js", "particles.json");
   }
 
-  // --- Typewriter ---
   const target = document.getElementById("typewriter");
   if (target) {
     const lines = [
@@ -65,8 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     loopType();
   }
-
-  // --- Mobile Hamburger Menu ---
   const hamburger = document.querySelector(".hamburger-menu");
   const navMenu = document.querySelector(".nav");
   hamburger.addEventListener("click", () => {
@@ -82,7 +93,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- Show More/Less Projects ---
   const projectGrid = document.querySelector(".project-grid");
   const showMoreBtn = document.querySelector(".show-more-btn");
   const showLessBtn = document.querySelector(".show-less-btn");
@@ -105,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Smooth Scrolling for Desktop Nav ---
   navLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
@@ -120,11 +129,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- Active Nav Link on Scroll ---
   const sections = document.querySelectorAll("section");
   const observerOptions = {
     root: null,
-    rootMargin: "-20% 0px -75% 0px", // Creates a trigger line near the top of the viewport
+    rootMargin: "-20% 0px -75% 0px",
     threshold: 0,
   };
   const sectionObserver = new IntersectionObserver((entries) => {
@@ -143,5 +151,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
   sections.forEach((section) => {
     sectionObserver.observe(section);
+  });
+
+  const devToolsOverlay = document.getElementById("dev-tools-overlay");
+
+  (() => {
+    "use strict";
+    const devtools = {
+      isOpen: false,
+      orientation: undefined,
+    };
+    const threshold = 160;
+    const emitEvent = (isOpen, orientation) => {
+      window.dispatchEvent(
+        new CustomEvent("devtoolschange", {
+          detail: {
+            isOpen,
+            orientation,
+          },
+        })
+      );
+    };
+    setInterval(() => {
+      const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+      const heightThreshold =
+        window.outerHeight - window.innerHeight > threshold;
+      const orientation = widthThreshold ? "vertical" : "horizontal";
+      if (
+        !(heightThreshold && widthThreshold) &&
+        ((window.Firebug &&
+          window.Firebug.chrome &&
+          window.Firebug.chrome.isInitialized) ||
+          widthThreshold ||
+          heightThreshold)
+      ) {
+        if (!devtools.isOpen || devtools.orientation !== orientation) {
+          emitEvent(true, orientation);
+        }
+        devtools.isOpen = true;
+        devtools.orientation = orientation;
+      } else {
+        if (devtools.isOpen) {
+          emitEvent(false, undefined);
+        }
+        devtools.isOpen = false;
+        devtools.orientation = undefined;
+      }
+    }, 500);
+    if (typeof module !== "undefined" && module.exports) {
+      module.exports = devtools;
+    } else {
+      window.devtools = devtools;
+    }
+  })();
+
+  window.addEventListener("devtoolschange", (event) => {
+    if (event.detail.isOpen) {
+      devToolsOverlay.classList.add("visible");
+    } else {
+      devToolsOverlay.classList.remove("visible");
+    }
   });
 });
