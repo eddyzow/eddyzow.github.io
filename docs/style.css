@@ -298,9 +298,8 @@ header {
   background: var(--text);
   color: var(--background);
   padding: 0.25rem 0.5rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   margin-left: 0.75rem;
-  animation: glow 2s infinite alternate;
 }
 @keyframes glow {
   from {
@@ -321,13 +320,13 @@ header {
 }
 
 .blogpost .title {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 0.25rem;
 }
 
 .blogpost .devtime {
-  font-size: 0.9rem;
+  font-size: 1rem;
   margin-bottom: 1rem;
   opacity: 0.7;
   display: flex;
@@ -461,9 +460,9 @@ header {
 }
 .dev-package {
   padding: 0.25rem 0.6rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--background);
   background-color: var(--text);
   border-radius: 4px;
 }
@@ -475,7 +474,7 @@ header {
   padding: 0.6rem 1rem;
   border: 2px solid var(--border-color);
   z-index: 50;
-  font-size: 0.9rem;
+  font-size: 1rem;
   box-shadow: 4px 4px 0px var(--border-color);
   background-color: rgba(101, 101, 101, 0.5);
   backdrop-filter: blur(10px);
