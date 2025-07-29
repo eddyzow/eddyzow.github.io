@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const themeToggle = document.querySelector(".theme-button");
   const navLinks = document.querySelectorAll(".nav-link");
-  const header = document.querySelector("header");
+  const header = document.querySelector("header"); // --- Theme Toggle ---
 
-  // --- Theme Toggle ---
   const setTheme = (theme) => {
     document.body.className = theme;
     localStorage.setItem("theme", theme);
@@ -157,6 +156,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   (() => {
     "use strict";
+    // FIX: Exit this function if the screen is likely a mobile device.
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      return;
+    }
+
     const devtools = {
       isOpen: false,
       orientation: undefined,
