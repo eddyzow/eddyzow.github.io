@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const target = document.getElementById("typewriter");
   if (target) {
     const lines = [
-      "I'm a self-taught developer studying Astrophysics + CS at UC Berkeley",
+      "I'm a self-taught developer studying Astrophysics + CS at UC Berkeley.",
       "I specialize in JavaScript and UI/UX design.",
       "I build the tools I wish someone else had made.",
       "I'm driven by R&B, boba, and the stars.",
