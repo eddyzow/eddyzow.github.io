@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "I specialize in JavaScript and UI/UX design.",
       "I build the tools I wish someone else had made.",
       "I'm driven by R&B, boba, and the stars.",
+      "Fun fact: I'm the #912 fastest typist in the world (203 wpm).",
       "See something interesting? Feel free to explore my site.",
     ];
     let lineIndex = 0;
