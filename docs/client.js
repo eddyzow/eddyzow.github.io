@@ -68,26 +68,43 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --- Active Nav Link on Scroll ---
-  const sections = document.querySelectorAll("section.page-section");
-  const observerOptions = {
-    root: null,
-    rootMargin: "-20% 0px -75% 0px",
-    threshold: 0,
-  };
-  const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        navLinks.forEach((link) => {
-          link.classList.toggle(
-            "active",
-            link.getAttribute("href") === `#${id}`
-          );
-        });
+  const sections = document.querySelectorAll("#home, section.page-section");
+
+  // Create an array of objects containing each section's ID and its top position on the page.
+  // This is more robust than hardcoding pixel values, as it adapts to content and screen size.
+  const sectionPositions = Array.from(sections).map((s) => {
+    return { id: s.id, top: s.offsetTop };
+  });
+
+  function updateActiveNavOnScroll() {
+    // Get the current vertical scroll position, adding an offset for the header height.
+    const scrollPosition = window.scrollY + 150;
+    let currentActiveId = "";
+
+    // Iterate through the sections from the bottom up.
+    for (let i = sectionPositions.length - 1; i >= 0; i--) {
+      // If the scroll position has passed the top of the current section,
+      // that section is the active one.
+      if (scrollPosition >= sectionPositions[i].top) {
+        currentActiveId = sectionPositions[i].id;
+        break; // Exit the loop once the active section is found.
       }
+    }
+
+    // Update the 'active' class on the corresponding navigation link.
+    navLinks.forEach((link) => {
+      link.classList.toggle(
+        "active",
+        link.getAttribute("href") === `#${currentActiveId}`
+      );
     });
-  }, observerOptions);
-  sections.forEach((section) => sectionObserver.observe(section));
+  }
+
+  // Add the event listener to the window.
+  window.addEventListener("scroll", updateActiveNavOnScroll);
+
+  // Call the function once on load to set the initial state.
+  updateActiveNavOnScroll();
 
   // --- Carousel Logic ---
   const carousel = document.querySelector(".carousel");
