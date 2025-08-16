@@ -5,10 +5,15 @@
 :root {
   --background-dark: #161616;
   --text-dark: #ffffff;
+  --shadow-dark: #ffffff80;
+
+  --text-email-light: #0c36be;
+  --text-email-dark: rgb(159, 221, 241);
   --border-dark: #838383;
   --primary-dark: #00bcd4;
   --background-light: #e9e9e9;
   --text-light: #292929;
+  --shadow-light: #29292980;
   --border-light: #303030;
   --primary-light: #0000ff;
   --font-main: "Atkinson Hyperlegible", monospace;
@@ -41,6 +46,8 @@ select {
 body.dark {
   --background: var(--background-dark);
   --text: var(--text-dark);
+  --shadow: var(--shadow-dark);
+  --text-email: var(--text-email-dark);
   --primary: var(--primary-dark);
   --border-color: var(--border-dark);
 }
@@ -48,6 +55,8 @@ body.dark {
 body.light {
   --background: var(--background-light);
   --text: var(--text-light);
+  --shadow: var(--shadow-light);
+  --text-email: var(--text-email-light);
   --primary: var(--primary-light);
   --border-color: var(--border-light);
 }
@@ -136,7 +145,7 @@ header {
   height: var(--header-height);
   box-sizing: border-box;
   z-index: 100;
-  background-color: rgba(30, 30, 30, 0.5);
+  background-color: rgba(160, 160, 160, 0.2);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 3px solid var(--border-color);
@@ -213,16 +222,26 @@ header {
   max-width: 900px;
 }
 
+.email {
+  color: var(--text-email);
+  transition: all 0.5s var(--ease-out-bouncy);
+}
+
+h1 {
+  transition: all 0.5s var(--ease-out-bouncy);
+}
+
 .profile-pic-container {
   flex-shrink: 0;
 }
 
 .profile-pic {
-  width: 240px;
-  height: 240px;
+  margin-top: 32px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
-  border: 4px solid #9f9f9f;
-  box-shadow: 6px 6px 0 #2d2d2d;
+  border: 4px solid var(--text);
+  box-shadow: 6px 6px 0 var(--shadow);
   object-fit: cover;
   background-color: #333;
 }
