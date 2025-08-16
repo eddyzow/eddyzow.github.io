@@ -236,7 +236,7 @@ h1 {
 }
 
 .profile-pic {
-  margin-top: 32px;
+  margin-top: 24px;
   width: 220px;
   height: 220px;
   border-radius: 50%;
@@ -262,6 +262,7 @@ h1 {
   font-size: 1.2rem;
   font-weight: 700;
   margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .glow-links a:hover {
