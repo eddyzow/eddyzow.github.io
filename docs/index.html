@@ -30,7 +30,7 @@
 
   <body class="dark">
     <header>
-      <p id="last-updated">Last updated 16 August 2025</p>
+      <p id="last-updated">Last updated 30 September 2025</p>
       <nav class="nav">
         <a href="#home" class="nav-link active">home</a>
         <a href="#projects" class="nav-link">projects</a>
@@ -58,12 +58,13 @@
           <div class="about-text">
             <h1>eddy zhao</h1>
             <p>
-              I'm a JavaScript developer and first-year at UC Berkeley studying
+              I'm a first-year undergraduate at UC Berkeley studying
               Astrophysics and Computer Science. I specialize in creating
               intuitive user experiences and building the tools I wish existed.
               My work is driven by R&B, bubble tea, and the cosmos.
             </p>
-            <p>
+            <p>I am currently a research assistant at the UC Berkeley Space Sciences Lab and Web and Marketing Chair at Eggster.</p>
+              <p>
               My email is
               <span class="email"
                 >eddy@<span style="display: none"></span>eddyzow.<span
@@ -132,7 +133,7 @@
                 <p class="note">
                   A next-generation hackathon peer shipping/voting/judging
                   platform. Create events, add projects, and vote fairly in a
-                  ELO rating-based system.
+                  ELO rating-based system. 70+ projects, 120+ attendees, and 850+ votes cast to date!
                 </p>
                 <div class="project-links">
                   <div class="projectPlay" onclick="window.open('/podium')">
@@ -218,10 +219,8 @@
             In high school, I competed and captained for Acton-Boxborough,
             attending Nationals in 2024.
           </p>
-          <h3>
-            Here you can find all Science Olympiad invitational exams I've
-            written.
-          </h3>
+          <p>Since 2025, I have been a member of the Astronomy A-Team, the committee that administers the Astronomy National Division C event and writes exams for several high-profile invitationals, including MIT and Golden Gate.</p>
+          <div style="height: 20px;"></div>
           <div class="scioly-filters">
             <select id="season-filter"></select>
             <select id="event-filter"></select>
@@ -256,6 +255,24 @@
     <footer></footer>
 
     <template id="project-template">
+       <div class="blogpost">
+        <div class="title">TypeRank</div>
+        <p class="devtime">SEPTEMBER 2025</p>
+        <div class="tags">
+          <span class="dev-package html">HTML</span
+          ><span class="dev-package js">JS</span
+          ><span class="dev-package css">CSS</span
+          ><span class="dev-package api">REST APIs</span>
+        </div>
+        <p class="note">
+          Fun real-time 1v1 typing competition with a live leaderboard. Note: the server for this game is down -- it'll be back when I integrate it with my main server.
+        </p>
+        <div class="project-links">
+          <div class="projectPlay" onclick="window.open('/TypeRank')">
+            OPEN
+          </div>
+        </div>
+      </div>
       <div class="blogpost">
         <div class="title">MBTA Tracker Pro</div>
         <p class="devtime">JUNE 2025</p>
@@ -536,14 +553,34 @@
 
     <template id="scioly-template">
       <div
-        data-season="2025"
+        data-season="2026"
         data-event="Astronomy"
-        data-title="2025 Lexington Invitational - Astronomy C (April 2025)"
+        data-title="2026 UMass Amherst Invitational - Astronomy C (14 February 2026)"
       >
         <div class="exam-links">
-          <b class="disable">contact me for exam!</b>
+          <b class="disable future">future exam; will be released on 15 February 2026</b>
         </div>
       </div>
+
+      <div
+        data-season="2026"
+        data-event="Astronomy"
+        data-title="2026 Northview Invitational - Astronomy C (6 December 2025)"
+      >
+        <div class="exam-links">
+          <b class="disable future">future exam; will be released on 7 December 2025</b>
+        </div>
+      </div>
+      <div
+        data-season="2026"
+        data-event="Codebusters"
+        data-title="2026 Rickards Invitational - Codebusters C (8 November 2025)"
+      >
+        <div class="exam-links">
+          <b class="disable future">future exam; will be released on 9 November 2025</b>
+        </div>
+      </div>
+      
       <div
         data-season="2025"
         data-event="Codebusters"
@@ -566,7 +603,7 @@
           <a
             href="https://drive.google.com/drive/folders/1OaV-JuRt5JOj6qh6-fhpy-9T9i8QBixf?usp=sharing"
             target="_blank"
-            >exam (there is no key)</a
+            >exam (no key, sorry!)</a
           >
         </div>
       </div>
@@ -579,7 +616,7 @@
           <a
             href="https://drive.google.com/drive/folders/1nW_AtA1QRctejWxZnvOM69i7NiiFyoS0?usp=sharing"
             target="_blank"
-            >exam | sheet | key | images</a
+            >exam | sheet | solutions | images</a
           >
         </div>
       </div>
@@ -592,7 +629,20 @@
           <a
             href="https://drive.google.com/drive/folders/1OfmFGY27_QJSrEKJDYHUgfMLgjpNA2Cr?usp=sharing"
             target="_blank"
-            >exam | key | solutions</a
+            >exam | solutions</a
+          >
+        </div>
+      </div>
+       <div
+        data-season="2025"
+        data-event="Fossils"
+        data-title="2025 Acton-Boxborough Tryouts - Fossils C (November 2024)"
+      >
+        <div class="exam-links">
+          <a
+            href="https://drive.google.com/drive/folders/1YBj0FFnLxvr8qN4dXRlyvpejwnAPvxRG?usp=sharing"
+            target="_blank"
+            >exam | solutions</a
           >
         </div>
       </div>
@@ -618,20 +668,7 @@
           <a
             href="https://drive.google.com/drive/folders/1viR--S54rVLXfcUwfAc7I-OE0n6lBlSx?usp=sharing"
             target="_blank"
-            >exam | key</a
-          >
-        </div>
-      </div>
-      <div
-        data-season="2025"
-        data-event="Fossils"
-        data-title="2025 Acton-Boxborough Tryouts - Fossils C (November 2024)"
-      >
-        <div class="exam-links">
-          <a
-            href="https://drive.google.com/drive/folders/1YBj0FFnLxvr8qN4dXRlyvpejwnAPvxRG?usp=sharing"
-            target="_blank"
-            >exam | key</a
+            >exam | solutions</a
           >
         </div>
       </div>

@@ -592,6 +592,16 @@ p {
   box-shadow: 1px 1px 0px var(--border-color);
 }
 
+.future {
+  font-weight: 400;
+  font-style: italic;
+}
+
+.tbd-comp {
+  font-weight: 400;
+  font-style: italic;
+}
+
 .scioly-exam-item .exam-title {
   font-weight: bold;
   font-size: 1.1rem;
