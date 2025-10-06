@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       slides = Array.from(track.children);
-      currentIndex = slideCount;
+      currentIndex = slideCount - 1;
       createAndAppendButtons();
       setPositionByIndex(false);
 

@@ -617,6 +617,14 @@ p {
   font-size: 0.9em;
 }
 
+.ext::after {
+  content: "\f35d";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  margin-left: 0.5em;
+  font-size: 0.8em;
+}
+
 .scioly-exam-item .exam-links a::after {
   content: "\f35d";
   font-family: "Font Awesome 6 Free";
