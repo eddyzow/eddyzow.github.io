@@ -92,7 +92,7 @@ var backgaudio = new Howl({
   loop: true,
   rate: 1,
 });
-const socket = io("https://eddyzow.herokuapp.com/"); // Socket
+const socket = io(window.SOCKET_URL || "https://eddyzow.herokuapp.com/"); // Socket
 document.getElementById("wallpaper").style["background-image"] =
   'url("./assets/wallpapers/' +
   (Math.floor(Math.random() * 7) + 1).toString() +

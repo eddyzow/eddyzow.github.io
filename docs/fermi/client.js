@@ -1,4 +1,4 @@
-const socket = io("https://eddyzow.herokuapp.com/"); // Socket
+const socket = io(window.SOCKET_URL || "https://eddyzow.herokuapp.com/"); // Socket
 particlesJS.load("particles-js", "particles.json");
 minipages = ["practice-gen", "practice-unit", "submit", "about"];
 var questions = JSON.parse(data);

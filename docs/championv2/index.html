@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Champion V2</title>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Login/Signup Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content login-card">
+            <div class="logo-section">
+                <div class="logo-icon">🏆</div>
+                <h1>Trivia Champion</h1>
+                <p class="version">Version 2.0</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="tab-btn active" id="login-tab-btn">Login</button>
+                <button class="tab-btn" id="signup-tab-btn">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <div class="tab-content active" id="login-form-container">
+                <div class="input-group">
+                    <input type="text" id="login-username" placeholder="Username" autocomplete="username">
+                    <span class="input-icon">👤</span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
+                    <span class="input-icon">🔒</span>
+                </div>
+                <button class="btn btn-primary" id="login-btn">
+                    <span>Login</span>
+                    <div class="btn-loader"></div>
+                </button>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="tab-content" id="signup-form-container">
+                <div class="input-group">
+                    <input type="text" id="signup-username" placeholder="Username" autocomplete="username">
+                    <span class="input-icon">👤</span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signup-password" placeholder="Password" autocomplete="new-password">
+                    <span class="input-icon">🔒</span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signup-confirm" placeholder="Confirm Password" autocomplete="new-password">
+                    <span class="input-icon">🔒</span>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="signup-email" placeholder="Email (optional)" autocomplete="email">
+                    <span class="input-icon">📧</span>
+                </div>
+                <button class="btn btn-primary" id="signup-btn">
+                    <span>Create Account</span>
+                    <div class="btn-loader"></div>
+                </button>
+            </div>
+
+            <div class="error-message" id="auth-error"></div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="app-container" id="app-container">
+        
+        <!-- Main Menu -->
+        <div class="screen active" id="menu-screen">
+            <div class="menu-header">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <div class="avatar-ring"></div>
+                        <div class="level-badge">
+                            <span id="user-level">1</span>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <h2 id="user-username">Player</h2>
+                        <div class="user-rank" id="user-rank">Unranked</div>
+                    </div>
+                </div>
+                
+                <div class="user-stats-row">
+                    <div class="stat-card">
+                        <div class="stat-value" id="user-wins">0</div>
+                        <div class="stat-label">Wins</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="user-losses">0</div>
+                        <div class="stat-label">Losses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="user-winrate">0%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-actions">
+                <button class="menu-btn btn-casual" id="play-casual">
+                    <div class="btn-glow"></div>
+                    <div class="btn-content">
+                        <span class="btn-icon">🎮</span>
+                        <div class="btn-text-group">
+                            <span class="btn-title">Casual Match</span>
+                            <span class="btn-subtitle">Play for fun</span>
+                        </div>
+                    </div>
+                </button>
+
+                <button class="menu-btn btn-ranked" id="play-ranked">
+                    <div class="btn-glow"></div>
+                    <div class="btn-content">
+                        <span class="btn-icon">⚔️</span>
+                        <div class="btn-text-group">
+                            <span class="btn-title">Ranked Match</span>
+                            <span class="btn-subtitle">Climb the ladder</span>
+                        </div>
+                    </div>
+                </button>
+
+                <div class="menu-row">
+                    <button class="menu-btn-small" id="stats-btn">
+                        <span class="btn-icon">📊</span>
+                        <span>Stats</span>
+                    </button>
+                    <button class="menu-btn-small" id="settings-btn">
+                        <span class="btn-icon">⚙️</span>
+                        <span>Settings</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="online-indicator">
+                <div class="pulse-dot"></div>
+                <span><span id="online-count">0</span> online</span>
+            </div>
+        </div>
+
+        <!-- Matchmaking Screen -->
+        <div class="screen" id="matchmaking-screen">
+            <div class="matchmaking-container">
+                <h2 class="finding-text">Finding Opponent</h2>
+                <div class="loading-rings">
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                </div>
+                <p class="queue-tip" id="queue-tip">Prepare for battle...</p>
+                <button class="btn btn-secondary" id="cancel-queue">Cancel</button>
+            </div>
+        </div>
+
+        <!-- VS Screen -->
+        <div class="screen" id="vs-screen">
+            <div class="vs-layout">
+                <div class="vs-player">
+                    <div class="vs-avatar">
+                        <div class="avatar-ring"></div>
+                        <div class="level-badge">
+                            <span id="vs-player-level">1</span>
+                        </div>
+                    </div>
+                    <h3 id="vs-player-name">You</h3>
+                    <div class="vs-rank" id="vs-player-rank">Unranked</div>
+                </div>
+
+                <div class="vs-center">
+                    <div class="vs-text">VS</div>
+                    <div class="vs-lightning"></div>
+                </div>
+
+                <div class="vs-player">
+                    <div class="vs-avatar">
+                        <div class="avatar-ring"></div>
+                        <div class="level-badge">
+                            <span id="vs-opponent-level">1</span>
+                        </div>
+                    </div>
+                    <h3 id="vs-opponent-name">Opponent</h3>
+                    <div class="vs-rank" id="vs-opponent-rank">Unranked</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="screen" id="game-screen">
+            <div class="game-header">
+                <div class="player-bar">
+                    <div class="player-name" id="game-player-name">You</div>
+                    <div class="player-score" id="game-player-score">0</div>
+                </div>
+                
+                <div class="game-info">
+                    <div class="act-badge" id="act-badge">Act 1</div>
+                    <div class="question-num" id="question-num">1/10</div>
+                </div>
+
+                <div class="opponent-bar">
+                    <div class="opponent-score" id="game-opponent-score">0</div>
+                    <div class="opponent-name" id="game-opponent-name">Opponent</div>
+                </div>
+            </div>
+
+            <div class="timer-container">
+                <div class="timer-track">
+                    <div class="timer-fill" id="timer-fill"></div>
+                </div>
+                <div class="timer-number" id="timer-number">10</div>
+            </div>
+
+            <div class="question-panel">
+                <div class="question-category" id="question-category">Category</div>
+                <div class="question-text" id="question-text">Question will appear here...</div>
+                
+                <div class="answers-container">
+                    <button class="answer-card" data-answer="1">
+                        <span class="answer-letter">A</span>
+                        <span class="answer-text" id="answer-text-1">Answer 1</span>
+                        <div class="answer-glow"></div>
+                    </button>
+                    <button class="answer-card" data-answer="2">
+                        <span class="answer-letter">B</span>
+                        <span class="answer-text" id="answer-text-2">Answer 2</span>
+                        <div class="answer-glow"></div>
+                    </button>
+                    <button class="answer-card" data-answer="3">
+                        <span class="answer-letter">C</span>
+                        <span class="answer-text" id="answer-text-3">Answer 3</span>
+                        <div class="answer-glow"></div>
+                    </button>
+                    <button class="answer-card" data-answer="4">
+                        <span class="answer-letter">D</span>
+                        <span class="answer-text" id="answer-text-4">Answer 4</span>
+                        <div class="answer-glow"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="screen" id="results-screen">
+            <div class="results-container">
+                <div class="result-icon" id="result-icon">
+                    <div class="icon-circle">
+                        <span id="result-emoji">🏆</span>
+                    </div>
+                </div>
+                
+                <h2 class="result-title" id="result-title">VICTORY</h2>
+                
+                <div class="score-display">
+                    <div class="score-item">
+                        <div class="score-label">You</div>
+                        <div class="score-value" id="result-player-score">0</div>
+                    </div>
+                    <div class="score-divider">:</div>
+                    <div class="score-item">
+                        <div class="score-label">Opponent</div>
+                        <div class="score-value" id="result-opponent-score">0</div>
+                    </div>
+                </div>
+
+                <div class="rank-change-container" id="rank-change-container">
+                    <!-- Rank change will be inserted here -->
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="play-again-btn">
+                        <span>Play Again</span>
+                    </button>
+                    <button class="btn btn-secondary" id="menu-btn">
+                        <span>Main Menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Act Transition -->
+    <div class="act-transition" id="act-transition">
+        <div class="act-text" id="act-transition-text">Act 2</div>
+    </div>
+
+    <script src="../config.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>

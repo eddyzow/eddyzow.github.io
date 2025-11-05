@@ -4,7 +4,7 @@
 //- CHANGE ALL SESSION STORAGE TO LOCAL STORAGE AS IT ALLOWS ONLY ONE ACCOUNT TO BE LOGGED IN AT ONCE
 document.title = "Trivia Champion";
 //const socket = io("http://127.0.0.1:3000"); // Socket
-const socket = io("eddyzow.herokuapp.com");
+const socket = io(window.SOCKET_URL || "https://eddyzow.herokuapp.com/");
 var musics = [
   "GO GO GO SUMMER - NOBUHAMU",
   "HANGING OUT IN TOKYO - MEESAN",
@@ -287,9 +287,8 @@ if (localStorage.getItem("userToken") === null) {
   document.getElementById("newLoginContent").style.transform =
     "translate(-50%, -50%) scale(1, 1)";
 } else {
-  document.getElementById("usernameDisplayLogin").innerHTML = localStorage
-    .getItem("username")
-    .toUpperCase();
+  const username = localStorage.getItem("username");
+  document.getElementById("usernameDisplayLogin").innerHTML = username ? username.toUpperCase() : "USER";
   signupPageStatus = 2; //Return User Page
   setTimeout(function () {
     document.documentElement.scrollTop = 0;

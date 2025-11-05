@@ -1,4 +1,4 @@
-const socket = io("https://eddyzow.herokuapp.com/"); // Socket
+const socket = io(window.SOCKET_URL || "https://eddyzow.herokuapp.com/"); // Socket
 var numQuestions = 1;
 var qelem;
 var qnum;
