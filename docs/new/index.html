@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eddy Zhao - macOS Portfolio</title>
+    <meta name="description" content="Interactive macOS-style portfolio of Eddy Zhao - Astrophysics & Computer Science student at UC Berkeley">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=-apple-system,BlinkMacSystemFont,SF Pro Display,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+        <div class="menu-left">
+            <div class="apple-logo">&#63743;</div>
+            <div class="menu-item active">Portfolio</div>
+        </div>
+        <div class="menu-center">
+            <div class="menu-time" id="current-time"></div>
+        </div>
+        <div class="menu-right">
+            <div class="menu-item battery">100%</div>
+            <div class="menu-item wifi">&#63721;</div>
+        </div>
+    </div>
+
+    <!-- Desktop -->
+    <div class="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+            <!-- Finder Icon -->
+            <div class="desktop-icon" data-app="finder">
+                <div class="icon finder-icon">
+                    <div class="finder-face">
+                        <div class="finder-eye left"></div>
+                        <div class="finder-eye right"></div>
+                        <div class="finder-smile"></div>
+                    </div>
+                </div>
+                <span class="icon-label">About Me</span>
+            </div>
+
+            <!-- Terminal Icon -->
+            <div class="desktop-icon" data-app="terminal">
+                <div class="icon terminal-icon">
+                    <div class="terminal-screen">
+                        <div class="terminal-line">$ whoami</div>
+                        <div class="terminal-line">eddy</div>
+                        <div class="terminal-cursor">_</div>
+                    </div>
+                </div>
+                <span class="icon-label">Terminal</span>
+            </div>
+
+            <!-- Safari Icon -->
+            <div class="desktop-icon" data-app="safari">
+                <div class="icon safari-icon">
+                    <div class="compass-needle"></div>
+                    <div class="compass-face">
+                        <div class="compass-n">N</div>
+                    </div>
+                </div>
+                <span class="icon-label">Projects</span>
+            </div>
+
+            <!-- Calculator Icon -->
+            <div class="desktop-icon" data-app="calculator">
+                <div class="icon calculator-icon">
+                    <div class="calc-display">42</div>
+                    <div class="calc-buttons">
+                        <div class="calc-btn">7</div>
+                        <div class="calc-btn">8</div>
+                        <div class="calc-btn">9</div>
+                    </div>
+                </div>
+                <span class="icon-label">Science Olympiad</span>
+            </div>
+
+            <!-- Mail Icon -->
+            <div class="desktop-icon" data-app="mail">
+                <div class="icon mail-icon">
+                    <div class="envelope">
+                        <div class="envelope-flap"></div>
+                        <div class="envelope-body">
+                            <div class="mail-lines"></div>
+                        </div>
+                    </div>
+                </div>
+                <span class="icon-label">Contact</span>
+            </div>
+
+            <!-- Photos Icon -->
+            <div class="desktop-icon" data-app="photos">
+                <div class="icon photos-icon">
+                    <div class="photo-flower"></div>
+                </div>
+                <span class="icon-label">Gallery</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Windows Container -->
+    <div class="windows-container">
+        <!-- About Me Window -->
+        <div class="window" id="finder-window" data-app="finder">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="window-control close" data-action="close"></div>
+                    <div class="window-control minimize" data-action="minimize"></div>
+                    <div class="window-control maximize" data-action="maximize"></div>
+                </div>
+                <div class="window-title">About Me - Eddy Zhao</div>
+            </div>
+            <div class="window-content">
+                <div class="about-content">
+                    <div class="profile-section">
+                        <img src="../assets/website-imgs/me.jpg" alt="Eddy Zhao" class="profile-image">
+                        <div class="profile-info">
+                            <h1>Eddy Zhao</h1>
+                            <p class="tagline">UC Berkeley • Astrophysics & Computer Science</p>
+                            <p class="description">I'm a first-year at UC Berkeley studying Astrophysics and Computer Science. I am currently an undergraduate research assistant at the UC Berkeley Space Sciences Lab. I also help run <a href="https://eggster.org" target="_blank">Eggster</a> and Science Olympiad at Berkeley.</p>
+                            <div class="social-links">
+                                <a href="https://github.com/eddyzow" target="_blank" class="social-link">GitHub</a>
+                                <a href="https://linkedin.com/in/eddyzow" target="_blank" class="social-link">LinkedIn</a>
+                                <a href="https://youtube.com/eddyzow" target="_blank" class="social-link">YouTube</a>
+                                <a href="https://www.last.fm/user/eddyzow" target="_blank" class="social-link">Last.fm</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terminal Window -->
+        <div class="window" id="terminal-window" data-app="terminal">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="window-control close" data-action="close"></div>
+                    <div class="window-control minimize" data-action="minimize"></div>
+                    <div class="window-control maximize" data-action="maximize"></div>
+                </div>
+                <div class="window-title">Terminal - zsh</div>
+            </div>
+            <div class="window-content terminal-content">
+                <div class="terminal-output">
+                    <div class="terminal-line">Last login: <span id="login-time"></span></div>
+                    <div class="terminal-line">eddy@macbook ~ % <span class="command">cat skills.txt</span></div>
+                    <div class="terminal-line">Languages: Python, JavaScript, Java, C++, HTML/CSS</div>
+                    <div class="terminal-line">Frameworks: React, Node.js, Express, MongoDB</div>
+                    <div class="terminal-line">Tools: Git, Docker, VS Code, Jupyter, LaTeX</div>
+                    <div class="terminal-line">Research: Space Physics, Astrophysics, Data Analysis</div>
+                    <div class="terminal-line">eddy@macbook ~ % <span class="command">ls current_projects/</span></div>
+                    <div class="terminal-line">rostrum/         typerank/        fermi_questions/</div>
+                    <div class="terminal-line">space_lab_research/    eggster/        science_olympiad/</div>
+                    <div class="terminal-line">eddy@macbook ~ % <span class="cursor">_</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Window -->
+        <div class="window" id="safari-window" data-app="safari">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="window-control close" data-action="close"></div>
+                    <div class="window-control minimize" data-action="minimize"></div>
+                    <div class="window-control maximize" data-action="maximize"></div>
+                </div>
+                <div class="window-title">Projects - Portfolio</div>
+            </div>
+            <div class="window-content">
+                <div class="browser-bar">
+                    <div class="browser-nav">
+                        <div class="nav-btn">‹</div>
+                        <div class="nav-btn">›</div>
+                        <div class="nav-btn">↻</div>
+                    </div>
+                    <div class="url-bar">https://eddyzow.net/projects</div>
+                </div>
+                <div class="projects-content">
+                    <div class="project-grid">
+                        <div class="project-card featured">
+                            <img src="../assets/website-imgs/podium.png" alt="Rostrum" class="project-image">
+                            <div class="project-info">
+                                <h3>Rostrum</h3>
+                                <p class="project-date">August 2025</p>
+                                <p class="project-description">A next-generation hackathon peer shipping/voting/judging platform. Create events, add projects, and vote fairly in an ELO rating-based system.</p>
+                                <div class="project-tags">
+                                    <span class="tag">HTML</span>
+                                    <span class="tag">JavaScript</span>
+                                    <span class="tag">CSS</span>
+                                    <span class="tag">MongoDB</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="/rostrum" target="_blank" class="project-link">Live Demo</a>
+                                    <a href="https://github.com/eddyzow/rostrum" target="_blank" class="project-link">Source</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="project-card">
+                            <div class="project-info">
+                                <h3>TypeRank</h3>
+                                <p class="project-date">September 2025</p>
+                                <p class="project-description">Fun real-time 1v1 typing competition with a live leaderboard.</p>
+                                <div class="project-tags">
+                                    <span class="tag">HTML</span>
+                                    <span class="tag">JavaScript</span>
+                                    <span class="tag">REST APIs</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="/TypeRank" target="_blank" class="project-link">Live Demo</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="project-card">
+                            <div class="project-info">
+                                <h3>MBTA Tracker Pro</h3>
+                                <p class="project-date">June 2025</p>
+                                <p class="project-description">This tracker displays all MBTA lines, letting you inspect individual vehicles and see predicted arrival times.</p>
+                                <div class="project-tags">
+                                    <span class="tag">HTML</span>
+                                    <span class="tag">JavaScript</span>
+                                    <span class="tag">MBTA API</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="/mbta-tracker-pro" target="_blank" class="project-link">Live Demo</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="project-card">
+                            <div class="project-info">
+                                <h3>Fermi Questions</h3>
+                                <p class="project-date">February 2023</p>
+                                <p class="project-description">A practice tool for Science Olympiad's Fermi Questions event, containing over 1,500 questions.</p>
+                                <div class="project-tags">
+                                    <span class="tag">HTML</span>
+                                    <span class="tag">JavaScript</span>
+                                    <span class="tag">WebSockets</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="/fermi" target="_blank" class="project-link">Live Demo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Science Olympiad Window -->
+        <div class="window" id="calculator-window" data-app="calculator">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="window-control close" data-action="close"></div>
+                    <div class="window-control minimize" data-action="minimize"></div>
+                    <div class="window-control maximize" data-action="maximize"></div>
+                </div>
+                <div class="window-title">Science Olympiad</div>
+            </div>
+            <div class="window-content">
+                <div class="scioly-content">
+                    <div class="scioly-header">
+                        <h2>Science Olympiad</h2>
+                        <p>Science Olympiad spearheaded my interest in STEM and astrophysics. In high school, I competed and captained for Acton-Boxborough, attending Nationals in 2024.</p>
+                        <p>Since 2025, I have been a member of the Astronomy A-Team, the committee that administers the Astronomy National Division C event and writes exams for several high-profile invitationals, including MIT and Golden Gate.</p>
+                    </div>
+                    <div class="exam-list">
+                        <div class="exam-item">
+                            <h3>2025 UMass Amherst Invitational - Astronomy C</h3>
+                            <p class="exam-date">February 2025</p>
+                            <a href="https://drive.google.com/drive/folders/1nW_AtA1QRctejWxZnvOM69i7NiiFyoS0?usp=sharing" target="_blank" class="exam-link">exam | sheet | solutions | images</a>
+                        </div>
+                        <div class="exam-item">
+                            <h3>2025 Acton-Boxborough Tryouts - Astronomy C</h3>
+                            <p class="exam-date">November 2024</p>
+                            <a href="https://drive.google.com/drive/folders/1OfmFGY27_QJSrEKJDYHUgfMLgjpNA2Cr?usp=sharing" target="_blank" class="exam-link">exam | solutions</a>
+                        </div>
+                        <div class="exam-item">
+                            <h3>2024 UMass Amherst Invitational - Fermi Questions C</h3>
+                            <p class="exam-date">February 2024</p>
+                            <a href="https://drive.google.com/drive/folders/11q1KwmNOAxg3HvnZXZHN-BQeSCvlDWgB" target="_blank" class="exam-link">exam, key, solutions, statistics</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Window -->
+        <div class="window" id="mail-window" data-app="mail">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="window-control close" data-action="close"></div>
+                    <div class="window-control minimize" data-action="minimize"></div>
+                    <div class="window-control maximize" data-action="maximize"></div>
+                </div>
+                <div class="window-title">Mail - Contact</div>
+            </div>
+            <div class="window-content">
+                <div class="mail-content">
+                    <div class="mail-header">
+                        <h2>Get In Touch</h2>
+                        <p class="contact-description">I'm always interested in new opportunities and collaborations. Feel free to reach out!</p>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">✉️</div>
+                            <div class="contact-details">
+                                <h3>Email</h3>
+                                <p>eddy@eddyzow.net</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📍</div>
+                            <div class="contact-details">
+                                <h3>Location</h3>
+                                <p>San Francisco Bay Area / Boston</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">🎓</div>
+                            <div class="contact-details">
+                                <h3>Institution</h3>
+                                <p>UC Berkeley</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-footer">
+                        <p>Built with raw HTML, CSS, and JavaScript</p>
+                        <p>Inspired by macOS design language</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Window -->
+        <div class="window" id="photos-window" data-app="photos">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="window-control close" data-action="close"></div>
+                    <div class="window-control minimize" data-action="minimize"></div>
+                    <div class="window-control maximize" data-action="maximize"></div>
+                </div>
+                <div class="window-title">Photos - Gallery</div>
+            </div>
+            <div class="window-content">
+                <div class="photos-content">
+                    <div class="photo-grid">
+                        <div class="photo-item">
+                            <img src="../assets/website-imgs/podium.png" alt="Rostrum Platform">
+                            <div class="photo-caption">Rostrum - Hackathon Platform</div>
+                        </div>
+                        <div class="photo-item">
+                            <img src="../assets/website-imgs/me.jpg" alt="Eddy Zhao">
+                            <div class="photo-caption">Profile Photo</div>
+                        </div>
+                        <div class="photo-item">
+                            <img src="../assets/website-imgs/wof.png" alt="Wheel of Fortune">
+                            <div class="photo-caption">Wheel of Fortune Game</div>
+                        </div>
+                        <div class="photo-item">
+                            <img src="../assets/website-imgs/pcb.png" alt="PCB Design">
+                            <div class="photo-caption">PCB Design Work</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dock -->
+    <div class="dock">
+        <div class="dock-item" data-app="finder" data-tooltip="About Me">
+            <div class="dock-icon finder-dock-icon">
+                <div class="finder-face">
+                    <div class="finder-eye left"></div>
+                    <div class="finder-eye right"></div>
+                    <div class="finder-smile"></div>
+                </div>
+            </div>
+        </div>
+        <div class="dock-item" data-app="terminal" data-tooltip="Terminal">
+            <div class="dock-icon terminal-dock-icon">
+                <div class="terminal-screen">
+                    <div class="terminal-line">$</div>
+                    <div class="terminal-cursor">_</div>
+                </div>
+            </div>
+        </div>
+        <div class="dock-item" data-app="safari" data-tooltip="Projects">
+            <div class="dock-icon safari-dock-icon">
+                <div class="compass-needle"></div>
+                <div class="compass-face">
+                    <div class="compass-n">N</div>
+                </div>
+            </div>
+        </div>
+        <div class="dock-item" data-app="calculator" data-tooltip="Science Olympiad">
+            <div class="dock-icon calculator-dock-icon">
+                <div class="calc-display">42</div>
+                <div class="calc-buttons">
+                    <div class="calc-btn">7</div>
+                    <div class="calc-btn">8</div>
+                </div>
+            </div>
+        </div>
+        <div class="dock-item" data-app="mail" data-tooltip="Contact">
+            <div class="dock-icon mail-dock-icon">
+                <div class="envelope">
+                    <div class="envelope-flap"></div>
+                </div>
+            </div>
+        </div>
+        <div class="dock-item" data-app="photos" data-tooltip="Gallery">
+            <div class="dock-icon photos-dock-icon">
+                <div class="photo-flower"></div>
+            </div>
+        </div>
+        
+        <div class="dock-divider"></div>
+        
+        <div class="dock-item trash" data-tooltip="Trash">
+            <div class="dock-icon trash-icon">
+                <div class="trash-body"></div>
+                <div class="trash-lid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

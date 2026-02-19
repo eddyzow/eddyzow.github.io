@@ -22,16 +22,17 @@
     <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body class="dark">
+  <body class="dark" id="home">
+    <div id="particles-js"></div>
     <header>
-      <p id="last-updated">Last updated 28 December 2025</p>
+      <p id="last-updated">Last updated 19 February 2026</p>
       <nav class="nav">
-        <a href="#home" class="nav-link active">home</a>
-        <a href="#projects" class="nav-link">projects</a>
-        <a href="#scioly" class="nav-link">scioly</a>
-        <a href="#contact" class="nav-link">contact</a>
+        <a href="#home" class="nav-link active"><span>home</span></a>
+        <a href="#projects" class="nav-link"><span>projects</span></a>
+        <a href="#scioly" class="nav-link"><span>scioly</span></a>
+        <a href="#contact" class="nav-link"><span>contact</span></a>
       </nav>
-      <button class="theme-button"></button>
+      <button class="theme-button"><span></span></button>
       <button class="hamburger-menu">
         <span></span>
         <span></span>
@@ -40,7 +41,7 @@
     </header>
 
     <main>
-      <section id="home">
+      <section class="home-section">
         <div class="about-container">
           <div class="profile-pic-container">
             <img
@@ -52,9 +53,15 @@
           <div class="about-text">
             <h1>eddy zhao</h1>
             <p>
-              I'm an undergraduate at UC Berkeley studying Astrophysics and
-              Computer Science. I am currently an undergraduate research
-              assistant at the UC Berkeley Space Sciences Lab. I also help run
+              I study Astrophysics and
+              Computer Science at UC Berkeley. 
+              
+              </p><p>
+                
+                I'm also a research
+              assistant at the <a class="ext" href="https://www.ssl.berkeley.edu/" target="_blank"
+                >Space Sciences Lab</a
+              > and a leader of 
               <a class="ext" href="https://eggster.org" target="_blank"
                 >Eggster</a
               >
@@ -207,9 +214,6 @@
               >net</span
             >
           </h3>
-          <p style="color: gray; font-size: 1rem">
-            Built in raw HTML, JavaScript, and CSS.
-          </p>
           <p style="color: gray; font-size: 1rem">
             Near Boston or the San Francisco Bay Area? Contact me and let's
             talk!
@@ -771,6 +775,7 @@
     </template>
 
     <script src="config.js"></script>
+    <script src="particles.js"></script>
     <script src="client.js"></script>
   </body>
 </html>

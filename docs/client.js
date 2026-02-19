@@ -5,11 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const scrollIndicator = document.querySelector(".scroll-down-indicator");
 
   // --- Theme Toggle ---
+  // Update theme button text to use span
   const setTheme = (theme) => {
     document.body.className = theme;
     localStorage.setItem("theme", theme);
     if (themeToggle) {
-      themeToggle.textContent = `theme: ${theme}`;
+      const span = themeToggle.querySelector('span');
+      if (span) {
+        span.textContent = `theme: ${theme}`;
+      } else {
+        themeToggle.textContent = `theme: ${theme}`;
+      }
     }
   };
   const toggleTheme = () => {
@@ -78,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateActiveNavOnScroll() {
     // Get the current vertical scroll position, adding an offset for the header height.
-    const scrollPosition = window.scrollY + 150;
+    const scrollPosition = window.scrollY + 0;
     let currentActiveId = "";
 
     // Iterate through the sections from the bottom up.
@@ -379,4 +385,146 @@ document.addEventListener("DOMContentLoaded", () => {
 
     filterExams(); // Initial population
   }
+
+  // --- Particles.js Configuration ---
+  if (typeof particlesJS !== 'undefined') {
+    particlesJS('particles-js', {
+      particles: {
+        number: {
+          value: 100,
+          density: {
+            enable: true,
+            value_area: 700
+          }
+        },
+        color: {
+          value: '#ffffff'
+        },
+        shape: {
+          type: 'circle'
+        },
+        opacity: {
+          value: 0.6,
+          random: true,
+          anim: {
+            enable: true,
+            speed: 1.5,
+            opacity_min: 0.2,
+            sync: false
+          }
+        },
+        size: {
+          value: 3.5,
+          random: true,
+          anim: {
+            enable: true,
+            speed: 2.5,
+            size_min: 0.5,
+            sync: false
+          }
+        },
+        line_linked: {
+          enable: true,
+          distance: 160,
+          color: '#ffffff',
+          opacity: 0.3,
+          width: 1.2
+        },
+        move: {
+          enable: true,
+          speed: 1.8,
+          direction: 'none',
+          random: true,
+          straight: false,
+          out_mode: 'out',
+          bounce: false,
+          attract: {
+            enable: false
+          }
+        }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: {
+            enable: true,
+            mode: 'grab'
+          },
+          onclick: {
+            enable: true,
+            mode: 'push'
+          },
+          resize: true
+        },
+        modes: {
+          grab: {
+            distance: 180,
+            line_linked: {
+              opacity: 0.6
+            }
+          },
+          push: {
+            particles_nb: 5
+          }
+        }
+      },
+      retina_detect: true
+    });
+  }
+
+  // --- Universal Ripple Effects ---
+  function createUniversalRipple(event) {
+    const element = event.currentTarget;
+    const circle = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    
+    const maxSize = Math.min(rect.width, rect.height, 120);
+    const diameter = Math.max(maxSize, 40);
+    const radius = diameter / 2;
+
+    // Calculate position relative to the element, not the page
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${x - radius}px`;
+    circle.style.top = `${y - radius}px`;
+    circle.classList.add('ripple');
+
+    // Ensure element has relative positioning for absolute ripple positioning
+    const originalPosition = getComputedStyle(element).position;
+    if (originalPosition === 'static') {
+      element.style.position = 'relative';
+    }
+
+    const existingRipples = element.querySelectorAll('.ripple');
+    existingRipples.forEach(ripple => ripple.remove());
+
+    element.appendChild(circle);
+
+    setTimeout(() => {
+      if (circle.parentNode) {
+        circle.remove();
+      }
+    }, 600);
+  }
+
+  function addUniversalRipples() {
+    const selectors = [
+      'a', 'button', '.blogpost', '.profile-pic', '.email', 
+      '.dev-package', '.projectPlay', '.theme-button', '.nav-link',
+      '.glow-links a', '.scioly-exam-item', 'h1', 'h2', 'h3'
+    ];
+    
+    selectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(element => {
+        if (!element.hasAttribute('data-ripple-enabled')) {
+          element.addEventListener('click', createUniversalRipple);
+          element.setAttribute('data-ripple-enabled', 'true');
+        }
+      });
+    });
+  }
+
+  addUniversalRipples();
 });
