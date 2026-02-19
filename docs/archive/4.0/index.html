@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eddyzow</title>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/9673dc3140.js"
+      crossorigin="anonymous"
+    ></script>
+    <script defer src="client.js"></script>
+    <script src="particles.js"></script>
+  <script>
+    // Fetch moon phase from a free API (ipgeolocation.io)
+    fetch("https://api.ipgeolocation.io/astronomy?apiKey=8368c0cfcae44cdabc5bcfb1d0d068d1")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("moon-phase").textContent = `🌙 Moon Phase: ${data.moon_phase}`;
+        document.getElementById("planet-visible").textContent = `🌌 Sunrise: ${data.sunrise} | Sunset: ${data.sunset}`;
+        const moonEmojis = {
+  "NEW_MOON": "🌑",
+  "WAXING_CRESCENT": "🌒",
+  "FIRST_QUARTER": "🌓",
+  "WAXING_GIBBOUS": "🌔",
+  "FULL_MOON": "🌕",
+  "WANING_GIBBOUS": "🌖",
+  "LAST_QUARTER": "🌗",
+  "WANING_CRESCENT": "🌘"
+};
+
+const emoji = moonEmojis[data.moon_phase] || "🌙";
+document.getElementById("moon-phase").textContent = `${emoji} Moon Phase: ${data.moon_phase}`;
+      })
+      .catch(() => {
+        document.getElementById("moon-phase").textContent = "🌘 Moon Phase: Unavailable";
+        document.getElementById("planet-visible").textContent = "🔭 Astronomy data unavailable";
+      });
+  </script>
+  </head>
+  <body class="dark">
+    <p id="last-updated">Last updated 18 May 2025</p>
+    <div class="music-widget" id="now-playing">
+      🎧 Listening to:
+      <a
+        href="https://open.spotify.com/track/68HocO7fx9z0MgDU0ZPHro"
+        target="_blank"
+        >Every Summertime - NIKI</a
+      >
+    </div>
+    <div id="particles-js"></div>
+
+    <nav class="nav">
+      <a href="#home" class="fade-link">home</a>
+      <a href="#projects" class="fade-link">projects</a>
+      <a href="#builds" class="fade-link">builds</a>
+      <a href="#scioly" class="fade-link">scioly</a>
+      <a href="#contact" class="fade-link">contact</a>
+    </nav>
+
+    <main class="center" id="home">
+      <p>eddy zhao</p>
+      <div class="terminal">
+        <div class="prompt">
+          $ <span id="typewriter"></span><span class="cursor">█</span>
+        </div>
+      </div>
+      <div class="glow-links">
+        <a href="https://github.com/eddyzow" target="_blank" class="glow"
+          >github</a
+        >
+        <a href="https://youtube.com/eddyzow" target="_blank" class="glow"
+          >youtube</a
+        >
+        <a href="https://www.last.fm/user/eddyzow" target="_blank" class="glow"
+          >last.fm</a
+        >
+        <a href="mailto:eddyz@berkeley.edu" class="glow">email</a>
+      </div>
+    </main>
+
+    <section
+      class="page-section"
+      id="projects"
+      style="display: none; flex-direction: column; text-align: center"
+    >
+      <h1 class="glow" style="margin-top: 40px;">Projects</h1>
+                    <p class="note" style="padding-bottom: 5px;">
+                    </p>
+
+                    <div class="blogpost"> 
+                        <div class="title">
+                           Word Hunt Web
+                        </div>
+                        <p class="devtime">DEVELOPMENT: JUNE 2025</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p>
+                        <p class="note">
+                          Want to play the iMessage game Word Hunt with your Android or web friends? Well, now you can! This game aims to be extremely similar to the popular game, but accessible to users without iPhones! Credits to GamePigeon for inspiration, sounds, and art. Open-source as always.
+                        </p>
+                        <div class="projectPlay" onclick="window.open('/word-hunt-web')" target=_blank>CLICK TO OPEN</div>
+
+                    </div>
+
+                      <div class="blogpost"> 
+                        <div class="title">
+                           eddyzow.net v4.0
+                        </div>
+                        <p class="devtime">DEVELOPMENT: MAY 2025</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package jquery">jQuery</p> <p class="dev-package api">Astronomy API</p>
+                        <p class="note">
+                            My website has gone through various designs and appearances over time. Behold the latest iteration! I think this represents my developer background alongside my astronomy interest much better than before. It also includes a place for me to showcase my engineering projects alongside my webapps!
+                        </p>
+                        <p class="note" style="margin-bottom: -10px;">
+                          For obvious reason, there is no link to open this project :D
+                        </p>
+                    </div>
+
+                     
+                    <div class="blogpost"> 
+                        <div class="title">
+                           Passcode
+                        </div>
+                        <p class="devtime">DEVELOPMENT: AUGUST 2024</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package jquery">jQuery</p>
+                        <p class="note">
+                            Can you crack today's passcode? This daily game is an inspiration from the popular game Wordle, with a special take. Guess the six-digit passcode in five tries, but you'll need smart calculations to crack it in as few tries as possible! A new puzzle is avaiable every day at 8:00 P.M. local Time.
+                        </p>
+                        
+                        <div class="projectPlay" onclick="window.open('/passcode')" target=_blank>CLICK TO OPEN</div>
+                    </div>
+
+                    <div class="blogpost"> 
+                        <div class="title">
+                           How Many U.S. States Have You Visited?
+                        </div>
+                        <p class="devtime">DEVELOPMENT: AUGUST 2024</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p>
+                        <p class="note">
+                            How many U.S. states have you visited? With this app, you can click on the interactive map to select states, and the app tells you the total area and percentage of the U.S. you've visited. You can also share your result with your friends to see how they stack up. This project introduced me to meta tags and using SVG paths in HTML. 
+                        </p>
+                        
+                        <div class="projectPlay" onclick="window.open('/states')" target=_blank>CLICK TO OPEN</div>
+                    </div>
+
+                    <div class="blogpost"> 
+                        <div class="title">
+                           BobaByte Hackathon Website
+                        </div>
+                        <p class="devtime">DEVELOPMENT: JULY 2024</p> <p class="dev-package html">HTML</p> <p class="dev-package css">CSS</p>
+                        <p class="note">
+                            I'm running a boba-themed hackathon for middle and high school students, to be held in Boston in October 2024! The project involved the building of a custom website. This project introduced me to responsive media queries as well as grid and flex display. 
+                        </p>
+                        
+                        <div class="projectPlay" onclick="window.open('https://bobabyte.org')" target=_blank>CLICK TO OPEN</div>
+                    </div>
+                
+                    <div class="blogpost"> 
+                        <div class="title">
+                            Where's My Commuter Rail Train?
+                        </div>
+                        <p class="devtime">DEVELOPMENT: JUNE 2024</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package api">MBTA v3 API</p>
+                        <p class="note">
+                            This project uses your location to determine your closest MBTA Commuter Rail station, then uses the MBTA V3 API to pull train data (location, speed, distance) and shows you which trains are coming your way. It also predicts when your train will arrive!
+                        </p>
+                    
+                        <div class="projectPlay" onclick="window.open('/mbta')" target=_blank>CLICK TO OPEN</div>
+                    </div>
+
+                    <div class="blogpost"> 
+                        <div class="title">
+                           FTC Robotics Team Website
+                        </div>
+                        <p class="devtime">DEVELOPMENT: NOVEMBER 2023</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p>
+                        <p class="note">
+                             As part of the FIRST Tech Challenge (FTC) team 16021 Techno Maniacs, I was called upon to design a custom website to showcase our awards and send to potential sponsors. I implemented a horizontal scroll-bar page design and used CSS tranitions to make page transitions incredibly smooth. 
+                        </p>
+                        
+                        <div class="projectPlay" onclick="window.open('https://technomaniacs.web.app')" target=_blank>CLICK TO OPEN</div>
+                    </div>
+
+                <div class="blogpost"> 
+                    <div class="title">
+                        Fermi Questions
+                    </div>
+                    <p class="devtime">DEVELOPMENT: FEBRUARY - MARCH 2023</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package socket">WebSockets</p>
+
+                    <p class="note">
+                        This project is for any Science Olympiad student who wants to practice Fermi Questions! It shows you essential data like point per question, and contains over 1,500 questions! 
+                    </p>
+                
+                    <div class="projectPlay" onclick="window.open('/fermi')" target=_blank>CLICK TO OPEN</div>
+                </div>
+                <div class="blogpost"> 
+                    <div class="title">
+                        Keyboard Hero
+                    </div>
+                    <p class="devtime">DEVELOPMENT: JUNE 2022</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package socket">WebSockets</p>
+
+                    <p class="note">
+                        Like Guitar Hero, but for the keyboard! To play notes, hold down A, S, D, F, or G and press Enter to strum.
+                    </p>
+                    <div class="projectPlay" onclick="window.open('/KeyboardHero')" target=_blank>CLICK TO OPEN</div>
+                </div>
+                <div class="blogpost"> 
+                    <div class="title">
+                        Champion Blitz
+                    </div>
+                    <p class="devtime">DEVELOPMENT: MAY 2021</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package socket">WebSockets</p>
+                    <p class="note">
+                        Great in the classroom, this project allows you to teach in a fun way through interactive educational games! In 8th grade, I had my teachers play this with their students in class, and many of my classmates refused to believe that I built a game like this...
+                    </p>
+                    <div class="projectPlay" onclick="window.open('/champion/custom')" target=_blank>CLICK TO OPEN</div>
+                </div>
+                <div class="blogpost"> 
+                    <div class="title">
+                        Keyspeed Test
+                    </div>
+                    <p class="devtime">DEVELOPMENT: MAY 2021</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p>
+                    <p class="note">
+                        Ever wanted to find out how fast you can tap the keys on your keyboard? My best is 14 keys per second!
+                    </p>
+                    <div class="projectPlay" onclick="window.open('/keyspeed')" target=_blank>CLICK TO OPEN</div>
+                </div>
+                <div class="blogpost"> 
+                    <div class="title">
+                        Who Wants To Be A Millionaire?
+                    </div>
+                    <p class="devtime">DEVELOPMENT: MARCH 2021</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package socket">WebSockets</p>
+                    <p class="note">
+                        Another great quiz game I created! All controls are keyboard only so that the game can be casted with a projector in front of a real audience and controlled by an operator from the side.
+                    </p>
+                    <p class="note">Controls: Space to start a new game. Press Z twice to open a question and reveal answer choices. Press A/B/C/D to answer. Press X to reveal the correct answer, and Z twice to advance to the next question. Q/W/E for lifelines (W twice for Ask The Audience), R twice and then L to walk away. Yes, they're complicated.</p>
+                    <div class="projectPlay" onclick="window.open('/wwtbam')" target=_blank>CLICK TO OPEN</div>
+                </div>
+                <div class="blogpost"> 
+                    <div class="title">
+                        JSBeats
+                    </div>
+                    <p class="devtime">DEVELOPMENT: FEBRUARY 2021</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package socket">WebSockets</p>
+                    <p class="note">
+                        Like Trivia Champion, but a rhythm game! It's similar to hit games like osu!mania or RoBeats. You can play against your friends in Online mode, or play the extremely hard songs in single player mode!
+                    </p>
+                    <div class="projectPlay" onclick="window.open('/jsb')" target=_blank>CLICK TO OPEN</div>
+                </div>
+               
+                <div class="blogpost"> 
+                    <div class="title">
+                        Live Quiz
+                    </div>
+                    <p class="devtime">DEVELOPMENT: FEBRUARY 2021</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package socket">WebSockets</p>
+                    <p class="note">
+                        This is a live trivia game system I built using the Twitch platform - viewers can tune in through this link, and the streamer can type commands into the developer console to push questions, announcements, etc, and see who is winning!
+                    </p>
+                    <div class="projectPlay" onclick="window.open('/live')" target=_blank>CLICK TO OPEN</div>
+                </div>
+                <div class="blogpost"> 
+                    <div class="title">
+                        Donut Simulator
+                    </div>
+                    <p class="devtime">DEVELOPMENT: JANUARY 2021</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> 
+                    <p class="note">
+                        Click donuts. How many can you get?
+                    </p>
+                    <div class="projectPlay" onclick="window.open('/donuts')" target=_blank>CLICK TO OPEN</div>
+                </div>
+                <div class="blogpost"> 
+                    <div class="title">
+                        Trivia Champion
+                    </div>
+                    <p class="devtime">DEVELOPMENT: AUGUST 2020</p> <p class="dev-package html">HTML</p> <p class="dev-package js">JavaScript</p> <p class="dev-package css">CSS</p> <p class="dev-package socket">WebSockets</p>
+                    <p class="note">
+                        My first project, an online live trivia game where you can play against real people for rank and glory! Answer trivia questions live against another player while battling to see who is correct AND fast! Play in acts of five questions - first to win five acts takes the cake!
+                    </p>
+                    <div class="projectPlay" onclick="window.open('/champion')" target=_blank>CLICK TO OPEN</div>
+                </div>
+                <p class="center">Unfortunately, you've reached the end :(</p>
+                <p style="margin-bottom: 80px;">Disclaimer: some complex parts of some projects were created using the help of a generative AI. While certain tools improve my productivity and workflow, making original, creative ideas is always at the forefront.</p>
+            </div>
+           
+    </section>
+
+    
+    <section
+      class="page-section"
+      id="builds"
+      style="display: none; flex-direction: column; text-align: center"
+    >
+
+      <h1 class="glow" style="margin-top: 40px;">Builds (engineering projects)</h1>
+                    <p class="note" style="padding-bottom: 5px;">
+                    </p>
+                    <div class="blogpost"> 
+                        <div class="title">
+                           ezpad
+                        </div>
+                        <p class="devtime">MAY 2025</p> 
+                        <p class="note">
+                          Macropad (mini-keyboard) with 9 mechanical keys, 0.91" OLED screen, and rotary encoder. Custom-built and wired PCB. Powered by a Seeed XIAO RP2040. Precursor project to a larger custom mechanical keyboard I'll be making soon! (thanks hackpad)
+                        </p>
+                      <div class="image-row">
+  <img src="../../assets/website-imgs/pcb.png">
+  <img src="../../assets/website-imgs/schematic.png">
+  <img src="../../assets/website-imgs/cad.png">
+</div>
+
+                    </div>
+                    <div class="blogpost"> 
+                        <div class="title">
+                           The Cold Brew Express
+                        </div>
+                        <p class="devtime">MAY 2025</p> 
+                        <p class="note">
+                          A DIY electric scooter that takes me to the nearest coffee shop and back! Features include cruise control, automatic lean detection, RGB lighting, and a display that relays telemetry such as speed and battery percentage. (thanks highway)
+                        </p>
+                    </div>
+    </section>
+
+    <section
+      class="center"
+      id="contact"
+      style="display: none; flex-direction: column; text-align: center"
+    >
+      <h1 class="glow">Contact</h1>
+      <p>discord: eddyzow</p>
+      <p>email: eddyzhao828@gmail.com</p>
+    </section>
+
+    <section class="page-section" id="scioly" style="display: none">
+      <div class="body-carrier">
+        <p>Science Olympiad spearheaded my interest in STEM and astrophysics. In high school, I competed and captained for Acton-Boxborough, attending Nationals in 2024.</p>
+        <h2>
+          On this page, you can find all Science Olympiad invitational exams I've
+          written. Tests are ordered chronologically.
+        </h2>
+        <div>
+          <ul>
+            <li>
+              2025 Lexington Invitational - Astronomy C (April 2025)
+              <ul>
+                <li class="smaller disable">exam | key | solutions</li>
+              </ul>
+            </li>
+            <li>
+              2025 Lexington Invitational - Codebusters C (April 2025)
+              <ul>
+                <li class="smaller disable">exam | key | solutions</li>
+              </ul>
+            </li>
+            <li>
+              2025 Lexington Invitational - Fermi Questions C (April 2025)
+              <ul>
+                <li class="smaller disable">exam | key | solutions</li>
+              </ul>
+            </li>
+            <li>
+              2025 UMass Amherst Invitational - Astronomy C (February 2025)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1nW_AtA1QRctejWxZnvOM69i7NiiFyoS0?usp=sharing"
+                    target="_blank"
+                    >exam | sheet | key | images</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2025 Acton-Boxborough Tryouts - Astronomy C (November 2024)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1OfmFGY27_QJSrEKJDYHUgfMLgjpNA2Cr?usp=sharing"
+                    target="_blank"
+                    >exam | key | solutions</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2025 Acton-Boxborough Tryouts - Codebusters C (October 2024)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1qZOZLFkDA12T3xGa5sl8ZsKBOLUHZwlD?usp=sharing"
+                    target="_blank"
+                    >exam | key</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2025 Acton-Boxborough Tryouts - Dynamic Planet C (October 2024)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1viR--S54rVLXfcUwfAc7I-OE0n6lBlSx?usp=sharing"
+                    target="_blank"
+                    >exam | key</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2025 Acton-Boxborough Tryouts - Fossils C (November 2024)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1YBj0FFnLxvr8qN4dXRlyvpejwnAPvxRG?usp=sharing"
+                    target="_blank"
+                    >exam | key</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2024 UMass Amherst Invitational - Fermi Questions C (February
+              2024)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/11q1KwmNOAxg3HvnZXZHN-BQeSCvlDWgB"
+                    target="_blank"
+                    >exam, key, solutions, statistics</a
+                  >
+                  |
+                  <a
+                    href="https://docs.google.com/document/d/1uxdq72pnmBMfV0WB-tKzd7iEpEcVLyN2QqBsjA7lX3s/edit?usp=sharing"
+                    target="_blank"
+                    >reflection</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              2024 SSSS - Fermi Questions C (July 2023)
+              <ul>
+                <li class="smaller">
+                  <a
+                    href="https://drive.google.com/drive/folders/1sLG1hxSMqW_UomHGLIUNP-vYnuBZm7ad?usp=sharing"
+                    target="_blank"
+                    >exam, solutions</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="astronomy-widget" id="astronomy-widget">
+    <p id="moon-phase">🌘 Moon Phase: Loading...</p>
+    <p id="planet-visible">🔭 Visible Planets: Loading...</p>
+  </div>
+  </body>
+</html>

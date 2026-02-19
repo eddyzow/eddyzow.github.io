@@ -1,0 +1,515 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "IBM Plex Mono", monospace;
+  height: 100vh;
+  background-color: black;
+  color: white;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s, color 0.3s;
+  animation: zoomFade 1s cubic-bezier(0.01, 1, 0.8, 1.01) forwards;
+  transform: scale(1); /* ensure no inherit transform bias */
+  transform-origin: center center !important;
+}
+
+.note {
+  font-size: 1.4em;
+  margin-top: 16px;
+}
+
+body.light {
+  background-color: #f3e3c1;
+  color: #333;
+}
+
+@keyframes zoomFade {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Dark theme rainbow gradient background (behind black) */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+body.dark::before {
+  opacity: 0.08;
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #88ff00,
+    #12dbe2,
+    #ea07ff,
+    #ff0000
+  );
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.body-carrier {
+  overflow-y: auto;
+  width: 100%;
+  font-size: 1.2em;
+}
+
+.body-carrier {
+  margin-top: 42px;
+  margin-bottom: 80px;
+}
+
+.body-carrier ul {
+  list-style-type: disc;
+  margin-left: 1.5em;
+  padding-left: 0;
+}
+
+.body-carrier li {
+  margin-bottom: 10px;
+  line-height: 1.5em;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+a:hover {
+  text-shadow: 0 0 6px currentColor;
+}
+
+.page-section {
+  position: fixed;
+  overflow-x: hidden;
+  flex-direction: column;
+  align-items: center;
+  width: 60vw;
+  padding: 200px 20vw;
+  text-align: left;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+.page-section {
+  z-index: 2;
+}
+
+.center {
+  flex-direction: column;
+  text-align: center;
+  z-index: 2;
+}
+
+.center h1 {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+}
+.center p {
+  font-size: 1.5em;
+}
+
+.terminal {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.prompt {
+  margin-left: 40px;
+  margin-right: 40px;
+  display: inline-block;
+}
+
+.cursor {
+  animation: blink 1s step-start infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.glow-links {
+  margin-left: 40px;
+  margin-right: 40px;
+  margin-top: 20px;
+}
+
+.glow {
+  display: inline-block;
+  margin: 0 15px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.5rem;
+  transition: 0.3s;
+}
+
+.glow:hover {
+  text-shadow: 0 0 8px currentColor;
+  transform: scale(1.1);
+}
+
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.theme-button {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  color: inherit;
+  border: 2px solid currentColor;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.25s ease;
+}
+
+.theme-button:hover {
+  transform: scale(0.95);
+}
+
+.theme-button:active {
+  transform: scale(0.9);
+}
+
+.nav {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.6s ease forwards;
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(1.03);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.nav a {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.5rem;
+  left: 10px;
+  color: inherit;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav a:hover {
+  text-shadow: 0 0 8px currentColor;
+  transform: scale(1.05);
+}
+
+.nav a.active {
+  color: white;
+  pointer-events: none;
+  font-weight: 900;
+}
+
+.nav a.active::after {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: currentColor;
+  border-radius: 50%;
+}
+
+.projectPlay {
+  padding: 1%;
+  background-color: white;
+  border-radius: 4px;
+  color: black;
+  transition: all 0.25s ease;
+  font-weight: 800;
+}
+
+.blogpost {
+  text-align: left;
+  width: 100%;
+  border: 4px solid white;
+  border-radius: 12px;
+  padding: 40px 50px 40px 50px;
+  margin-bottom: 30px;
+  background: repeating-linear-gradient(
+    45deg,
+    /* angle for diagonal lines */ #00000005,
+    /* start color */ #00000005 10px,
+    /* end color of the line */ #ffffff05 10px,
+    /* start of the next stripe */ #ffffff05 20px /* end color of the gap */
+  );
+}
+.title {
+  font-size: 2em;
+  margin-top: -10px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.time {
+  font-size: 0.75em;
+  margin: 0;
+  font-weight: 300;
+}
+
+.dev-package {
+  display: inline;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 1.2em;
+  border-radius: 4px;
+  font-weight: 800;
+  background: repeating-linear-gradient(
+    -45deg,
+    /* angle for diagonal lines */ #00000010,
+    /* start color */ #00000010 5px,
+    /* end color of the line */ #ffffff10 5px,
+    /* start of the next stripe */ #ffffff10 10px /* end color of the gap */
+  );
+}
+
+.js {
+  background-color: rgb(153, 132, 63);
+  box-shadow: 0px 0px 20px rgb(153, 132, 63);
+  color: white;
+}
+
+.html {
+  background-color: rgb(122, 79, 139);
+  box-shadow: 0px 0px 20px rgb(122, 79, 139);
+  color: rgb(255, 255, 255);
+}
+
+.css {
+  background-color: rgb(65, 139, 71);
+  box-shadow: 0px 0px 20px rgb(65, 139, 71);
+  color: rgb(255, 255, 255);
+}
+
+.jquery {
+  background-color: rgb(47, 63, 107);
+  box-shadow: 0px 0px 20px rgb(47, 63, 107);
+  color: rgb(255, 255, 255);
+}
+
+.socket {
+  background-color: rgb(114, 52, 52);
+  box-shadow: 0px 0px 20px rgb(114, 52, 52);
+  color: rgb(255, 255, 255);
+}
+
+.api {
+  background-color: rgb(114, 87, 52);
+  box-shadow: 0px 0px 20px rgb(114, 87, 52);
+  color: rgb(255, 255, 255);
+}
+
+.button:hover {
+  transform: scale(0.9, 0.9);
+  cursor: pointer;
+}
+.button:active {
+  transform: scale(0.8, 0.8);
+  cursor: pointer;
+}
+
+.projectPlay:hover {
+  filter: brightness(80%);
+  transform: scale(0.98, 0.98);
+  cursor: pointer;
+}
+
+.projectPlay:active {
+  filter: brightness(70%);
+  transform: scale(0.95, 0.95);
+  cursor: pointer;
+}
+
+.music-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 32px;
+  background: rgba(0, 0, 0, 1);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 1em;
+  max-width: 400px;
+  z-index: 20;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 10px rgba(177, 177, 177, 0.4);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0.95;
+}
+
+#last-updated {
+  position: fixed;
+  left: 50%;
+  opacity: 70%;
+  bottom: 10px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+}
+
+.devtime {
+  display: inline-block;
+  font-size: 1.4em;
+  margin: 0;
+  margin-right: 8px;
+  font-weight: 900;
+}
+
+.music-widget:hover {
+  transform: scale(1.03);
+  opacity: 1;
+}
+
+.music-widget a {
+  color: inherit;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.music-widget a:hover {
+  text-shadow: 0 0 6px currentColor;
+}
+
+.astronomy-widget {
+  position: fixed;
+  bottom: 20px;
+  left: 32px;
+  background: rgba(0, 0, 0, 1);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.9em;
+  max-width: 400px;
+  z-index: 20;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 10px rgba(177, 177, 177, 0.4);
+  opacity: 0.95;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.astronomy-widget:hover {
+  transform: scale(1.03);
+  opacity: 1;
+}
+
+@media screen and (max-width: 800px) {
+  .astronomy-widget {
+    bottom: -200px;
+  }
+}
+
+#builds .blogpost .image-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+#builds .blogpost .image-row img {
+  width: 300px; /* Fixed width */
+  height: 300px; /* Fixed height */
+  object-fit: cover; /* Crop to fill box, keeps uniform size */
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease-in-out;
+}
+
+#builds .blogpost .image-row img:hover {
+  transform: scale(1.04);
+}
+
+@media (max-width: 768px) {
+  #builds .blogpost .image-row {
+    justify-content: center;
+  }
+
+  #builds .blogpost .image-row img {
+    width: 200px;
+    height: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  #builds .blogpost .image-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #builds .blogpost .image-row img {
+    width: 90%;
+    height: auto;
+    object-fit: contain;
+  }
+}
