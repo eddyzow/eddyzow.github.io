@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Eddy Zhao - Interactive Space Portfolio">
+  <meta property="og:title" content="Eddy Zhao - Space Portfolio" />
+  <meta property="og:description" content="An interactive, space-themed personal website" />
+  <meta property="og:url" content="https://eddyzow.net/experimental" />
+  <meta property="og:type" content="website" />
+  <title>Eddy Zhao - Space Portfolio</title>
+  
+  <!-- Three.js for 3D graphics -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Pixi.js for 2D graphics -->
+  <script src="https://pixijs.download/v7.2.4/pixi.min.js"></script>
+  
+  <!-- Particles.js for particle effects -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 3D Space Canvas -->
+  <div id="space-canvas"></div>
+  
+  <!-- Particles Background -->
+  <div id="particles-js"></div>
+  
+  <!-- Navigation Planets Container -->
+  <div id="planets-container">
+    <!-- Planets will be dynamically generated here -->
+  </div>
+  
+  <!-- HUD (Heads-Up Display) -->
+  <div id="hud">
+    <div id="hud-title">EDDY'S SPACE</div>
+    <div id="hud-subtitle">Navigate to explore</div>
+    <div id="hud-interactions"></div>
+  </div>
+  
+  <!-- Content Panel -->
+  <div id="content-panel">
+    <button class="close-btn">&times;</button>
+    <div id="content-wrapper">
+      <!-- Content will be dynamically loaded here -->
+    </div>
+  </div>
+  
+  <!-- Cosmic dust overlay -->
+  <canvas id="dust-canvas"></canvas>
+  
+  <!-- Loading spinner -->
+  <div id="loading-spinner">
+    <div class="spinner"></div>
+  </div>
+  
+  <!-- Main Scripts -->
+  <script src="config.js"></script>
+  <script src="three-scene.js"></script>
+  <script src="planets.js"></script>
+  <script src="particles-config.js"></script>
+  <script src="content.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
