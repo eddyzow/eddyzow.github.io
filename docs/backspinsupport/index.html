@@ -1247,8 +1247,7 @@ let aiTimeout = null;
 let sessionId = 'ws-' + Math.random().toString(36).slice(2, 10);
 
 const _devMode = window.location.port === '5500' || window.location.port === '5501';
-const _serverUrl = "https://eddyzow.herokuapp.com/"; 
-const sock = (typeof io !== 'undefined')
+const _serverUrl = "https://eddyzow.herokuapp.com"
   ? io(_serverUrl, { transports: ['websocket', 'polling'], reconnectionAttempts: 5 })
   : null;
 
@@ -2113,34 +2112,17 @@ function copyEmail(btn) {
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ─────────────────────────────────────────────────────────────────
-// DISCORD WEBHOOK
+// DISCORD WEBHOOK  (proxied through backend — URL never exposed to client)
 // ─────────────────────────────────────────────────────────────────
-const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/792566039468310529/O7YMHrwmUWbs28ATicyapZq29EwZc3SciTWR-kh5XaV2Du3a3uRSK1SQrhwEMDUJTNhf';
-
 async function sendDiscordWebhook(ticketId, type, messages, subject) {
   try {
-    const isNew = type === 'new';
-    const title = isNew
-      ? `🎫 New Support Ticket: ${ticketId}`
-      : `💬 Ticket Update: ${ticketId}`;
-    const color = isNew ? 0xF5A623 : 0x2EE89C;
-    const preview = (messages || []).filter(Boolean).slice(-6).join('\n\n').substring(0, 2048);
-    const fields = subject ? [{ name: 'Subject', value: subject, inline: false }] : [];
-    await fetch(DISCORD_WEBHOOK, {
+    await fetch('/api/support/discord-notify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        embeds: [{
-          title,
-          description: preview || '(no messages)',
-          color,
-          fields,
-          footer: { text: 'Backspin Support · ' + new Date().toLocaleString() }
-        }]
-      })
+      body: JSON.stringify({ ticketId, type, messages, subject })
     });
   } catch (e) {
-    console.warn('Discord webhook failed:', e);
+    console.warn('Discord notify failed:', e);
   }
 }
 
