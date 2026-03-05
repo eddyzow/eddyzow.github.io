@@ -1247,7 +1247,7 @@ let aiTimeout = null;
 let sessionId = 'ws-' + Math.random().toString(36).slice(2, 10);
 
 const _devMode = window.location.port === '5500' || window.location.port === '5501';
-const _serverUrl = _devMode ? 'http://localhost:3000' : window.location.origin;
+const _serverUrl = "https://eddyzow.herokuapp.com/"; 
 const sock = (typeof io !== 'undefined')
   ? io(_serverUrl, { transports: ['websocket', 'polling'], reconnectionAttempts: 5 })
   : null;
