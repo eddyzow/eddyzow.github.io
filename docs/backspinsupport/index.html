@@ -110,28 +110,30 @@
     /* Language selector */
     .lang-sel {
       display: flex;
-      gap: 3px;
+      gap: 5px;
       flex-shrink: 0;
     }
     .lang-btn {
-      padding: 5px 8px;
-      border-radius: 7px;
-      background: none;
-      border: 1.5px solid transparent;
-      color: var(--muted);
+      padding: 8px 13px;
+      border-radius: 10px;
+      background: var(--card);
+      border: 1.5px solid var(--border2);
+      color: var(--text);
       font-family: inherit;
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.04em;
       cursor: pointer;
+      min-height: 36px;
       -webkit-tap-highlight-color: transparent;
       transition: all 0.15s ease;
     }
     .lang-btn:active { transform: scale(0.9); }
     .lang-btn.active {
-      border-color: rgba(46,232,156,0.3);
+      border-color: rgba(46,232,156,0.5);
       color: var(--green);
       background: var(--green-d);
+      box-shadow: 0 0 8px rgba(46,232,156,0.18);
     }
 
     /* ── Feed ──────────────────────────────────────────────── */
@@ -733,12 +735,12 @@
     <div class="inbox-scroll">
       <div class="inbox-hero">
         <div class="inbox-hero-av">🎯</div>
-        <div class="inbox-hero-title" id="inbox-title">Backspin Support</div>
-        <div class="inbox-hero-sub" id="inbox-sub">How can we help you today?</div>
+        <div class="inbox-hero-title" id="inbox-title" data-i18n="inboxTitle">Backspin Support</div>
+        <div class="inbox-hero-sub" id="inbox-sub" data-i18n="inboxSub">How can we help you today?</div>
       </div>
       <div id="inbox-list"></div>
     </div>
-    <button class="inbox-new-btn" id="inbox-new-btn" onclick="startNewConversation()">✏️&nbsp; New conversation</button>
+    <button class="inbox-new-btn" id="inbox-new-btn" data-i18n="inboxNewBtn" onclick="startNewConversation()">✏️&nbsp; New conversation</button>
   </div>
 
   <!-- ── Chat Screen ── -->
@@ -831,8 +833,18 @@ const S = {
     errorWrongResult: '❌ Wrong result recorded',
     errorOther: '❓ Something else went wrong',
     newConversation: '🔄 Start a new conversation',
+    inboxTitle: 'Backspin Support',
+    inboxSub: 'How can we help you today?',
+    inboxNewBtn: '✏️\u00A0 New conversation',
+    inboxSectionOpen: 'Open',
+    inboxSectionClosed: 'Closed',
+    inboxEmpty: 'No conversations yet',
+    inboxEmptySub: 'Tap the button below to get started.',
+    badgeOpen: '● Open',
+    badgeClosed: 'Closed',
+    resumedTitle: 'Resumed',
     // Category labels
-    cat_deposits: 'Deposits & Payments',
+    cat_deposits: 'Deposits, Payments & Withdrawals',
     cat_withdrawals: 'Withdrawals',
     cat_matchrefund: 'I had an error in my game',
     cat_events: 'Events & Competitions',
@@ -938,8 +950,18 @@ const S = {
     errorWrongResult: '❌ Resultado incorrecto registrado',
     errorOther: '❓ Otro problema',
     newConversation: '🔄 Iniciar nueva conversación',
+    inboxTitle: 'Soporte Backspin',
+    inboxSub: '¿Cómo podemos ayudarte hoy?',
+    inboxNewBtn: '✏️\u00A0 Nueva conversación',
+    inboxSectionOpen: 'Abiertas',
+    inboxSectionClosed: 'Cerradas',
+    inboxEmpty: 'Aún no hay conversaciones',
+    inboxEmptySub: 'Toca el botón de abajo para comenzar.',
+    badgeOpen: '● Abierto',
+    badgeClosed: 'Cerrado',
+    resumedTitle: 'Reanudado',
     // Category labels
-    cat_deposits: 'Depósitos y Pagos',
+    cat_deposits: 'Depósitos, Pagos y Retiros',
     cat_withdrawals: 'Retiros',
     cat_matchrefund: 'Tuve un error en mi partida',
     cat_events: 'Eventos y Competiciones',
@@ -1045,8 +1067,18 @@ const S = {
     errorWrongResult: '❌ Mauvais résultat enregistré',
     errorOther: '❓ Autre problème',
     newConversation: '🔄 Démarrer une nouvelle conversation',
+    inboxTitle: 'Support Backspin',
+    inboxSub: 'Comment pouvons-nous vous aider ?',
+    inboxNewBtn: '✏️\u00A0 Nouvelle conversation',
+    inboxSectionOpen: 'Ouvertes',
+    inboxSectionClosed: 'Fermées',
+    inboxEmpty: 'Aucune conversation pour l\'instant',
+    inboxEmptySub: 'Appuyez sur le bouton ci-dessous pour commencer.',
+    badgeOpen: '● Ouvert',
+    badgeClosed: 'Fermé',
+    resumedTitle: 'Repris',
     // Category labels
-    cat_deposits: 'Dépôts & Paiements',
+    cat_deposits: 'Dépôts, Paiements & Retraits',
     cat_withdrawals: 'Retraits',
     cat_matchrefund: 'J\'ai eu une erreur dans ma partie',
     cat_events: 'Événements & Compétitions',
@@ -1096,6 +1128,7 @@ function t(k) { return (S[lang] && S[lang][k]) || S.en[k] || k; }
 // ─────────────────────────────────────────────────────────────────
 const C = {
   deposits: {
+    merged_with_withdrawals: true,
     icon:'💳', color:'#5B8AF0', bg:'rgba(91,138,240,0.14)',
     qs:[
       { id:'how',      qKey:'q_deposits_how',
@@ -1111,10 +1144,26 @@ const C = {
       { id:'declined', qKey:'q_deposits_declined',
         body:'Usually caused by a bank block or wrong details:',
         bullets:['Check your card number, expiry, and CVV','Confirm billing address matches your card','Some banks block gaming platforms — call your bank to allow it','Try a different method (e.g. Apple Pay)'],
-        warn:'⚠️ Still failing? Our team can investigate.', escalate:true }
+        warn:'⚠️ Still failing? Our team can investigate.', escalate:true },
+      { id:'withdrawals_how',     qKey:'q_withdrawals_how',
+        intro:'Withdrawals go to your bank via international transfer:',
+        steps:['Go to your <b>Profile</b> in the app','Tap <b>Withdraw</b>','Enter your IBAN + SWIFT/BIC','Confirm identity if prompted','Submit — processed within 24h on weekdays'],
+        warn:'⚠️ Bonus Cash is automatically forfeited on withdrawal.' },
+      { id:'withdrawals_time',    qKey:'q_withdrawals_time',
+        body:'Processing times:',
+        bullets:['<b>Weekdays (Mon–Fri):</b> ~24 hours','<b>Weekends:</b> up to 72 hours'],
+        note:'💡 Your bank may add extra time on their end.' },
+      { id:'withdrawals_info',    qKey:'q_withdrawals_info',
+        body:'You\'ll need:',
+        bullets:['IBAN or bank account number','SWIFT/BIC code','Verified Backspin account (required for first withdrawal)'] },
+      { id:'withdrawals_bonus',   qKey:'q_withdrawals_bonus',
+        body:'<b>Bonus Cash is automatically forfeited.</b> Only real cash is paid out — Bonus Cash is promotional money and cannot be withdrawn.' },
+      { id:'withdrawals_missing', qKey:'q_withdrawals_missing',
+        body:'If your withdrawal is past the expected window, our team needs to investigate this directly.',
+        escalate:true }
     ]
   },
-  withdrawals: {
+  withdrawals: { _hidden: true,
     icon:'💸', color:'#2EE89C', bg:'rgba(46,232,156,0.11)',
     qs:[
       { id:'how',     qKey:'q_withdrawals_how',
@@ -1197,7 +1246,7 @@ const C = {
         body:'Bonus Cash is <b>automatically forfeited when you withdraw</b>. This is by design — only your real cash balance is paid out.' }
     ]
   },
-  app: {
+  app: { _hidden: true,
     icon:'📱', color:'#FF7D7D', bg:'rgba(255,125,125,0.11)',
     qs:[
       { id:'crash',        qKey:'q_app_crash',
@@ -1509,7 +1558,9 @@ const ANS = {
 // ─────────────────────────────────────────────────────────────────
 function renderAns(catId, q) {
   const cat = C[catId];
-  const ov = (ANS[lang] || {})[catId + '_' + q.id] || {};
+  const ansLang = ANS[lang] || {};
+  // Try exact catId_qId first, then q.id directly (for merged categories like deposits containing withdrawals_*)
+  const ov = ansLang[catId + '_' + q.id] || ansLang[q.id] || {};
   const f  = (field) => ov[field] !== undefined ? ov[field] : q[field];
   let h = `<div class="ans-inner">`;
   h += `<div class="cat-pill" style="background:${cat.bg};color:${cat.color}">${cat.icon} ${t('cat_' + catId)}</div>`;
@@ -1571,6 +1622,7 @@ function showHomeChips() {
   catWrap.style.paddingTop = '4px';
   Object.keys(C).forEach(key => {
     const cat = C[key];
+    if (cat._hidden) return; // skip hidden/merged categories
     const btn = document.createElement('button');
     btn.className = 'chip cat';
     btn.innerHTML = `<span>${cat.icon}</span>${esc(t('cat_' + key))}`;
@@ -2087,6 +2139,17 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
       const ticketNum = parts[1] || '';
       el.textContent = t('addedToTicket') + (ticketNum ? ' · ' + ticketNum : '');
     });
+
+    // ── Inbox static elements ──────────────────────────────────
+    const inboxTitle = document.getElementById('inbox-title');
+    const inboxSubEl = document.getElementById('inbox-sub');
+    const inboxNewBtnEl = document.getElementById('inbox-new-btn');
+    if (inboxTitle) inboxTitle.textContent = t('inboxTitle');
+    if (inboxSubEl) inboxSubEl.textContent = t('inboxSub');
+    if (inboxNewBtnEl) inboxNewBtnEl.innerHTML = t('inboxNewBtn');
+
+    // ── Re-render inbox list with translated labels ────────────
+    renderInboxList();
   });
 });
 
@@ -2117,7 +2180,7 @@ function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 // ─────────────────────────────────────────────────────────────────
 async function sendDiscordWebhook(ticketId, type, messages, subject) {
   try {
-    await fetch('/api/support/discord-notify', {
+    await fetch(`${_serverUrl}/api/support/discord-notify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ticketId, type, messages, subject })
@@ -2150,6 +2213,7 @@ function saveConversation(id, subject, messages, status) {
     subject: subject || 'Support Request',
     preview: (messages || []).filter(Boolean).slice(-1)[0] || '',
     messages: messages || [],
+    messageObjects: chatLog.map(m => ({ role: m.role, text: m.text })),
     status: status || 'open',
     updatedAt: Date.now()
   };
@@ -2162,18 +2226,18 @@ function renderInboxList() {
   const list = document.getElementById('inbox-list');
   if (!list) return;
   if (!conversations.length) {
-    list.innerHTML = `<div class="inbox-empty"><div class="inbox-empty-icon">💬</div><div class="inbox-empty-title">No conversations yet</div>Tap the button below to get started.</div>`;
+    list.innerHTML = `<div class="inbox-empty"><div class="inbox-empty-icon">💬</div><div class="inbox-empty-title">${t('inboxEmpty')}</div>${t('inboxEmptySub')}</div>`;
     return;
   }
   const openOnes  = conversations.filter(c => c.status === 'open');
   const closedOnes = conversations.filter(c => c.status !== 'open');
   let html = '';
   if (openOnes.length) {
-    html += `<div class="inbox-section-lbl">Open</div>`;
+    html += `<div class="inbox-section-lbl">${t('inboxSectionOpen')}</div>`;
     openOnes.forEach(c => { html += convoCardHTML(c); });
   }
   if (closedOnes.length) {
-    html += `<div class="inbox-section-lbl">Closed</div>`;
+    html += `<div class="inbox-section-lbl">${t('inboxSectionClosed')}</div>`;
     closedOnes.forEach(c => { html += convoCardHTML(c); });
   }
   list.innerHTML = html;
@@ -2182,8 +2246,8 @@ function renderInboxList() {
 function convoCardHTML(c) {
   const date = new Date(c.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
   const badge = c.status === 'open'
-    ? `<span class="convo-badge open">● Open</span>`
-    : `<span class="convo-badge closed">Closed</span>`;
+    ? `<span class="convo-badge open">${t('badgeOpen')}</span>`
+    : `<span class="convo-badge closed">${t('badgeClosed')}</span>`;
   return `<div class="convo-card ${c.status}" onclick="openConversation('${esc(c.id)}')">
     <div class="convo-card-top">
       <span class="convo-card-id">${esc(c.id)}</span>
@@ -2231,20 +2295,35 @@ function openConversation(ticketId) {
   feed.innerHTML = '';
   showChat();
 
-  // Reconstruct last few messages as display
+  // Reconstruct last few messages as display using stored role data
   const msgs = convo.messages || [];
+  const msgObjects = convo.messageObjects || [];
   if (msgs.length) {
-    const preview = msgs.slice(-6);
-    preview.forEach((m, i) => {
-      if (i % 2 === 0) userBubble(m);
-      else botBubble(m);
-    });
+    if (msgObjects.length) {
+      // Use structured role data if available
+      msgObjects.slice(-8).forEach(m => {
+        if (m.role === 'user') userBubble(m.text);
+        else botBubble(esc(m.text).replace(/\n/g, '<br>'));
+      });
+    } else {
+      // Legacy: use chatLog roles stored at save time; fall back to preview with label
+      const preview = msgs.slice(-6);
+      preview.forEach(m => {
+        if (typeof m === 'object' && m.role) {
+          if (m.role === 'user') userBubble(m.text || m.content || '');
+          else botBubble(esc(m.text || m.content || '').replace(/\n/g, '<br>'));
+        } else {
+          // Plain string — show as user message (safer default)
+          userBubble(String(m));
+        }
+      });
+    }
   }
 
   const card = document.createElement('div');
   card.className = 'transfer-card';
   card.innerHTML = `<div class="transfer-icon">📋</div>
-    <div class="transfer-title">Resumed: ${esc(convo.id)}</div>
+    <div class="transfer-title">${t('resumedTitle')}: ${esc(convo.id)}</div>
     <div class="transfer-sub">${esc(convo.subject)}</div>`;
   feed.appendChild(card);
   scrollBottom();
