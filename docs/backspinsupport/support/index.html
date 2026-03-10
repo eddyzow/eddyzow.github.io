@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#6EBDE9" />
+  <title>Backspin Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ─── Header ─────────────────────────────────────────── -->
+  <header id="hdr">
+    <button id="hdr-back" aria-label="Back" onclick="showInbox()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+
+    <div class="hdr-av" aria-hidden="true">
+      <img class="brand-logo" src="logo.webp" alt="" />
+    </div>
+
+    <div class="hdr-info">
+      <div class="hdr-name" id="hdr-name">Spinny</div>
+      <div class="hdr-status">
+        <span class="status-dot online" id="status-dot"></span>
+        <span class="status-text online" id="status-text">Online now</span>
+      </div>
+    </div>
+
+    <div class="lang-sel" role="group" aria-label="Language">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+    </div>
+  </header>
+
+  <!-- ─── Conversations Inbox ─────────────────────────────── -->
+  <section id="inbox-screen" aria-label="Conversations inbox">
+    <div class="inbox-scroll">
+
+      <div class="inbox-hero">
+        <div class="inbox-hero-badge">Support</div>
+        <h1 class="inbox-hero-title" id="inbox-title" data-i18n="inboxTitle">Backspin Support</h1>
+        <p class="inbox-hero-sub" id="inbox-sub" data-i18n="inboxSub">How can we help you today?</p>
+      </div>
+
+      <div id="inbox-list"></div>
+    </div>
+
+    <div class="inbox-fab-wrap">
+      <button class="inbox-fab" id="inbox-new-btn" data-i18n="inboxNewBtn" onclick="startNewConversation()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New conversation
+      </button>
+    </div>
+  </section>
+
+  <!-- ─── Chat Screen ──────────────────────────────────────── -->
+  <section id="chat-screen" class="hidden" aria-label="Support chat">
+
+    <div id="feed" role="log" aria-live="polite" aria-label="Chat messages"></div>
+
+    <div id="input-wrap">
+      <span id="char-count" aria-live="polite"></span>
+      <div id="input-bar">
+        <textarea
+          id="msg-input"
+          rows="1"
+          maxlength="500"
+          enterkeyhint="send"
+          placeholder="Type your question…"
+          aria-label="Message input"
+        ></textarea>
+        <button id="send-btn" disabled aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+</div><!-- #app -->
+
+<script src="index.js"></script>
+</body>
+</html>
