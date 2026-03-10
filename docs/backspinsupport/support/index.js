@@ -22,6 +22,11 @@ const S = {
     aiError: "I'm having a connection issue right now. Please try again, or email support@backspingames.com.",
     greeting: 'Hey! I\'m <b>Spinny</b>, your Backspin support assistant.',
     greetSub: 'What do you need help with today?',
+    aiDisclaimer: 'AI may be inaccurate. Backspin is not liable for AI-generated inaccuracies.',
+    thinkingTitle: 'Looking that up…',
+    thinkingSub: 'Checking the best answer for you.',
+    articleLabel: 'Help article',
+    loadingConversations: 'Loading conversations…',
     quickLabel: 'QUICK HELP',
     topicsLabel: 'TOPICS',
     refundTitle: 'Match Refund',
@@ -86,6 +91,7 @@ const S = {
     inboxSectionClosed: 'Closed',
     inboxEmpty: 'No conversations yet',
     inboxEmptySub: 'Tap the button below to get started.',
+    inboxEmptyHint: 'Popular topics',
     badgeOpen: '● Open',
     badgeClosed: 'Closed',
     resumedTitle: 'Resumed',
@@ -137,6 +143,11 @@ const S = {
     aiError: 'Tengo un problema de conexión. Inténtalo de nuevo o escribe a support@backspingames.com.',
     greeting: '¡Hola! Soy <b>Spinny</b>, tu asistente de soporte de Backspin.',
     greetSub: '¿En qué puedo ayudarte hoy?',
+    aiDisclaimer: 'La IA puede cometer errores. Backspin no se hace responsable de inexactitudes generadas por IA.',
+    thinkingTitle: 'Buscando eso…',
+    thinkingSub: 'Comprobando la mejor respuesta para ti.',
+    articleLabel: 'Artículo de ayuda',
+    loadingConversations: 'Cargando conversaciones…',
     quickLabel: 'AYUDA RÁPIDA',
     topicsLabel: 'TEMAS',
     refundTitle: 'Reembolso de Partida',
@@ -201,6 +212,7 @@ const S = {
     inboxSectionClosed: 'Cerradas',
     inboxEmpty: 'Aún no hay conversaciones',
     inboxEmptySub: 'Toca el botón de abajo para comenzar.',
+    inboxEmptyHint: 'Temas populares',
     badgeOpen: '● Abierto',
     badgeClosed: 'Cerrado',
     resumedTitle: 'Reanudado',
@@ -252,6 +264,11 @@ const S = {
     aiError: 'Problème de connexion. Réessaie ou écris à support@backspingames.com.',
     greeting: 'Salut ! Je suis <b>Spinny</b>, ton assistant support Backspin.',
     greetSub: 'Comment puis-je t\'aider aujourd\'hui ?',
+    aiDisclaimer: 'L’IA peut être inexacte. Backspin n’est pas responsable des erreurs générées par l’IA.',
+    thinkingTitle: 'Je vérifie ça…',
+    thinkingSub: 'Je cherche la meilleure réponse pour toi.',
+    articleLabel: 'Article d’aide',
+    loadingConversations: 'Chargement des conversations…',
     quickLabel: 'AIDE RAPIDE',
     topicsLabel: 'SUJETS',
     refundTitle: 'Remboursement de Partie',
@@ -316,6 +333,7 @@ const S = {
     inboxSectionClosed: 'Fermées',
     inboxEmpty: 'Aucune conversation pour l\'instant',
     inboxEmptySub: 'Appuyez sur le bouton ci-dessous pour commencer.',
+    inboxEmptyHint: 'Sujets populaires',
     badgeOpen: '● Ouvert',
     badgeClosed: 'Fermé',
     resumedTitle: 'Repris',
@@ -608,7 +626,20 @@ let activeTicketId = null;
 let ticketMessages = [];
 let pendingMatchId = false;
 let pendingMatchCat = null;
+let activeDraftKey = 'new';
 const MAX_LEN = 500;
+const DRAFTS_KEY = 'bsp_support_drafts';
+let draftStore = {};
+let inboxRenderToken = 0;
+
+function sanitizeClientMessage(text) {
+  return String(text || '')
+    .replace(/\u0000/g, '')
+    .replace(/[\r\n]+/g, ' ')
+    .replace(/\s{3,}/g, '  ')
+    .trim()
+    .slice(0, MAX_LEN);
+}
 
 // ─────────────────────────────────────────────────────────────────
 // DOM HELPERS
@@ -618,6 +649,119 @@ const inputBar = document.getElementById('input-bar');
 const msgInput = document.getElementById('msg-input');
 const sendBtn  = document.getElementById('send-btn');
 const charCount = document.getElementById('char-count');
+
+function loadDraftStore() {
+  try { draftStore = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}'); }
+  catch (_) { draftStore = {}; }
+}
+
+function saveDraftStore() {
+  try { localStorage.setItem(DRAFTS_KEY, JSON.stringify(draftStore)); } catch (_) {}
+}
+
+function getDraftStorageKey(key = activeDraftKey) {
+  return `draft:${key || 'new'}`;
+}
+
+function setActiveDraftKey(key) {
+  activeDraftKey = key || 'new';
+}
+
+function persistDraft(key = activeDraftKey) {
+  const storageKey = getDraftStorageKey(key);
+  const value = String(msgInput.value || '').slice(0, MAX_LEN);
+  if (value.trim()) draftStore[storageKey] = value;
+  else delete draftStore[storageKey];
+  saveDraftStore();
+}
+
+function clearDraft(key = activeDraftKey) {
+  delete draftStore[getDraftStorageKey(key)];
+  saveDraftStore();
+}
+
+function migrateDraft(fromKey, toKey) {
+  const fromStorageKey = getDraftStorageKey(fromKey);
+  const toStorageKey = getDraftStorageKey(toKey);
+  if (!draftStore[fromStorageKey] || fromStorageKey === toStorageKey) return;
+  draftStore[toStorageKey] = draftStore[fromStorageKey];
+  delete draftStore[fromStorageKey];
+  saveDraftStore();
+}
+
+function syncComposerState() {
+  msgInput.style.height = 'auto';
+  msgInput.style.height = '48px';
+  const len = msgInput.value.length;
+  if (len > 400) {
+    charCount.textContent = `${len}/${MAX_LEN}`;
+    charCount.className = len > MAX_LEN ? 'over visible' : 'warn visible';
+  } else {
+    charCount.className = '';
+    charCount.textContent = '';
+  }
+  validateInput();
+}
+
+function restoreDraft(key = activeDraftKey) {
+  msgInput.value = draftStore[getDraftStorageKey(key)] || '';
+  syncComposerState();
+}
+
+function triggerHaptic(style = 'selection') {
+  try {
+    if (window.ReactNativeWebView?.postMessage) {
+      window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'haptic', style }));
+    }
+  } catch (_) {}
+
+  try {
+    if (window.webkit?.messageHandlers?.haptic) {
+      window.webkit.messageHandlers.haptic.postMessage(style);
+    } else if (window.webkit?.messageHandlers?.haptics) {
+      window.webkit.messageHandlers.haptics.postMessage({ style });
+    }
+  } catch (_) {}
+
+  try {
+    if (navigator.vibrate) {
+      const pattern = style === 'success' ? [12, 24, 14] : style === 'warning' ? [18] : [8];
+      navigator.vibrate(pattern);
+    }
+  } catch (_) {}
+}
+
+function isInteractiveDisabled(el) {
+  return !el
+    || el.disabled
+    || el.getAttribute('aria-disabled') === 'true'
+    || el.classList.contains('disabled')
+    || el.classList.contains('is-locked');
+}
+
+function clearTapFeedback() {
+  document.querySelectorAll('.tap-pressed').forEach(el => el.classList.remove('tap-pressed'));
+}
+
+const INTERACTIVE_SELECTOR = '.chip, .ebtn, .inbox-fab, .lang-btn, #send-btn, #hdr-back, .convo-card, .ans-link';
+
+document.addEventListener('pointerdown', e => {
+  const target = e.target.closest(INTERACTIVE_SELECTOR);
+  if (!target || isInteractiveDisabled(target)) return;
+  target.classList.add('tap-pressed');
+}, true);
+
+['pointerup', 'pointercancel', 'scroll'].forEach(evt => {
+  document.addEventListener(evt, clearTapFeedback, true);
+});
+
+document.addEventListener('click', e => {
+  const target = e.target.closest(INTERACTIVE_SELECTOR);
+  if (!target || isInteractiveDisabled(target)) return;
+  triggerHaptic(target.matches('#send-btn, .inbox-fab, .ebtn-p') ? 'impactLight' : 'selection');
+}, true);
+
+window.addEventListener('pagehide', () => persistDraft());
 
 function scrollBottom() {
   requestAnimationFrame(() => feed.scrollTo({ top: feed.scrollHeight, behavior: 'smooth' }));
@@ -726,7 +870,7 @@ function userBubble(text, options = {}) {
 function showTyping() {
   const row = document.createElement('div');
   row.className = 'row bot typing-row';
-  row.innerHTML = `<div class="row-av">${spinnyAvatarMarkup()}</div><div class="typing-bubble"><span></span><span></span><span></span></div>`;
+  row.innerHTML = `<div class="row-av">${spinnyAvatarMarkup()}</div><div class="typing-card"><div class="typing-card-head"><span class="typing-ping"></span>${esc(t('thinkingTitle'))}</div><div class="typing-card-sub">${esc(t('thinkingSub'))}</div><div class="typing-bubble"><span></span><span></span><span></span></div></div>`;
   feed.appendChild(row);
   scrollBottom();
   activeTyping = row;
@@ -739,6 +883,7 @@ function removeTyping() {
 }
 
 function showErrBubble(msg) {
+  triggerHaptic('warning');
   const w = document.createElement('div');
   w.className = 'err-row';
   w.innerHTML = `<div class="err-bubble">⚡ ${esc(msg)}</div>`;
@@ -782,11 +927,21 @@ function disableChips(wrap) {
 
 function showInputBar() {
   inputBar.classList.add('visible');
-  setTimeout(() => { msgInput.placeholder = t('placeholder'); msgInput.focus(); }, 80);
+  restoreDraft();
+  setTimeout(() => {
+    msgInput.placeholder = t('placeholder');
+    msgInput.focus();
+    const end = msgInput.value.length;
+    msgInput.setSelectionRange(end, end);
+  }, 80);
 }
-function hideInputBar() { inputBar.classList.remove('visible'); msgInput.blur(); }
+function hideInputBar() {
+  persistDraft();
+  inputBar.classList.remove('visible');
+  msgInput.blur();
+}
 function lockInput()    { sendBtn.disabled = true; msgInput.disabled = true; }
-function unlockInput()  { msgInput.disabled = false; validateInput(); }
+function unlockInput()  { msgInput.disabled = false; syncComposerState(); }
 function validateInput(){ sendBtn.disabled = (msgInput.value.trim().length === 0 || msgInput.value.length > MAX_LEN); }
 
 // ─────────────────────────────────────────────────────────────────
@@ -871,9 +1026,9 @@ function renderAns(catId, q) {
   const ansLang = ANS[lang] || {};
   const ov = ansLang[catId + '_' + q.id] || ansLang[q.id] || {};
   const f  = (field) => ov[field] !== undefined ? ov[field] : q[field];
-  let h = `<div class="ans-inner">`;
-  h += `<div class="cat-pill" style="background:${cat.bg};color:${cat.color}">${cat.icon} ${t('cat_' + catId)}</div>`;
-  h += `<div class="ans-q">${t(q.qKey)}</div>`;
+  let h = `<article class="article-card"><div class="ans-inner">`;
+  h += `<div class="article-card-head"><div class="cat-pill" style="background:${cat.bg};color:${cat.color}">${cat.icon} ${t('cat_' + catId)}</div><div class="article-kicker">${esc(t('articleLabel'))}</div></div>`;
+  h += `<div class="article-title">${t(q.qKey)}</div>`;
   if (f('intro')) h += `<div>${f('intro')}</div>`;
   if (f('body'))  h += `<div>${f('body')}</div>`;
   const steps = f('steps');
@@ -890,8 +1045,8 @@ function renderAns(catId, q) {
   }
   if (f('note')) h += `<div class="info-box">${f('note')}</div>`;
   if (f('warn')) h += `<div class="warn-box">${f('warn')}</div>`;
-  if (q.link) h += `<a class="ans-link" href="${q.link.url}" target="_blank" rel="noopener">${q.link.label}</a>`;
-  h += '</div>';
+  if (q.link) h += `<a class="ans-link article-link" href="${q.link.url}" target="_blank" rel="noopener">${q.link.label}</a>`;
+  h += '</div></article>';
   return h;
 }
 
@@ -913,6 +1068,7 @@ async function startGreeting() {
       <div class="gh-text">
         <div class="bot-name" id="g-name">${t('botName')}</div>
         <div class="gh-bubble" id="g-bubble">${t('greeting')}<span class="greet-sub">${t('greetSub')}</span></div>
+        <div class="support-disclaimer chat-disclaimer" id="support-disclaimer-chat">${esc(t('aiDisclaimer'))}</div>
       </div>
     </div>`;
   feed.appendChild(row);
@@ -931,7 +1087,7 @@ function showHomeChips() {
     if (cat._hidden) return;
     const btn = document.createElement('button');
     btn.className = 'chip cat';
-    btn.innerHTML = `<span>${cat.icon}</span>${esc(t('cat_' + key))}`;
+    btn.innerHTML = `<span class="chip-icon">${cat.icon}</span><span class="chip-label">${esc(t('cat_' + key))}</span>`;
     btn.dataset.action = 'pick-cat';
     btn.dataset.cat = key;
     btn.dataset.i18nCat = key;
@@ -941,7 +1097,7 @@ function showHomeChips() {
 
   const elseBtn = document.createElement('button');
   elseBtn.className = 'chip cat white';
-  elseBtn.innerHTML = `<span>💬</span>${esc(t('somethingElse'))}`;
+  elseBtn.innerHTML = `<span class="chip-icon">💬</span><span class="chip-label">${esc(t('somethingElse'))}</span>`;
   elseBtn.dataset.action = 'go-ai';
   elseBtn.dataset.i18nKey = 'somethingElse';
   elseBtn.dataset.i18nEmoji = '💬';
@@ -1000,6 +1156,7 @@ async function handlePickQ(btn, wrap, catId, qId) {
   if (q.escalate) {
     await delay(250);
     addEscCard();
+    return;
   }
 
   await delay(350);
@@ -1016,6 +1173,7 @@ function askHelpful(mode) {
 
 async function handleHelpfulYes(btn, wrap) {
   disableChips(wrap);
+  triggerHaptic('success');
   userBubble(t('yesLabel'));
   noCount = 0;
   await delay(250);
@@ -1153,10 +1311,13 @@ async function handleTransferYes(btn, wrap) {
 
   await delay(600);
   activeTicketId = 'BSP-' + Math.floor(10000 + Math.random() * 90000);
+  migrateDraft('new', 'ticket:' + activeTicketId);
+  setActiveDraftKey('ticket:' + activeTicketId);
   ticketMessages = buildTicketTranscript();
   const subject = getConversationSubject(ticketMessages);
   saveConversation(activeTicketId, subject, ticketMessages, 'open');
   sendDiscordWebhook(activeTicketId, 'new', ticketMessages, subject);
+  triggerHaptic('success');
 
   const card = document.createElement('div');
   card.className = 'transfer-card';
@@ -1203,16 +1364,23 @@ function addEscCard() {
 }
 
 async function openSupportTicket(triggerBtn) {
-  if (triggerBtn) triggerBtn.disabled = true;
+  if (triggerBtn) {
+    triggerBtn.disabled = true;
+    triggerBtn.classList.add('is-locked');
+    triggerBtn.setAttribute('aria-disabled', 'true');
+  }
   if (activeTicketId) return;
 
   feed.querySelectorAll('.chips-wrap').forEach(w => disableChips(w));
 
   activeTicketId = 'BSP-' + Math.floor(10000 + Math.random() * 90000);
+  migrateDraft('new', 'ticket:' + activeTicketId);
+  setActiveDraftKey('ticket:' + activeTicketId);
   ticketMessages = buildTicketTranscript();
   const ticketSubject = getConversationSubject(ticketMessages);
   saveConversation(activeTicketId, ticketSubject, ticketMessages, 'open');
   sendDiscordWebhook(activeTicketId, 'new', ticketMessages, ticketSubject);
+  triggerHaptic('success');
 
   await delay(200);
   showTyping(); await delay(900); removeTyping();
@@ -1240,6 +1408,10 @@ async function handleRestart(btn, wrap) {
   stage = 1; noCount = 0; conversationHistory = []; chatLog = [];
   activeTicketId = null; ticketMessages = [];
   pendingMatchId = false; pendingMatchCat = null;
+  clearDraft(activeDraftKey);
+  msgInput.value = '';
+  syncComposerState();
+  setActiveDraftKey('new');
   userBubble(t('backTopics'));
   await delay(200);
   showTyping(); await delay(500); removeTyping();
@@ -1288,6 +1460,10 @@ async function handleNewConversation(btn, wrap) {
   stage = 1; noCount = 0; conversationHistory = []; chatLog = [];
   activeTicketId = null; ticketMessages = [];
   pendingMatchId = false; pendingMatchCat = null;
+  clearDraft(activeDraftKey);
+  msgInput.value = '';
+  syncComposerState();
+  setActiveDraftKey('new');
   feed.innerHTML = '';
   hideInputBar();
   loadConversations();
@@ -1307,33 +1483,43 @@ async function handleGoAi(btn, wrap) {
 // INPUT BAR EVENTS
 // ─────────────────────────────────────────────────────────────────
 msgInput.addEventListener('input', () => {
-  msgInput.style.height = 'auto';
-  msgInput.style.height = Math.min(msgInput.scrollHeight, 112) + 'px';
-  const len = msgInput.value.length;
-  if (len > 400) {
-    charCount.textContent = `${len}/${MAX_LEN}`;
-    charCount.className = len > MAX_LEN ? 'over visible' : 'warn visible';
-  } else {
-    charCount.className = '';
+  if (/[\r\n]/.test(msgInput.value)) {
+    msgInput.value = msgInput.value.replace(/[\r\n]+/g, ' ');
   }
-  validateInput();
+  syncComposerState();
+  persistDraft();
 });
 
 msgInput.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
     doSend();
+    return;
   }
+  if (e.key === 'Enter') {
+    e.preventDefault();
+  }
+});
+
+msgInput.addEventListener('paste', e => {
+  const pasted = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+  if (!/[\r\n]/.test(pasted)) return;
+  e.preventDefault();
+  const sanitized = sanitizeClientMessage(pasted);
+  const start = msgInput.selectionStart || 0;
+  const end = msgInput.selectionEnd || 0;
+  msgInput.setRangeText(sanitized, start, end, 'end');
+  msgInput.dispatchEvent(new Event('input', { bubbles: true }));
 });
 
 sendBtn.addEventListener('click', doSend);
 
 function doSend() {
-  const text = msgInput.value.trim();
+  const text = sanitizeClientMessage(msgInput.value);
   if (!text || text.length > MAX_LEN || inputLocked || pendingAI) return;
   msgInput.value = '';
-  msgInput.style.height = 'auto';
-  charCount.className = '';
+  clearDraft();
+  syncComposerState();
   sendBtn.disabled = true;
   const allWraps = feed.querySelectorAll('.chips-wrap');
   for (let i = allWraps.length - 1; i >= 0; i--) {
@@ -1362,18 +1548,24 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
     if (gBubble) gBubble.innerHTML = `${t('greeting')}<span class="greet-sub">${t('greetSub')}</span>`;
     const gName = document.getElementById('g-name');
     if (gName) gName.textContent = t('botName');
+    const inboxDisclaimer = document.getElementById('support-disclaimer-inbox');
+    if (inboxDisclaimer) inboxDisclaimer.textContent = t('aiDisclaimer');
+    const chatDisclaimer = document.getElementById('support-disclaimer-chat');
+    if (chatDisclaimer) chatDisclaimer.textContent = t('aiDisclaimer');
 
     feed.querySelectorAll('.chip[data-i18n-key]').forEach(c => {
       const key = c.dataset.i18nKey;
       const emoji = c.dataset.i18nEmoji;
-      c.innerHTML = emoji ? `<span>${emoji}</span>${esc(t(key))}` : esc(t(key));
+      c.innerHTML = emoji
+        ? `<span class="chip-icon">${emoji}</span><span class="chip-label">${esc(t(key))}</span>`
+        : `<span class="chip-label">${esc(t(key))}</span>`;
     });
 
     feed.querySelectorAll('.chip[data-i18n-cat]').forEach(c => {
       const catKey = c.dataset.i18nCat;
       const cat = C[catKey];
       if (!cat) return;
-      c.innerHTML = `<span>${cat.icon}</span>${esc(t('cat_' + catKey))}`;
+      c.innerHTML = `<span class="chip-icon">${cat.icon}</span><span class="chip-label">${esc(t('cat_' + catKey))}</span>`;
     });
 
     feed.querySelectorAll('.bubble[data-i18n]').forEach(el => {
@@ -1389,7 +1581,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
     });
 
     feed.querySelectorAll('.chip[data-qkey]').forEach(c => {
-      c.innerHTML = esc(t(c.dataset.qkey));
+      c.innerHTML = `<span class="chip-label">${esc(t(c.dataset.qkey))}</span>`;
     });
 
     feed.querySelectorAll('.esc-card').forEach(card => {
@@ -1479,15 +1671,29 @@ function saveConversation(id, subject, messages, status) {
   saveConversations();
 }
 
-function renderInboxList() {
+function renderInboxList(loading = false) {
   const list = document.getElementById('inbox-list');
   if (!list) return;
+  if (loading) {
+    list.innerHTML = `
+      <div class="inbox-loading" aria-live="polite" aria-label="${esc(t('loadingConversations'))}">
+        <div class="inbox-loading-card"></div>
+        <div class="inbox-loading-card short"></div>
+      </div>`;
+    return;
+  }
   if (!conversations.length) {
     list.innerHTML = `
       <div class="inbox-empty">
         <div class="inbox-empty-icon">💬</div>
         <div class="inbox-empty-title">${t('inboxEmpty')}</div>
         <div class="inbox-empty-sub">${t('inboxEmptySub')}</div>
+        <div class="inbox-empty-hint-title">${t('inboxEmptyHint')}</div>
+        <div class="inbox-empty-hints">
+          <div class="inbox-empty-hint-chip">💸 ${esc(t('cat_withdrawals'))}</div>
+          <div class="inbox-empty-hint-chip">⚠️ ${esc(t('cat_matchrefund'))}</div>
+          <div class="inbox-empty-hint-chip">👤 ${esc(t('cat_account'))}</div>
+        </div>
       </div>`;
     return;
   }
@@ -1526,11 +1732,16 @@ const chatScreen  = document.getElementById('chat-screen');
 const hdrBack     = document.getElementById('hdr-back');
 
 function showInbox() {
-  loadConversations();
-  renderInboxList();
+  const renderToken = ++inboxRenderToken;
   inboxScreen.classList.remove('hidden');
   chatScreen.classList.add('hidden');
   if (hdrBack) hdrBack.classList.remove('visible');
+  renderInboxList(true);
+  window.setTimeout(() => {
+    if (renderToken !== inboxRenderToken) return;
+    loadConversations();
+    renderInboxList();
+  }, 140);
 }
 
 function showChat() {
@@ -1543,6 +1754,10 @@ function startNewConversation() {
   stage = 1; noCount = 0; conversationHistory = []; chatLog = [];
   activeTicketId = null; ticketMessages = [];
   pendingMatchId = false; pendingMatchCat = null;
+  persistDraft();
+  msgInput.value = '';
+  syncComposerState();
+  setActiveDraftKey('new');
   feed.innerHTML = '';
   hideInputBar();
   showChat();
@@ -1554,6 +1769,7 @@ function openConversation(ticketId) {
   if (!convo) { startNewConversation(); return; }
   stage = 2; noCount = 0; conversationHistory = []; chatLog = [];
   activeTicketId = convo.id;
+  setActiveDraftKey('ticket:' + ticketId);
   pendingMatchId = false; pendingMatchCat = null;
   feed.innerHTML = '';
   showChat();
@@ -1590,5 +1806,6 @@ function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 // BOOT
 // ─────────────────────────────────────────────────────────────────
 msgInput.placeholder = t('placeholder');
+loadDraftStore();
 loadConversations();
 showInbox();

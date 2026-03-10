@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -50,17 +50,22 @@
       <div class="inbox-hero">
         <div class="inbox-hero-badge">Support</div>
         <h1 class="inbox-hero-title" id="inbox-title" data-i18n="inboxTitle">Backspin Support</h1>
-        <p class="inbox-hero-sub" id="inbox-sub" data-i18n="inboxSub">How can we help you today?</p>
+        <p class="inbox-hero-sub" id="inbox-sub" data-i18n="inboxSub">I'm Spinny, your AI support operator. How can we help you today?</p>
       </div>
 
       <div id="inbox-list"></div>
     </div>
 
     <div class="inbox-fab-wrap">
-      <button class="inbox-fab" id="inbox-new-btn" data-i18n="inboxNewBtn" onclick="startNewConversation()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        New conversation
-      </button>
+      <div class="inbox-fab-stack">
+        <button class="inbox-fab" id="inbox-new-btn" data-i18n="inboxNewBtn" onclick="startNewConversation()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New conversation
+        </button>
+        <div class="support-disclaimer inbox-disclaimer" id="support-disclaimer-inbox" role="note" aria-label="AI disclaimer">
+          AI responses may be inaccurate or incomplete. Backspin is not liable for AI-generated inaccuracies.
+        </div>
+      </div>
     </div>
   </section>
 
