@@ -1,7 +1,7 @@
 const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 const serverUrl = isLocalhost
   ? 'http://localhost:3000'
-  : window.location.origin;
+  : 'https://eddyzow.herokuapp.com';
 
 const apiBase = `${serverUrl}/api/support`;
 const sock = io(serverUrl, { transports: ['websocket', 'polling'] });
