@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backspin Support Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+</head>
+<body>
+  <div class="dashboard-shell">
+    <div class="dashboard-toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Backspin Games</div>
+        <h1>Support Command Center</h1>
+      </div>
+      <div class="topbar-actions">
+        <button id="create-ticket-btn" class="primary-btn" type="button">Create ticket</button>
+        <button id="logout-btn" class="status-action" type="button">Log out</button>
+      </div>
+      <div class="topbar-stats" id="topbar-stats">
+        <div class="stat-card">
+          <span class="stat-label">Open</span>
+          <strong id="stat-open">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Waiting on player</span>
+          <strong id="stat-waiting">0</strong>
+        </div>
+        <div class="stat-card accent">
+          <span class="stat-label">Total</span>
+          <strong id="stat-total">0</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <aside class="ticket-sidebar">
+        <div class="sidebar-toolbar">
+          <input id="search-input" type="search" placeholder="Search tickets, subjects, messages" aria-label="Search tickets" />
+          <div class="filter-pills" id="status-filter" aria-label="Filter by ticket status">
+            <button class="filter-pill active" data-status="all" type="button">All</button>
+            <button class="filter-pill" data-status="open" type="button">Open</button>
+            <button class="filter-pill" data-status="waiting_on_player" type="button">Waiting</button>
+            <button class="filter-pill" data-status="closed" type="button">Closed</button>
+            <button class="filter-pill" data-status="archived" type="button">Archived</button>
+          </div>
+        </div>
+        <div class="ticket-list" id="ticket-list" aria-live="polite"></div>
+      </aside>
+
+      <section class="ticket-main">
+        <div class="ticket-empty" id="ticket-empty">
+          <div class="ticket-empty-icon">🎫</div>
+          <h2>Select a ticket</h2>
+          <p>New and updated tickets will appear here in real time.</p>
+        </div>
+
+        <div class="ticket-detail hidden" id="ticket-detail">
+          <header class="detail-header">
+            <div>
+              <button id="detail-back-btn" class="detail-back-btn" type="button">← Tickets</button>
+              <button id="toggle-notes-btn" class="detail-back-btn notes-toggle-btn" type="button">Notes</button>
+              <div class="detail-ticket-id" id="detail-ticket-id"></div>
+              <h2 id="detail-subject"></h2>
+              <div class="detail-meta" id="detail-meta"></div>
+              <div class="detail-presence" id="detail-presence"></div>
+            </div>
+            <div class="detail-actions">
+              <input id="assigned-to" type="text" placeholder="Assign to" aria-label="Assigned agent" />
+              <select id="priority" aria-label="Ticket priority">
+                <option value="low">Low priority</option>
+                <option value="normal">Normal priority</option>
+                <option value="high">High priority</option>
+                <option value="urgent">Urgent priority</option>
+              </select>
+              <div class="status-actions" id="detail-status" aria-label="Ticket status">
+                <button class="status-action" data-status="open" type="button">Open</button>
+                <button class="status-action" data-status="waiting_on_player" type="button">Waiting</button>
+                <button class="status-action" data-status="closed" type="button">Close</button>
+              </div>
+              <div class="action-dropdown" id="action-dropdown">
+                <button id="action-dropdown-btn" class="status-action action-dropdown-toggle" type="button">Actions <span class="dropdown-caret">▾</span></button>
+                <div class="action-dropdown-menu" id="action-dropdown-menu" role="menu">
+                  <button id="clean-ticket-btn" class="dropdown-item" type="button">Clean ticket</button>
+                  <button id="delete-ticket-btn" class="dropdown-item" type="button">Hide view</button>
+                  <div class="dropdown-divider"></div>
+                  <button id="permanently-delete-btn" class="dropdown-item danger" type="button">Delete ticket</button>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <section class="detail-settings collapsed" id="detail-settings">
+            <label class="setting-field">
+              <span class="setting-label">Internal notes</span>
+              <textarea id="internal-notes" rows="3" placeholder="Visible only to support"></textarea>
+            </label>
+          </section>
+
+          <div class="quick-replies">
+            <button class="quick-reply" data-reply="Thanks — we’re reviewing this now and will update you shortly.">Reviewing now</button>
+            <button class="quick-reply" data-reply="Please send your Match ID so we can investigate this correctly.">Ask for Match ID</button>
+            <button class="quick-reply" data-reply="Please send a screenshot or screen recording if you have one.">Ask for proof</button>
+            <button class="quick-reply" data-reply="We’ve escalated this internally. We’ll follow up as soon as we have an update.">Escalated internally</button>
+          </div>
+
+          <div class="message-feed" id="message-feed"></div>
+
+          <footer class="composer">
+            <textarea id="reply-input" rows="3" placeholder="Reply to the player…" aria-label="Reply to ticket"></textarea>
+            <div class="composer-actions">
+              <span id="realtime-indicator" class="realtime-indicator">Live</span>
+              <button id="send-reply-btn" class="primary-btn">Send reply</button>
+            </div>
+          </footer>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="confirm-overlay hidden" id="confirm-overlay" aria-hidden="true">
+    <div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+      <div class="confirm-title" id="confirm-title">Confirm action</div>
+      <div class="confirm-message" id="confirm-message"></div>
+      <div class="confirm-actions">
+        <button id="confirm-cancel-btn" class="status-action" type="button">Cancel</button>
+        <button id="confirm-ok-btn" class="danger-btn" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-overlay" id="auth-overlay" aria-hidden="false">
+    <div class="auth-card" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+      <div class="eyebrow">Staff only</div>
+      <h2 id="auth-title">Support dashboard login</h2>
+      <p>Enter the staff password to access live tickets.</p>
+      <input id="auth-password" type="password" placeholder="Staff password" autocomplete="current-password" />
+      <button id="auth-login-btn" class="primary-btn" type="button">Unlock dashboard</button>
+    </div>
+  </div>
+
+  <div class="confirm-overlay hidden" id="create-ticket-overlay" aria-hidden="true">
+    <div class="confirm-card create-ticket-card" role="dialog" aria-modal="true" aria-labelledby="create-ticket-title">
+      <div class="confirm-title" id="create-ticket-title">Create support ticket</div>
+      <div class="create-ticket-grid">
+        <input id="create-player-username" type="text" placeholder="Player username" />
+        <input id="create-player-id" type="text" placeholder="Player ID (optional)" />
+        <input id="create-ticket-subject" type="text" placeholder="Ticket subject" />
+        <input id="create-ticket-assigned" type="text" placeholder="Assign to" />
+        <select id="create-ticket-category">
+          <option value="general">General</option>
+          <option value="refund">Refund</option>
+        </select>
+        <select id="create-ticket-priority">
+          <option value="low">Low priority</option>
+          <option value="normal">Normal priority</option>
+          <option value="high">High priority</option>
+          <option value="urgent">Urgent priority</option>
+        </select>
+        <textarea id="create-ticket-notes" rows="3" placeholder="Internal notes"></textarea>
+      </div>
+      <div class="confirm-actions">
+        <button id="create-ticket-cancel-btn" class="status-action" type="button">Cancel</button>
+        <button id="create-ticket-submit-btn" class="primary-btn" type="button">Create ticket</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>

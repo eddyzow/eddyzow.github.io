@@ -9,6 +9,15 @@ const _isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostnam
 const _serverUrl   = _isLocalhost
   ? 'http://localhost:3000'
   : 'https://eddyzow.herokuapp.com';
+const SUPPORT_UNREAD_KEY = 'bsp_support_unread_counts';
+
+function readSupportIdentityFromUrl() {
+  const params = new URLSearchParams(window.location.search || '');
+  const username = String(params.get('username') || '').trim().slice(0, 80);
+  const playerId = String(params.get('playerId') || username).trim().slice(0, 80);
+  const supportToken = String(params.get('supportToken') || '').trim();
+  return { username, playerId, supportToken };
+}
 
 // ─────────────────────────────────────────────────────────────────
 // TRANSLATIONS
@@ -77,6 +86,13 @@ const S = {
     addMoreInfo: '💬 The more detail you can add below, the faster we can help:',
     addedToTicket: '✓ Added to your ticket',
     ticketUpdated: 'Got it — added to your ticket. Anything else you\'d like to include?',
+    sentToSupport: 'Sent to support',
+    ticketClosedNotice: 'This ticket is closed. Reopen it from support if you need to continue.',
+    ticketClosedLabel: 'Closed by support',
+    ticketWaitingLabel: 'Support replied',
+    ticketOpenLabel: 'Awaiting support reply',
+    newReplyLabel: 'New reply',
+    ticketHiddenNotice: 'This ticket was removed from your support inbox by support.',
     gameErrorLabel: 'I had an error in my game',
     gameErrorSub: 'What kind of error did you experience?',
     errorCrash: '💥 The app crashed',
@@ -198,6 +214,13 @@ const S = {
     addMoreInfo: '💬 Cuanta más información añadas, más rápido podremos ayudarte:',
     addedToTicket: '✓ Añadido a tu ticket',
     ticketUpdated: 'Entendido — añadido a tu ticket. ¿Algo más que quieras incluir?',
+    sentToSupport: 'Enviado a soporte',
+    ticketClosedNotice: 'Este ticket está cerrado. Ábrelo de nuevo desde soporte si necesitas continuar.',
+    ticketClosedLabel: 'Cerrado por soporte',
+    ticketWaitingLabel: 'Soporte respondió',
+    ticketOpenLabel: 'Esperando respuesta de soporte',
+    newReplyLabel: 'Nueva respuesta',
+    ticketHiddenNotice: 'Este ticket fue eliminado de tu bandeja de soporte por el equipo.',
     gameErrorLabel: 'Tuve un error en mi partida',
     gameErrorSub: '¿Qué tipo de error experimentaste?',
     errorCrash: '💥 La app se cerró sola',
@@ -319,6 +342,13 @@ const S = {
     addMoreInfo: '💬 Plus tu donnes de détails, plus vite on peut t\'aider :',
     addedToTicket: '✓ Ajouté à ton ticket',
     ticketUpdated: 'Compris — ajouté à ton ticket. Autre chose à ajouter ?',
+    sentToSupport: 'Envoyé au support',
+    ticketClosedNotice: 'Ce ticket est fermé. Rouvre-le via le support si tu dois continuer.',
+    ticketClosedLabel: 'Fermé par le support',
+    ticketWaitingLabel: 'Le support a répondu',
+    ticketOpenLabel: 'En attente d’une réponse du support',
+    newReplyLabel: 'Nouvelle réponse',
+    ticketHiddenNotice: 'Ce ticket a été retiré de ta boîte de support par le support.',
     gameErrorLabel: 'J\'ai eu une erreur dans ma partie',
     gameErrorSub: 'Quel type d\'erreur as-tu rencontré ?',
     errorCrash: '💥 L\'appli a planté',
@@ -553,6 +583,9 @@ let pendingAI   = false;
 let activeTyping = null;
 let aiTimeout   = null;
 let sessionId   = 'ws-' + Math.random().toString(36).slice(2, 10);
+let clientId = '';
+let supportIdentity = readSupportIdentityFromUrl();
+let supportAuthReady = false;
 
 const sock = io(_serverUrl, { transports: ['websocket', 'polling'], reconnectionAttempts: 5 });
 
@@ -567,7 +600,18 @@ function updateConnStatus(state) {
                   : t('connecting');
 }
 
-sock.on('connect',       () => { sockReady = true;  updateConnStatus('online');  });
+sock.on('connect',       () => {
+  sockReady = true;
+  updateConnStatus('online');
+  if (supportAuthReady) {
+    sock.emit('support:client:subscribe', {
+      playerId: clientId,
+      username: supportIdentity.username,
+      supportToken: supportIdentity.supportToken,
+    });
+  }
+  if (activeTicketId) sock.emit('support:ticket:join', { ticketId: activeTicketId });
+});
 sock.on('disconnect',    () => { sockReady = false; updateConnStatus('offline'); });
 sock.on('connect_error', () => { sockReady = false; updateConnStatus('error');   });
 
@@ -578,9 +622,84 @@ sock.on('support:chat:response', result => {
   handleAIResponse(result);
 });
 
+sock.on('support:ticket:summary', payload => {
+  const ticket = payload?.ticket;
+  if (!ticket) return;
+  upsertConversation(ticket);
+  if (ticket.id === activeTicketId) {
+    setTicketComposerState(ticket);
+    appendTicketStateNote(ticket.status);
+  }
+  if (!document.getElementById('inbox-screen')?.classList.contains('hidden')) renderInboxList();
+});
+
+sock.on('support:ticket:message', payload => {
+  const ticket = payload?.ticket;
+  const message = payload?.message;
+  if (ticket) upsertConversation(ticket);
+  if (!message || seenTicketMessageIds.has(message.id)) return;
+  seenTicketMessageIds.add(message.id);
+  const isActiveTicketOpen = payload.ticketId === activeTicketId && !chatScreen.classList.contains('hidden');
+
+  if (message.senderType === 'agent' && !isActiveTicketOpen) {
+    markUnread(payload.ticketId);
+    if (!document.getElementById('inbox-screen')?.classList.contains('hidden')) renderInboxList();
+    return;
+  }
+
+  if (!isActiveTicketOpen) return;
+  clearUnread(payload.ticketId);
+  if (ticket) setTicketComposerState(ticket);
+  if (message.senderType === 'agent') {
+    staffBubble(message.text, message.authorName || 'Backspin Support', { persist: true });
+    unlockInput();
+    inputLocked = false;
+  }
+  appendTicketStateNote(ticket?.status);
+});
+
+sock.on('support:ticket:hidden', payload => {
+  const ticketId = payload?.ticketId;
+  if (!ticketId) return;
+  if (payload?.reason === 'archived_by_support') {
+    const existing = conversations.find(ticket => ticket.id === ticketId) || { id: ticketId };
+    const archivedTicket = { ...existing, status: 'closed', archived: true };
+    upsertConversation(archivedTicket);
+    clearUnread(ticketId);
+    if (ticketId === activeTicketId) {
+      setTicketComposerState(archivedTicket);
+      appendTicketStateNote('closed');
+      showSupportToast(t('ticketClosedNotice'), 'info');
+    }
+    if (!document.getElementById('inbox-screen')?.classList.contains('hidden')) renderInboxList();
+    return;
+  }
+  handleHiddenTicket(ticketId);
+});
+
+sock.on('support:ticket:archived', payload => {
+  const ticket = payload?.ticket;
+  if (!ticket?.id) return;
+  upsertConversation({ ...ticket, status: 'closed', archived: true });
+  clearUnread(ticket.id);
+  if (ticket.id === activeTicketId) {
+    setTicketComposerState({ ...ticket, status: 'closed' });
+    appendTicketStateNote('closed');
+    showSupportToast(t('ticketClosedNotice'), 'info');
+  }
+  if (!document.getElementById('inbox-screen')?.classList.contains('hidden')) renderInboxList();
+});
+
+sock.on('support:ticket:restored', payload => {
+  const ticket = payload?.ticket;
+  if (!ticket?.id) return;
+  upsertConversation(ticket);
+  if (!document.getElementById('inbox-screen')?.classList.contains('hidden')) renderInboxList();
+});
+
 async function callAI(text) {
   const historySlice = conversationHistory.slice(-10).slice(0, -1);
-  const payload = { message: text, history: historySlice, sessionId, userLang: lang };
+  const payload = { message: text, history: historySlice, sessionId, userLang: lang, ...getSupportAuthPayload() };
 
   if (sockReady) {
     sock.emit('support:chat', payload);
@@ -598,7 +717,7 @@ async function callAI(text) {
       const res = await fetch(`${_serverUrl}/api/support/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, conversationHistory: historySlice, sessionId, userLang: lang })
+        body: JSON.stringify({ message: text, conversationHistory: historySlice, sessionId, userLang: lang, ...getSupportAuthPayload() })
       });
       const result = await res.json();
       pendingAI = false;
@@ -626,11 +745,15 @@ let activeTicketId = null;
 let ticketMessages = [];
 let pendingMatchId = false;
 let pendingMatchCat = null;
+let pendingTicketCategory = 'general';
 let activeDraftKey = 'new';
+let unreadState = {};
+let ticketComposerLocked = false;
 const MAX_LEN = 500;
 const DRAFTS_KEY = 'bsp_support_drafts';
 let draftStore = {};
 let inboxRenderToken = 0;
+const seenTicketMessageIds = new Set();
 
 function sanitizeClientMessage(text) {
   return String(text || '')
@@ -649,6 +772,69 @@ const inputBar = document.getElementById('input-bar');
 const msgInput = document.getElementById('msg-input');
 const sendBtn  = document.getElementById('send-btn');
 const charCount = document.getElementById('char-count');
+const toastStack = document.getElementById('support-toast-stack');
+
+function getSupportAuthPayload() {
+  return {
+    username: supportIdentity.username,
+    playerId: clientId,
+    supportToken: supportIdentity.supportToken,
+  };
+}
+
+function appendSupportAuthParams(path) {
+  const url = new URL(`${_serverUrl}/api/support${path}`);
+  if (supportIdentity.username && !url.searchParams.has('username')) url.searchParams.set('username', supportIdentity.username);
+  if (clientId && !url.searchParams.has('playerId')) url.searchParams.set('playerId', clientId);
+  if (supportIdentity.supportToken && !url.searchParams.has('supportToken')) url.searchParams.set('supportToken', supportIdentity.supportToken);
+  return url.toString();
+}
+
+function setSupportAccessLocked(locked, reason = '') {
+  supportAuthReady = !locked;
+  ticketComposerLocked = locked;
+  inputLocked = locked;
+  msgInput.disabled = locked;
+  sendBtn.disabled = locked;
+  if (reason) showSupportToast(reason, 'error');
+}
+
+function applyPlayerIdentityToUi() {
+  const inboxSubEl = document.getElementById('inbox-sub');
+  if (inboxSubEl && supportIdentity.username) {
+    inboxSubEl.textContent = `Welcome, ${supportIdentity.username}! · ${t('inboxSub')}`;
+  }
+}
+
+async function ensurePlayerIdentity() {
+  supportIdentity = readSupportIdentityFromUrl();
+  clientId = supportIdentity.playerId;
+  if (!supportIdentity.username || !clientId) {
+    setSupportAccessLocked(true, 'Open support from the Backspin app so we can verify your username.');
+    throw new Error('Player authentication required');
+  }
+
+  const data = await fetch(appendSupportAuthParams('/auth/player'))
+    .then(res => res.json().then(body => ({ ok: res.ok, body })))
+    .catch(() => ({ ok: false, body: { error: 'Player authentication required' } }));
+
+  if (!data.ok || data.body?.ok === false || !data.body?.player?.playerId) {
+    setSupportAccessLocked(true, data.body?.error || 'Player authentication required');
+    throw new Error(data.body?.error || 'Player authentication required');
+  }
+
+  supportIdentity = {
+    username: data.body.player.username,
+    playerId: data.body.player.playerId,
+    supportToken: supportIdentity.supportToken,
+  };
+  clientId = supportIdentity.playerId;
+  supportAuthReady = true;
+  inputLocked = false;
+  ticketComposerLocked = false;
+  msgInput.disabled = false;
+  applyPlayerIdentityToUi();
+}
 
 function loadDraftStore() {
   try { draftStore = JSON.parse(localStorage.getItem(DRAFTS_KEY) || '{}'); }
@@ -657,6 +843,63 @@ function loadDraftStore() {
 
 function saveDraftStore() {
   try { localStorage.setItem(DRAFTS_KEY, JSON.stringify(draftStore)); } catch (_) {}
+}
+
+function loadUnreadState() {
+  try { unreadState = JSON.parse(localStorage.getItem(SUPPORT_UNREAD_KEY) || '{}'); }
+  catch (_) { unreadState = {}; }
+}
+
+function saveUnreadState() {
+  try { localStorage.setItem(SUPPORT_UNREAD_KEY, JSON.stringify(unreadState)); } catch (_) {}
+}
+
+function getUnreadCount(ticketId) {
+  return Number(unreadState[ticketId] || 0);
+}
+
+function markUnread(ticketId) {
+  if (!ticketId) return;
+  unreadState[ticketId] = getUnreadCount(ticketId) + 1;
+  saveUnreadState();
+}
+
+function clearUnread(ticketId) {
+  if (!ticketId) return;
+  delete unreadState[ticketId];
+  saveUnreadState();
+}
+
+function showSupportToast(message, type = 'info') {
+  if (!toastStack || !message) return;
+  const toast = document.createElement('div');
+  toast.className = `support-toast ${type}`;
+  toast.textContent = message;
+  toastStack.appendChild(toast);
+  window.setTimeout(() => toast.remove(), 3200);
+}
+
+function removeConversation(ticketId) {
+  conversations = conversations.filter(ticket => ticket.id !== ticketId);
+  clearUnread(ticketId);
+}
+
+function handleHiddenTicket(ticketId) {
+  const wasActive = activeTicketId === ticketId;
+  removeConversation(ticketId);
+  if (wasActive) {
+    leaveTicketRoom();
+    clearDraft('ticket:' + ticketId);
+    activeTicketId = null;
+    ticketMessages = [];
+    ticketComposerLocked = false;
+    setActiveDraftKey('new');
+    feed.innerHTML = '';
+    showInbox();
+  } else if (!document.getElementById('inbox-screen')?.classList.contains('hidden')) {
+    renderInboxList();
+  }
+  showSupportToast(t('ticketHiddenNotice'), 'info');
 }
 
 function getDraftStorageKey(key = activeDraftKey) {
@@ -706,6 +949,21 @@ function syncComposerState() {
 function restoreDraft(key = activeDraftKey) {
   msgInput.value = draftStore[getDraftStorageKey(key)] || '';
   syncComposerState();
+}
+
+function setTicketComposerState(ticket) {
+  const isClosed = ticket?.status === 'closed';
+  ticketComposerLocked = isClosed;
+  inputBar.classList.toggle('ticket-closed', isClosed);
+  msgInput.disabled = isClosed;
+  msgInput.placeholder = isClosed ? t('ticketClosedNotice') : t('placeholder');
+  if (isClosed) {
+    msgInput.value = '';
+    clearDraft();
+    sendBtn.disabled = true;
+  } else {
+    syncComposerState();
+  }
 }
 
 function triggerHaptic(style = 'selection') {
@@ -793,10 +1051,15 @@ function plainText(s) {
     .trim();
 }
 
-function appendChatEntry(role, text) {
+function appendChatEntry(role, text, meta = {}) {
   const clean = plainText(text);
   if (!clean) return null;
-  const entry = { role, text: clean };
+  const entry = {
+    role,
+    text: clean,
+    sourceKind: meta.sourceKind || (role === 'bot' ? 'spinny_default' : role === 'agent' ? 'staff' : 'typed'),
+    authorName: meta.authorName || '',
+  };
   chatLog.push(entry);
   return entry;
 }
@@ -806,27 +1069,45 @@ function normalizeConversationMessages(messages, messageObjects) {
     && messageObjects.length
     && messageObjects.some(m => m && typeof m === 'object' && (m.role || m.text || m.content));
 
+  let result;
   if (hasStructuredObjects) {
-    return messageObjects
-      .map(m => ({ role: m.role === 'assistant' ? 'bot' : (m.role || 'user'), text: plainText(m.text || m.content || '') }))
+    result = messageObjects
+      .map(m => ({
+        role: m.role === 'assistant' ? 'bot' : (m.role || 'user'),
+        text: plainText(m.text || m.content || ''),
+        authorName: m.authorName || '',
+        senderType: m.senderType || '',
+        sourceKind: m.sourceKind || ''
+      }))
+      .filter(m => m.text);
+  } else {
+    result = (Array.isArray(messages) ? messages : [])
+      .map(m => {
+        if (m && typeof m === 'object') {
+          return {
+            role: m.role === 'assistant' ? 'bot' : (m.role || 'user'),
+            text: plainText(m.text || m.content || ''),
+            authorName: m.authorName || '',
+            senderType: m.senderType || '',
+            sourceKind: m.sourceKind || ''
+          };
+        }
+        return { role: 'user', text: plainText(m), authorName: '', senderType: '', sourceKind: 'typed' };
+      })
       .filter(m => m.text);
   }
 
-  return (Array.isArray(messages) ? messages : [])
-    .map(m => {
-      if (m && typeof m === 'object') {
-        return {
-          role: m.role === 'assistant' ? 'bot' : (m.role || 'user'),
-          text: plainText(m.text || m.content || '')
-        };
-      }
-      return { role: 'user', text: plainText(m) };
-    })
-    .filter(m => m.text);
+  // Deduplicate consecutive messages with identical role+text.
+  // This cleans up tickets created before a bug that stored each message twice.
+  return result.filter((m, i) => {
+    if (i === 0) return true;
+    const prev = result[i - 1];
+    return !(prev.role === m.role && prev.text === m.text);
+  });
 }
 
 function buildTicketTranscript() {
-  return chatLog.map(m => ({ role: m.role, text: m.text }));
+  return chatLog.map(m => ({ role: m.role, text: m.text, authorName: m.authorName || '', sourceKind: m.sourceKind || '' }));
 }
 
 function getConversationSubject(messages) {
@@ -852,7 +1133,7 @@ function botBubble(html, showAv = true, i18nKey = null, extraData = null, option
   }
   row.innerHTML = `<div class="row-av${showAv ? '' : ' hidden'}">${spinnyAvatarMarkup()}</div><div class="bubble"${i18nAttr}${extraAttrs}>${html}</div>`;
   feed.appendChild(row);
-  if (options.persist !== false) appendChatEntry('bot', options.logText || html);
+  if (options.persist !== false) appendChatEntry('bot', options.logText || html, { sourceKind: options.sourceKind || 'spinny_default' });
   scrollBottom();
   return row;
 }
@@ -862,7 +1143,17 @@ function userBubble(text, options = {}) {
   row.className = 'row user';
   row.innerHTML = `<div class="bubble">${esc(text)}</div>`;
   feed.appendChild(row);
-  if (options.persist !== false) appendChatEntry('user', options.logText || text);
+  if (options.persist !== false) appendChatEntry('user', options.logText || text, { sourceKind: options.sourceKind || 'typed' });
+  scrollBottom();
+  return row;
+}
+
+function staffBubble(text, authorName = 'Backspin Support', options = {}) {
+  const row = document.createElement('div');
+  row.className = 'row bot staff-row';
+  row.innerHTML = `<div class="row-av">${spinnyAvatarMarkup()}</div><div class="bubble staff-bubble"><div class="staff-label">${esc(authorName)}</div>${esc(text).replace(/\n/g, '<br>')}</div>`;
+  feed.appendChild(row);
+  if (options.persist !== false) appendChatEntry('agent', options.logText || text, { sourceKind: options.sourceKind || 'staff', authorName });
   scrollBottom();
   return row;
 }
@@ -930,6 +1221,10 @@ function showInputBar() {
   restoreDraft();
   setTimeout(() => {
     msgInput.placeholder = t('placeholder');
+    if (ticketComposerLocked) {
+      setTicketComposerState({ status: 'closed' });
+      return;
+    }
     msgInput.focus();
     const end = msgInput.value.length;
     msgInput.setSelectionRange(end, end);
@@ -940,9 +1235,18 @@ function hideInputBar() {
   inputBar.classList.remove('visible');
   msgInput.blur();
 }
-function lockInput()    { sendBtn.disabled = true; msgInput.disabled = true; }
-function unlockInput()  { msgInput.disabled = false; syncComposerState(); }
-function validateInput(){ sendBtn.disabled = (msgInput.value.trim().length === 0 || msgInput.value.length > MAX_LEN); }
+function lockInput()    { sendBtn.disabled = true; msgInput.readOnly = true; }
+function unlockInput()  {
+  if (ticketComposerLocked) {
+    setTicketComposerState({ status: 'closed' });
+    return;
+  }
+  msgInput.readOnly = false;
+  msgInput.disabled = false;
+  syncComposerState();
+  msgInput.focus();
+}
+function validateInput(){ sendBtn.disabled = ticketComposerLocked || msgInput.value.trim().length === 0 || msgInput.value.length > MAX_LEN; }
 
 // ─────────────────────────────────────────────────────────────────
 // FAQ ANSWER TRANSLATIONS  (ES / FR overrides — EN lives in C)
@@ -1021,6 +1325,24 @@ const ANS = {
 // ─────────────────────────────────────────────────────────────────
 // ANSWER RENDERER
 // ─────────────────────────────────────────────────────────────────
+function renderAnsPlain(catId, q) {
+  const cat = C[catId];
+  const ansLang = ANS[lang] || {};
+  const ov = ansLang[catId + '_' + q.id] || ansLang[q.id] || {};
+  const f = (field) => ov[field] !== undefined ? ov[field] : q[field];
+  const lines = [];
+  lines.push(`${cat.icon} ${t('cat_' + catId)} — ${t(q.qKey)}`);
+  if (f('intro')) lines.push(plainText(f('intro')));
+  if (f('body'))  lines.push(plainText(f('body')));
+  const steps = f('steps');
+  if (steps?.length) steps.forEach((s, i) => lines.push(`${i + 1}. ${plainText(s)}`));
+  const bullets = f('bullets');
+  if (bullets?.length) bullets.forEach(b => lines.push(`• ${plainText(b)}`));
+  if (f('note')) lines.push(plainText(f('note')));
+  if (f('warn')) lines.push(plainText(f('warn')));
+  return lines.join('\n');
+}
+
 function renderAns(catId, q) {
   const cat = C[catId];
   const ansLang = ANS[lang] || {};
@@ -1111,7 +1433,8 @@ function showHomeChips() {
 async function handlePickCat(btn, wrap, catId) {
   disableChips(wrap);
   const cat = C[catId];
-  userBubble(cat.icon + ' ' + t('cat_' + catId));
+  pendingTicketCategory = cat.errorFlow ? 'refund' : 'general';
+  userBubble(cat.icon + ' ' + t('cat_' + catId), { sourceKind: 'button' });
 
   if (cat.errorFlow) {
     await delay(250);
@@ -1144,14 +1467,14 @@ async function handlePickQ(btn, wrap, catId, qId) {
   const cat = C[catId];
   const q = cat.qs.find(x => x.id === qId);
   const qLabel = t(q.qKey);
-  userBubble(qLabel);
+  userBubble(qLabel, { sourceKind: 'button' });
 
   await delay(250);
   showTyping();
   await delay(850);
   removeTyping();
 
-  botBubble(renderAns(catId, q));
+  botBubble(renderAns(catId, q), true, null, null, { logText: renderAnsPlain(catId, q) });
 
   if (q.escalate) {
     await delay(250);
@@ -1174,7 +1497,7 @@ function askHelpful(mode) {
 async function handleHelpfulYes(btn, wrap) {
   disableChips(wrap);
   triggerHaptic('success');
-  userBubble(t('yesLabel'));
+  userBubble(t('yesLabel'), { sourceKind: 'button' });
   noCount = 0;
   await delay(250);
   showTyping(); await delay(600); removeTyping();
@@ -1188,7 +1511,7 @@ async function handleHelpfulYes(btn, wrap) {
 
 async function handleHelpfulNoFaq(btn, wrap) {
   disableChips(wrap);
-  userBubble(t('noLabel'));
+  userBubble(t('noLabel'), { sourceKind: 'button' });
   await delay(200);
   showTyping(); await delay(650); removeTyping();
   botBubble(t('hardMsg'), true, 'hardMsg');
@@ -1197,7 +1520,7 @@ async function handleHelpfulNoFaq(btn, wrap) {
 
 async function handleHelpfulNoAi(btn, wrap) {
   disableChips(wrap);
-  userBubble(t('noLabel'));
+  userBubble(t('noLabel'), { sourceKind: 'button' });
   noCount++;
   if (noCount >= 1) {
     await delay(200);
@@ -1222,7 +1545,7 @@ function enterStage2() {
 }
 
 async function handleUserMessage(text) {
-  if (inputLocked || pendingAI) return;
+  if (inputLocked || pendingAI || ticketComposerLocked) return;
   inputLocked = true;
 
   if (pendingMatchId) {
@@ -1230,7 +1553,7 @@ async function handleUserMessage(text) {
     pendingMatchId = false;
     const catId = pendingMatchCat;
     pendingMatchCat = null;
-    appendChatEntry('user', 'Match ID: ' + text);
+    appendChatEntry('user', 'Match ID: ' + text, { sourceKind: 'typed' });
     await delay(300);
     showTyping(); await delay(600); removeTyping();
     botBubble(`Got it! Match ID <b>${esc(text)}</b>. What type of issue did you experience?`);
@@ -1250,18 +1573,27 @@ async function handleUserMessage(text) {
   if (activeTicketId) {
     ticketMessages = buildTicketTranscript();
     lockInput();
-    await delay(400);
     const confirmRow = document.createElement('div');
     confirmRow.className = 'ticket-update-confirm';
-    confirmRow.textContent = t('addedToTicket') + ' · ' + activeTicketId;
+    confirmRow.textContent = t('sentToSupport') + ' · ' + activeTicketId;
     feed.appendChild(confirmRow);
     scrollBottom();
-    const currentSubject = conversations.find(c => c.id === activeTicketId)?.subject || getConversationSubject(ticketMessages);
-    saveConversation(activeTicketId, currentSubject, ticketMessages, 'open');
-    sendDiscordWebhook(activeTicketId, 'update', [{ role: 'user', text }], currentSubject);
-    await delay(600);
-    showTyping(); await delay(700); removeTyping();
-    botBubble(t('ticketUpdated'), true, 'ticketUpdated');
+    try {
+      const ticket = await appendSupportTicketMessage(activeTicketId, text, 'player');
+      setTicketComposerState(ticket);
+      appendTicketStateNote(ticket.status);
+    } catch (err) {
+      if (/unavailable|not found|forbidden/i.test(err.message || '')) {
+        handleHiddenTicket(activeTicketId);
+      } else
+      if (/closed/i.test(err.message || '')) {
+        setTicketComposerState({ status: 'closed' });
+        appendTicketStateNote('closed');
+        showErrBubble(t('ticketClosedNotice'));
+      } else {
+        showErrBubble('Could not update your ticket right now. Please try again.');
+      }
+    }
     unlockInput();
     inputLocked = false;
     return;
@@ -1281,7 +1613,7 @@ function handleAIResponse(rawResult) {
   }
   let reply = (result && typeof result.response === 'string') ? result.response : t('aiError');
   const safeReply = reply.replace(/\n/g, '<br>');
-  botBubble(`${safeReply}<div class="ai-lang-tag">🤖 ${t('generatedIn')} ${t('aiLang')}</div>`);
+  botBubble(`${safeReply}<div class="ai-lang-tag">🤖 ${t('generatedIn')} ${t('aiLang')}</div>`, true, null, null, { sourceKind: 'ai_generated', logText: reply });
   conversationHistory.push({ role: 'assistant', content: reply });
 
   setTimeout(() => {
@@ -1304,19 +1636,26 @@ function offerTransfer() {
 
 async function handleTransferYes(btn, wrap) {
   disableChips(wrap);
-  userBubble(t('transferYes'));
+  userBubble(t('transferYes'), { sourceKind: 'button' });
   await delay(200);
   showTyping(); await delay(1000); removeTyping();
   botBubble(t('packagingMsg'), true, 'packagingMsg');
 
   await delay(600);
-  activeTicketId = 'BSP-' + Math.floor(10000 + Math.random() * 90000);
-  migrateDraft('new', 'ticket:' + activeTicketId);
-  setActiveDraftKey('ticket:' + activeTicketId);
   ticketMessages = buildTicketTranscript();
   const subject = getConversationSubject(ticketMessages);
-  saveConversation(activeTicketId, subject, ticketMessages, 'open');
-  sendDiscordWebhook(activeTicketId, 'new', ticketMessages, subject);
+  try {
+    const ticket = await createSupportTicket(subject, ticketMessages, pendingTicketCategory);
+    activeTicketId = ticket.id;
+    migrateDraft('new', 'ticket:' + activeTicketId);
+    setActiveDraftKey('ticket:' + activeTicketId);
+    joinTicketRoom(activeTicketId);
+  } catch (err) {
+    showErrBubble('Could not open a support ticket right now. Please try again.');
+    unlockInput();
+    inputLocked = false;
+    return;
+  }
   triggerHaptic('success');
 
   const card = document.createElement('div');
@@ -1329,15 +1668,15 @@ async function handleTransferYes(btn, wrap) {
   feed.appendChild(card);
   scrollBottom();
 
-  await delay(400);
-  botBubble(t('addMoreInfo'), true, 'addMoreInfo');
+  appendTicketStateNote('open');
+  setTicketComposerState({ status: 'open' });
   enterStage2();
 }
 
 async function handleTransferNo(btn, wrap) {
   disableChips(wrap);
   noCount = 0;
-  userBubble(t('transferNo'));
+  userBubble(t('transferNo'), { sourceKind: 'button' });
   await delay(200);
   showTyping(); await delay(600); removeTyping();
   botBubble(t('retryMsg'), true, 'retryMsg');
@@ -1373,13 +1712,23 @@ async function openSupportTicket(triggerBtn) {
 
   feed.querySelectorAll('.chips-wrap').forEach(w => disableChips(w));
 
-  activeTicketId = 'BSP-' + Math.floor(10000 + Math.random() * 90000);
-  migrateDraft('new', 'ticket:' + activeTicketId);
-  setActiveDraftKey('ticket:' + activeTicketId);
   ticketMessages = buildTicketTranscript();
   const ticketSubject = getConversationSubject(ticketMessages);
-  saveConversation(activeTicketId, ticketSubject, ticketMessages, 'open');
-  sendDiscordWebhook(activeTicketId, 'new', ticketMessages, ticketSubject);
+  try {
+    const ticket = await createSupportTicket(ticketSubject, ticketMessages, pendingTicketCategory);
+    activeTicketId = ticket.id;
+    migrateDraft('new', 'ticket:' + activeTicketId);
+    setActiveDraftKey('ticket:' + activeTicketId);
+    joinTicketRoom(activeTicketId);
+  } catch (err) {
+    showErrBubble('Could not open a support ticket right now. Please try again.');
+    if (triggerBtn) {
+      triggerBtn.disabled = false;
+      triggerBtn.classList.remove('is-locked');
+      triggerBtn.removeAttribute('aria-disabled');
+    }
+    return;
+  }
   triggerHaptic('success');
 
   await delay(200);
@@ -1395,8 +1744,8 @@ async function openSupportTicket(triggerBtn) {
   feed.appendChild(card);
   scrollBottom();
 
-  await delay(400);
-  botBubble(t('addMoreInfo'), true, 'addMoreInfo');
+  appendTicketStateNote('open');
+  setTicketComposerState({ status: 'open' });
   enterStage2();
 }
 
@@ -1408,11 +1757,14 @@ async function handleRestart(btn, wrap) {
   stage = 1; noCount = 0; conversationHistory = []; chatLog = [];
   activeTicketId = null; ticketMessages = [];
   pendingMatchId = false; pendingMatchCat = null;
+  pendingTicketCategory = 'general';
+  ticketComposerLocked = false;
+  inputBar.classList.remove('ticket-closed');
   clearDraft(activeDraftKey);
   msgInput.value = '';
   syncComposerState();
   setActiveDraftKey('new');
-  userBubble(t('backTopics'));
+  userBubble(t('backTopics'), { sourceKind: 'button' });
   await delay(200);
   showTyping(); await delay(500); removeTyping();
   botBubble(t('whatElse'), true, 'whatElse');
@@ -1422,7 +1774,7 @@ async function handleRestart(btn, wrap) {
 
 async function handleDone(btn, wrap) {
   disableChips(wrap);
-  userBubble(t('thatIsAll'));
+  userBubble(t('thatIsAll'), { sourceKind: 'button' });
   await delay(200);
   showTyping(); await delay(600); removeTyping();
   botBubble(t('doneFarewell'), true, 'doneFarewell');
@@ -1460,19 +1812,22 @@ async function handleNewConversation(btn, wrap) {
   stage = 1; noCount = 0; conversationHistory = []; chatLog = [];
   activeTicketId = null; ticketMessages = [];
   pendingMatchId = false; pendingMatchCat = null;
+  pendingTicketCategory = 'general';
+  ticketComposerLocked = false;
+  inputBar.classList.remove('ticket-closed');
+  leaveTicketRoom();
   clearDraft(activeDraftKey);
   msgInput.value = '';
   syncComposerState();
   setActiveDraftKey('new');
   feed.innerHTML = '';
   hideInputBar();
-  loadConversations();
   showInbox();
 }
 
 async function handleGoAi(btn, wrap) {
   disableChips(wrap);
-  userBubble('💬 ' + t('somethingElse'));
+  userBubble('💬 ' + t('somethingElse'), { sourceKind: 'button' });
   await delay(200);
   showTyping(); await delay(750); removeTyping();
   botBubble(t('aiFirst'), true, 'aiFirst');
@@ -1625,50 +1980,120 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 });
 
 // ─────────────────────────────────────────────────────────────────
-// DISCORD WEBHOOK  (proxied through backend)
+// CONVERSATIONS INBOX + SUPPORT TICKETS API
 // ─────────────────────────────────────────────────────────────────
-async function sendDiscordWebhook(ticketId, type, messages, subject) {
-  try {
-    await fetch(`${_serverUrl}/api/support/discord-notify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ticketId, type, messages, subject })
-    });
-  } catch (e) {
-    console.warn('Discord notify failed:', e);
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────
-// CONVERSATIONS INBOX
-// ─────────────────────────────────────────────────────────────────
-const INBOX_KEY = 'bsp_conversations';
 let conversations = [];
+let currentTicketRoomId = null;
 
-function loadConversations() {
-  try { conversations = JSON.parse(localStorage.getItem(INBOX_KEY) || '[]'); }
-  catch (_) { conversations = []; }
-}
-
-function saveConversations() {
-  try { localStorage.setItem(INBOX_KEY, JSON.stringify(conversations)); } catch (_) {}
-}
-
-function saveConversation(id, subject, messages, status) {
-  const transcript = normalizeConversationMessages(messages, messages);
-  const idx = conversations.findIndex(c => c.id === id);
-  const entry = {
-    id,
-    subject: subject || getConversationSubject(transcript),
-    preview: transcript.filter(Boolean).slice(-1)[0]?.text || '',
-    messages: transcript.map(m => m.text),
-    messageObjects: transcript.map(m => ({ role: m.role, text: m.text })),
-    status: status || 'open',
-    updatedAt: Date.now()
+async function supportApi(path, options = {}) {
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {})
   };
-  if (idx >= 0) { conversations[idx] = entry; }
-  else { conversations.unshift(entry); }
-  saveConversations();
+  if (supportIdentity.supportToken) headers['x-support-player-token'] = supportIdentity.supportToken;
+  const res = await fetch(appendSupportAuthParams(path), {
+    ...options,
+    headers
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || data.ok === false) throw new Error(data.error || 'Support request failed');
+  return data;
+}
+
+function upsertConversation(ticket) {
+  if (!ticket?.id) return;
+  const idx = conversations.findIndex(c => c.id === ticket.id);
+  if (idx >= 0) conversations[idx] = { ...conversations[idx], ...ticket };
+  else conversations.unshift(ticket);
+  conversations.sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
+}
+
+async function loadConversations() {
+  try {
+    const data = await supportApi('/tickets');
+    conversations = Array.isArray(data.tickets) ? data.tickets : [];
+    conversations.forEach(ticket => {
+      if (ticket.lastMessageSender === 'agent' && ticket.status === 'waiting_on_player' && !getUnreadCount(ticket.id)) {
+        unreadState[ticket.id] = 1;
+      }
+    });
+    saveUnreadState();
+  } catch (err) {
+    console.warn('Support ticket load failed:', err.message);
+    conversations = [];
+  }
+  return conversations;
+}
+
+async function createSupportTicket(subject, messages, category = 'general') {
+  const data = await supportApi('/tickets', {
+    method: 'POST',
+    body: JSON.stringify({
+      ...getSupportAuthPayload(),
+      subject,
+      language: lang,
+      messages,
+      category,
+    })
+  });
+  upsertConversation(data.ticket);
+  return data.ticket;
+}
+
+async function appendSupportTicketMessage(ticketId, text, senderType = 'player', authorName = '') {
+  const data = await supportApi(`/tickets/${encodeURIComponent(ticketId)}/messages`, {
+    method: 'POST',
+    body: JSON.stringify({
+      ...getSupportAuthPayload(),
+      senderType,
+      authorName,
+      text,
+      sourceKind: senderType === 'player' ? 'typed' : senderType === 'agent' ? 'staff' : 'spinny_default',
+    })
+  });
+  upsertConversation(data.ticket);
+  return data.ticket;
+}
+
+async function fetchSupportTicket(ticketId) {
+  const data = await supportApi(`/tickets/${encodeURIComponent(ticketId)}`);
+  upsertConversation(data.ticket);
+  return data.ticket;
+}
+
+function joinTicketRoom(ticketId) {
+  const safeId = String(ticketId || '').trim();
+  if (currentTicketRoomId && currentTicketRoomId !== safeId && sockReady) {
+    sock.emit('support:ticket:leave', { ticketId: currentTicketRoomId });
+  }
+  currentTicketRoomId = safeId || null;
+  if (safeId && sockReady) sock.emit('support:ticket:join', { ticketId: safeId });
+}
+
+function leaveTicketRoom() {
+  if (currentTicketRoomId && sockReady) sock.emit('support:ticket:leave', { ticketId: currentTicketRoomId });
+  currentTicketRoomId = null;
+}
+
+function ticketStateLabel(status) {
+  if (status === 'closed') return t('ticketClosedLabel');
+  if (status === 'waiting_on_player') return '';
+  return t('ticketOpenLabel');
+}
+
+function removeTicketStateNotes() {
+  feed.querySelectorAll('.ticket-state-note').forEach(node => node.remove());
+}
+
+function appendTicketStateNote(status) {
+  const label = ticketStateLabel(status);
+  removeTicketStateNotes();
+  if (!label) return;
+  const row = document.createElement('div');
+  row.className = `ticket-state-note ${status || 'open'}`;
+  row.textContent = label;
+  feed.appendChild(row);
+  scrollBottom();
 }
 
 function renderInboxList(loading = false) {
@@ -1697,8 +2122,8 @@ function renderInboxList(loading = false) {
       </div>`;
     return;
   }
-  const openOnes   = conversations.filter(c => c.status === 'open');
-  const closedOnes = conversations.filter(c => c.status !== 'open');
+  const openOnes   = conversations.filter(c => c.status === 'open' || c.status === 'waiting_on_player');
+  const closedOnes = conversations.filter(c => c.status === 'closed');
   let html = '';
   if (openOnes.length) {
     html += `<div class="inbox-section-lbl">${t('inboxSectionOpen')}</div>`;
@@ -1713,14 +2138,17 @@ function renderInboxList(loading = false) {
 
 function convoCardHTML(c) {
   const date  = new Date(c.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-  const badge = c.status === 'open'
+  const isActive = c.status === 'open' || c.status === 'waiting_on_player';
+  const unreadCount = getUnreadCount(c.id);
+  const badge = isActive
     ? `<span class="convo-badge open">${t('badgeOpen')}</span>`
     : `<span class="convo-badge closed">${t('badgeClosed')}</span>`;
-  return `<div class="convo-card ${c.status}" onclick="openConversation('${esc(c.id)}')">
+  return `<div class="convo-card ${c.status} ${unreadCount ? 'has-unread' : ''}" onclick="openConversation('${esc(c.id)}')">
     <div class="convo-card-top">
       <span class="convo-card-id">${esc(c.id)}</span>
       <span class="convo-card-date">${date}</span>
     </div>
+    ${unreadCount ? `<div class="convo-unread-pill">⚡ ${t('newReplyLabel')}</div>` : ''}
     <div class="convo-card-subject">${esc(c.subject)}</div>
     <div class="convo-card-preview">${esc(c.preview)}</div>
     ${badge}
@@ -1733,13 +2161,15 @@ const hdrBack     = document.getElementById('hdr-back');
 
 function showInbox() {
   const renderToken = ++inboxRenderToken;
+  leaveTicketRoom();
   inboxScreen.classList.remove('hidden');
   chatScreen.classList.add('hidden');
   if (hdrBack) hdrBack.classList.remove('visible');
   renderInboxList(true);
-  window.setTimeout(() => {
+  window.setTimeout(async () => {
     if (renderToken !== inboxRenderToken) return;
-    loadConversations();
+    if (!supportAuthReady) return;
+    await loadConversations();
     renderInboxList();
   }, 140);
 }
@@ -1751,9 +2181,14 @@ function showChat() {
 }
 
 function startNewConversation() {
+  if (!supportAuthReady) return;
   stage = 1; noCount = 0; conversationHistory = []; chatLog = [];
   activeTicketId = null; ticketMessages = [];
   pendingMatchId = false; pendingMatchCat = null;
+  pendingTicketCategory = 'general';
+  ticketComposerLocked = false;
+  inputBar.classList.remove('ticket-closed');
+  leaveTicketRoom();
   persistDraft();
   msgInput.value = '';
   syncComposerState();
@@ -1764,36 +2199,37 @@ function startNewConversation() {
   startGreeting();
 }
 
-function openConversation(ticketId) {
-  const convo = conversations.find(c => c.id === ticketId);
-  if (!convo) { startNewConversation(); return; }
+async function openConversation(ticketId) {
+  let convo = conversations.find(c => c.id === ticketId);
+  try {
+    convo = await fetchSupportTicket(ticketId);
+  } catch (err) {
+    console.warn('Support ticket open failed:', err.message);
+    if (!convo) { startNewConversation(); return; }
+  }
   stage = 2; noCount = 0; conversationHistory = []; chatLog = [];
   activeTicketId = convo.id;
+  clearUnread(convo.id);
   setActiveDraftKey('ticket:' + ticketId);
   pendingMatchId = false; pendingMatchCat = null;
+  pendingTicketCategory = convo.category === 'refund' ? 'refund' : 'general';
   feed.innerHTML = '';
   showChat();
+  joinTicketRoom(convo.id);
 
   const transcript = normalizeConversationMessages(convo.messages, convo.messageObjects);
-  chatLog = transcript.map(m => ({ role: m.role, text: m.text }));
+  chatLog = transcript.map(m => ({ role: m.role, text: m.text, sourceKind: m.sourceKind || '', authorName: m.authorName || '' }));
   ticketMessages = buildTicketTranscript();
 
   if (transcript.length) {
-    transcript.slice(-10).forEach(m => {
-      if (m.role === 'user') userBubble(m.text, { persist: false });
-      else botBubble(esc(m.text).replace(/\n/g, '<br>'), true, null, null, { persist: false, logText: m.text });
+    transcript.forEach(m => {
+      if (m.role === 'user') userBubble(m.text, { persist: false, sourceKind: m.sourceKind || 'typed' });
+      else if (m.role === 'agent') staffBubble(m.text, m.authorName || 'Backspin Support', { persist: false, logText: m.text, sourceKind: m.sourceKind || 'staff' });
+      else botBubble(esc(m.text).replace(/\n/g, '<br>'), true, null, null, { persist: false, logText: m.text, sourceKind: m.sourceKind || 'spinny_default' });
     });
   }
-
-  const card = document.createElement('div');
-  card.className = 'transfer-card';
-  card.innerHTML = `<div class="transfer-icon">📋</div>
-    <div class="transfer-title">${t('resumedTitle')}: ${esc(convo.id)}</div>
-    <div class="transfer-sub">${esc(convo.subject)}</div>`;
-  feed.appendChild(card);
-  scrollBottom();
-
-  botBubble(t('addMoreInfo'), true, 'addMoreInfo');
+  appendTicketStateNote(convo.status);
+  setTicketComposerState(convo);
   enterStage2();
 }
 
@@ -1807,5 +2243,19 @@ function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 // ─────────────────────────────────────────────────────────────────
 msgInput.placeholder = t('placeholder');
 loadDraftStore();
-loadConversations();
-showInbox();
+loadUnreadState();
+ensurePlayerIdentity()
+  .catch(err => {
+    console.warn('Support auth failed:', err.message);
+  })
+  .finally(() => {
+    applyPlayerIdentityToUi();
+    if (sockReady && supportAuthReady) {
+      sock.emit('support:client:subscribe', {
+        playerId: clientId,
+        username: supportIdentity.username,
+        supportToken: supportIdentity.supportToken,
+      });
+    }
+    showInbox();
+  });
